@@ -29,6 +29,7 @@ const AppSidebar = () => {
       className="border-end"
       colorScheme="dark"
       position="fixed"
+      style={{ backgroundColor: '#dc3545' }}
       unfoldable={unfoldable}
       visible={sidebarShow}
       onVisibleChange={(visible) => {
