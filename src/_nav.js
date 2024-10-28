@@ -1,16 +1,17 @@
 import React from 'react'
 import CIcon from '@coreui/icons-react'
 import {
-  cilBell,
-  cilCalculator,
+  cilCreditCard,
   cilChartPie,
-  cilStorage,
+  cilLibrary,
   cilWallet,
-  cilNotes,
   cilWeightlifitng,
   cilSpeedometer,
   cilStar,
   cilAddressBook,
+  cilEqualizer,
+  cilBell,
+  cilBarChart,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
@@ -31,71 +32,57 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Membership management',
+    name: 'Membership',
     to: '/theme/typography',
     icon: <CIcon icon={cilWallet} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Class management',
+    name: 'Class',
     to: '/theme/colors',
     icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Users Management',
+    name: 'Users',
     to: '/base',
     icon: <CIcon icon={cilWeightlifitng} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Inventory Management',
+    name: 'Inventory',
     to: '/buttons',
-    icon: <CIcon icon={cilStorage} customClassName="nav-icon" />,
+    icon: <CIcon icon={cilLibrary} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
-    name: 'Charts',
+    name: 'Payment',
     to: '/charts',
+    icon: <CIcon icon={cilCreditCard} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Progress',
+    to: '/404',
+    icon: <CIcon icon={cilBarChart} customClassName="nav-icon" />,
+  },
+  {
+    component: CNavItem,
+    name: 'Rutine',
+    to: '/notifications/badges',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
   },
-
   {
-    component: CNavGroup,
-    name: 'Notifications',
+    component: CNavItem,
+    name: 'Notification',
+    to: '/widgets',
     icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
-    items: [
-      {
-        component: CNavItem,
-        name: 'Alerts',
-        to: '/notifications/alerts',
-      },
-      {
-        component: CNavItem,
-        name: 'Badges',
-        to: '/notifications/badges',
-      },
-      {
-        component: CNavItem,
-        name: 'Modal',
-        to: '/notifications/modals',
-      },
-      {
-        component: CNavItem,
-        name: 'Toasts',
-        to: '/notifications/toasts',
-      },
-    ],
   },
   {
     component: CNavItem,
-    name: 'Widgets',
-    to: '/widgets',
-    icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
+    name: 'Administration',
+    to: '/404',
+    icon: <CIcon icon={cilEqualizer} customClassName="nav-icon" />,
   },
   {
     component: CNavTitle,
