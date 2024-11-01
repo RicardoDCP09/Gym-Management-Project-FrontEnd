@@ -33,7 +33,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Membership',
-    to: '/theme/typography',
+    to: '/membership',
     icon: <CIcon icon={cilWallet} customClassName="nav-icon" />,
   },
   {

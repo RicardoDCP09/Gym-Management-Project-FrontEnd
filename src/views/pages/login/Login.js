@@ -16,7 +16,6 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
-import BackgroundImg from 'src/assets/images/training_loggin.jpg'
 
 const Login = () => {
   return (
@@ -67,17 +66,7 @@ const Login = () => {
                   </CForm>
                 </CCardBody>
               </CCard>
-              <CCard
-                className="text-white py-5"
-                style={{
-                  width: '44%',
-                  background: ` 
-                    linear-gradient(rgba(237,186,186, 0.7), rgba(237,186,186,  0.7)),
-                    url(${BackgroundImg})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
-              >
+              <CCard className="text-white py-5 login_custom">
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
