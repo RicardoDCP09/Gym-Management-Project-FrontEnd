@@ -1,3 +1,11 @@
+import CIcon from '@coreui/icons-react'
+import {
+  cilClock,
+  cilTag,
+  cilColorBorder,
+  cilCash,
+} from '@coreui/icons'
+
 import {
   CCard,
   CButton,
@@ -60,10 +68,18 @@ const Membership = () => {
         <CTable hover responsive>
           <CTableHead>
             <CTableRow>
-              <CTableHeaderCell>Name</CTableHeaderCell>
-              <CTableHeaderCell>Duration (days)</CTableHeaderCell>
-              <CTableHeaderCell>Price</CTableHeaderCell>
-              <CTableHeaderCell>Actions</CTableHeaderCell>
+              <CTableHeaderCell>Name
+                <CIcon icon={cilTag} customClassName="nav-icon icon-small" />
+              </CTableHeaderCell>
+              <CTableHeaderCell>Duration (days)
+                <CIcon icon={cilClock} customClassName="nav-icon icon-small" />
+              </CTableHeaderCell>
+              <CTableHeaderCell>Price
+                <CIcon icon={cilCash} customClassName="nav-icon icon-small" />
+              </CTableHeaderCell>
+              <CTableHeaderCell>Actions
+                <CIcon icon={cilColorBorder} customClassName="nav-icon icon-small" />
+              </CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
