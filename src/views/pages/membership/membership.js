@@ -41,21 +41,21 @@ const Membership = () => {
               <CFormInput
                 type="text"
                 placeholder="Name"
-                value={"Yearly"}
+                value={""}
               />
             </CCol>
             <CCol md={3}>
               <CFormInput
                 type="number"
                 placeholder="Duration(days)"
-                value={"365"}
+                value={""}
               />
             </CCol>
             <CCol md={3}>
               <CFormInput
                 type="number"
                 placeholder="Price"
-                value={"800"}
+                value={""}
               />
             </CCol>
             <CCol md={3}>

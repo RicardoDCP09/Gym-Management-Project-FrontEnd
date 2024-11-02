@@ -1,11 +1,12 @@
 import CIcon from '@coreui/icons-react'
 import {
     cilClock,
-    cilBadge,
-    cilGroup,
-    cilCheckAlt,
-    cilTag,
+    cilUser,
     cilColorBorder,
+    cilCash,
+    cilWallet,
+    cilEnvelopeClosed,
+
 } from '@coreui/icons'
 import {
     CCard,
@@ -26,14 +27,14 @@ import {
 
 } from '@coreui/react';
 
-const Classes = () => {
+const Payment = () => {
 
 
     return (
 
         <CCard className="mb-4">
             <CCardHeader>
-                <h4 className="mb-0">Classes Management</h4>
+                <h4 className="mb-0">Payment Management</h4>
             </CCardHeader>
             <CCardBody>
                 <CForm className="mb-4">
@@ -47,26 +48,30 @@ const Classes = () => {
                         </CCol>
                         <CCol md={3}>
                             <CFormInput
-                                type="text"
-                                placeholder="Traineer"
-                                value={""}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="number"
-                                placeholder="amount(People)"
-                                value={""}
+                                type="text-number"
+                                placeholder="Amount"
+                                value={"$"}
                             />
                         </CCol>
                         <CCol md={3}>
                             <CFormSelect
-                                aria-label="Select a Status for the class"
+                                aria-label="Select a Payment Method"
                                 options={[
-                                    'Status',
-                                    { label: 'Available', value: '1' },
-                                    { label: 'Cancelled', value: '2' },
-                                    { label: 'Complete', value: '3' }
+                                    'PaymentMethod',
+                                    { label: 'Cash', value: '1' },
+                                    { label: 'Card', value: '2' },
+                                    { label: 'Transfer', value: '3' }
+                                ]}
+                            />
+                        </CCol>
+                        <CCol md={3}>
+                            <CFormSelect
+                                aria-label="Select a Status Payment"
+                                options={[
+                                    'Status Pay',
+                                    { label: 'Confirmed', value: '1' },
+                                    { label: 'Waiting', value: '2' },
+                                    { label: 'Canceled', value: '3' }
                                 ]}
                             />
                         </CCol>
@@ -88,18 +93,18 @@ const Classes = () => {
                     <CTableHead>
                         <CTableRow>
                             <CTableHeaderCell>Name
-                                <CIcon icon={cilTag} customClassName="nav-icon icon-small" />
+                                <CIcon icon={cilUser} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Amount (People)
-                                <CIcon icon={cilGroup} customClassName="nav-icon icon-small" />
+                            <CTableHeaderCell>Amount
+                                <CIcon icon={cilCash} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Status
-                                <CIcon icon={cilCheckAlt} customClassName="nav-icon icon-small" />
+                            <CTableHeaderCell>Method Pay
+                                <CIcon icon={cilWallet} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Traineer
-                                <CIcon icon={cilBadge} customClassName="nav-icon icon-small" />
+                            <CTableHeaderCell>Status Payment
+                                <CIcon icon={cilEnvelopeClosed} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Daytime
+                            <CTableHeaderCell>Date Payment
                                 <CIcon icon={cilClock} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
                             <CTableHeaderCell>Actions
@@ -109,10 +114,10 @@ const Classes = () => {
                     </CTableHead>
                     <CTableBody>
                         <CTableRow>
-                            <CTableDataCell>{"Spinning"}</CTableDataCell>
-                            <CTableDataCell>{30}</CTableDataCell>
-                            <CTableDataCell>{"Available"}</CTableDataCell>
-                            <CTableDataCell>{"Jose Alvarez"}</CTableDataCell>
+                            <CTableDataCell>{"Ricardo"}</CTableDataCell>
+                            <CTableDataCell>${200}</CTableDataCell>
+                            <CTableDataCell>{"Cash"}</CTableDataCell>
+                            <CTableDataCell>{"Confirmed"}</CTableDataCell>
                             <CTableDataCell>{"12 / 10 / 24 08:30"}</CTableDataCell>
                             <CTableDataCell>
                                 <CButton color="info" variant='outline' size="sm" className="me-2" >Edit</CButton>
@@ -125,4 +130,4 @@ const Classes = () => {
         </CCard>
     )
 }
-export default Classes
+export default Payment

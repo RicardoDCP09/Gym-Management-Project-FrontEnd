@@ -13,3 +13,11 @@
   height: 18px; // Ajusta el tamaño según sea necesario
   margin-left: 5px; // Espacio entre el texto y el ícono
 }
+
+.nav-link:hover {
+  background-color: #dd7b7b !important;
+}
+
+.simplebar-content .active {
+  background-color: #dd7b7b !important;
+}

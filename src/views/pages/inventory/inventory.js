@@ -1,8 +1,7 @@
 import CIcon from '@coreui/icons-react'
 import {
     cilClock,
-    cilBadge,
-    cilGroup,
+    cilInbox,
     cilCheckAlt,
     cilTag,
     cilColorBorder,
@@ -26,14 +25,14 @@ import {
 
 } from '@coreui/react';
 
-const Classes = () => {
+const Inventory = () => {
 
 
     return (
 
         <CCard className="mb-4">
             <CCardHeader>
-                <h4 className="mb-0">Classes Management</h4>
+                <h4 className="mb-0">Inventory Management</h4>
             </CCardHeader>
             <CCardBody>
                 <CForm className="mb-4">
@@ -47,33 +46,26 @@ const Classes = () => {
                         </CCol>
                         <CCol md={3}>
                             <CFormInput
-                                type="text"
-                                placeholder="Traineer"
-                                value={""}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
                                 type="number"
-                                placeholder="amount(People)"
+                                placeholder="Quantity"
                                 value={""}
                             />
                         </CCol>
                         <CCol md={3}>
                             <CFormSelect
-                                aria-label="Select a Status for the class"
+                                aria-label="Select status"
                                 options={[
                                     'Status',
-                                    { label: 'Available', value: '1' },
-                                    { label: 'Cancelled', value: '2' },
-                                    { label: 'Complete', value: '3' }
+                                    { label: 'Active', value: '1' },
+                                    { label: 'Saved', value: '2' },
+                                    { label: 'Fixing', value: '3' }
                                 ]}
                             />
                         </CCol>
                         <CCol md={3}>
                             <CFormInput
                                 type="datetime-local"
-                                placeholder="date(class)"
+                                placeholder="Date Use"
                                 value={""}
                             />
                         </CCol>
@@ -90,16 +82,13 @@ const Classes = () => {
                             <CTableHeaderCell>Name
                                 <CIcon icon={cilTag} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Amount (People)
-                                <CIcon icon={cilGroup} customClassName="nav-icon icon-small" />
+                            <CTableHeaderCell>Quantity
+                                <CIcon icon={cilInbox} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
                             <CTableHeaderCell>Status
                                 <CIcon icon={cilCheckAlt} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Traineer
-                                <CIcon icon={cilBadge} customClassName="nav-icon icon-small" />
-                            </CTableHeaderCell>
-                            <CTableHeaderCell>Daytime
+                            <CTableHeaderCell>DayUse
                                 <CIcon icon={cilClock} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
                             <CTableHeaderCell>Actions
@@ -109,10 +98,9 @@ const Classes = () => {
                     </CTableHead>
                     <CTableBody>
                         <CTableRow>
-                            <CTableDataCell>{"Spinning"}</CTableDataCell>
+                            <CTableDataCell>{"Mancuernas"}</CTableDataCell>
                             <CTableDataCell>{30}</CTableDataCell>
                             <CTableDataCell>{"Available"}</CTableDataCell>
-                            <CTableDataCell>{"Jose Alvarez"}</CTableDataCell>
                             <CTableDataCell>{"12 / 10 / 24 08:30"}</CTableDataCell>
                             <CTableDataCell>
                                 <CButton color="info" variant='outline' size="sm" className="me-2" >Edit</CButton>
@@ -125,4 +113,4 @@ const Classes = () => {
         </CCard>
     )
 }
-export default Classes
+export default Inventory 

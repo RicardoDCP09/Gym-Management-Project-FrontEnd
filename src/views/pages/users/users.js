@@ -1,11 +1,12 @@
 import CIcon from '@coreui/icons-react'
 import {
     cilClock,
-    cilBadge,
-    cilGroup,
-    cilCheckAlt,
+    cilFingerprint,
     cilTag,
     cilColorBorder,
+    cilTags,
+    cilAt,
+    cilContact,
 } from '@coreui/icons'
 import {
     CCard,
@@ -21,86 +22,118 @@ import {
     CTableHead,
     CTableRow,
     CTableHeaderCell,
-    CFormSelect,
     CTableBody,
-
+    CModal,
+    CModalBody,
+    CModalFooter,
+    CModalHeader,
+    CModalTitle,
+    CFormSelect,
 } from '@coreui/react';
-
-
+import { useState } from 'react'
 const Users = () => {
-
+    const [visible, setVisible] = useState(false)
     return (
 
         <CCard className="mb-4">
             <CCardHeader>
-                <h4 className="mb-0">Classes Management</h4>
+                <h4 className="mb-0">Users Management</h4>
             </CCardHeader>
             <CCardBody>
                 <CForm className="mb-4">
                     <CRow className="g-3">
-                        <CCol md={3}>
-                            <CFormInput
-                                type="text"
-                                placeholder="Name"
-                                value={""}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="text"
-                                placeholder="Traineer"
-                                value={""}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="number"
-                                placeholder="amount(People)"
-                                value={""}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormSelect
-                                aria-label="Default select example"
-                                options={[
-                                    'Status',
-                                    { label: 'Available', value: '1' },
-                                    { label: 'Cancelled', value: '2' },
-                                    { label: 'Complete', value: '3' }
-                                ]}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="datetime-local"
-                                placeholder="date(class)"
-                                value={""}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CButton color="primary">
-                                Add
-                            </CButton>
-                        </CCol>
+                        <CButton color="primary" onClick={() => setVisible(!visible)}>Create User</CButton>
+                        <CModal
+                            backdrop="static"
+                            visible={visible}
+                            onClose={() => setVisible(false)}
+                            aria-labelledby="StaticBackdropExampleLabel"
+                        >
+                            <CModalHeader>
+                                <CModalTitle id="Create Users">New Users</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody>
+                                <CRow className="mb-3">
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
+                                            type="text"
+                                            placeholder="Name"
+                                            value={""}
+                                        />
+                                    </CCol>
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
+                                            type="text"
+                                            placeholder="Last Name"
+                                            value={""}
+                                        />
+                                    </CCol>
+                                </CRow>
+                                <CRow className="mb-3">
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
+                                            type="text"
+                                            placeholder="Email"
+                                            value={""}
+                                        />
+                                    </CCol>
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
+                                            type="date(register)"
+                                            placeholder="Date(class)"
+                                            value={""}
+                                        />
+                                    </CCol>
+                                </CRow>
+                                <CRow>
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
+                                            type="password"
+                                            placeholder="Password"
+                                            value={""}
+                                        />
+                                    </CCol>
+                                    <CCol md={3}>
+                                        <CFormSelect
+                                            aria-label="Select Type"
+                                            options={[
+                                                'Type',
+                                                { label: 'User-Monthly', value: '1' },
+                                                { label: 'Vip-User-Yearly', value: '2' },
+                                                { label: 'Premium-User-Quarterly', value: '3' }
+                                            ]}
+                                        />
+                                    </CCol>
+
+                                </CRow>
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="secondary" onClick={() => setVisible(false)}>
+                                    Close
+                                </CButton>
+                                <CButton color="primary">Add User</CButton>
+                            </CModalFooter>
+                        </CModal>
                     </CRow>
                 </CForm>
+
                 <CTable hover responsive>
                     <CTableHead>
                         <CTableRow>
                             <CTableHeaderCell>Name
                                 <CIcon icon={cilTag} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Amount (People)
-                                <CIcon icon={cilGroup} customClassName="nav-icon icon-small" />
+                            <CTableHeaderCell>Last-Name
+                                <CIcon icon={cilTags} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Status
-                                <CIcon icon={cilCheckAlt} customClassName="nav-icon icon-small" />
+                            <CTableHeaderCell>Email
+                                <CIcon icon={cilAt} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Traineer
-                                <CIcon icon={cilBadge} customClassName="nav-icon icon-small" />
-                            </CTableHeaderCell>
-                            <CTableHeaderCell>Daytime
+                            <CTableHeaderCell>RegisterDate
                                 <CIcon icon={cilClock} customClassName="nav-icon icon-small" />
+                            </CTableHeaderCell>
+                            <CTableHeaderCell>Role
+                                <CIcon icon={cilContact} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
                             <CTableHeaderCell>Actions
                                 <CIcon icon={cilColorBorder} customClassName="nav-icon icon-small" />
@@ -109,11 +142,11 @@ const Users = () => {
                     </CTableHead>
                     <CTableBody>
                         <CTableRow>
-                            <CTableDataCell>{"Spinning"}</CTableDataCell>
-                            <CTableDataCell>{30}</CTableDataCell>
-                            <CTableDataCell>{"Available"}</CTableDataCell>
-                            <CTableDataCell>{"Jose Alvarez"}</CTableDataCell>
+                            <CTableDataCell>{"Ricardo"}</CTableDataCell>
+                            <CTableDataCell>{"Colmenares"}</CTableDataCell>
+                            <CTableDataCell>{"example@gmail.com"}</CTableDataCell>
                             <CTableDataCell>{"12 / 10 / 24 08:30"}</CTableDataCell>
+                            <CTableDataCell>{"User"}</CTableDataCell>
                             <CTableDataCell>
                                 <CButton color="info" variant='outline' size="sm" className="me-2" >Edit</CButton>
                                 <CButton color="danger" variant='outline' size="sm" >Delete</CButton>
@@ -122,7 +155,9 @@ const Users = () => {
                     </CTableBody>
                 </CTable>
             </CCardBody>
-        </CCard>
+        </CCard >
     )
+
 }
 export default Users
+
