@@ -97,7 +97,7 @@ const Users = () => {
                                         <CFormSelect
                                             aria-label="Select Type"
                                             options={[
-                                                'Type',
+                                                'Select a Type Membership',
                                                 { label: 'User-Monthly', value: '1' },
                                                 { label: 'Vip-User-Yearly', value: '2' },
                                                 { label: 'Premium-User-Quarterly', value: '3' }

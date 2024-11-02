@@ -57,7 +57,7 @@ const Payment = () => {
                             <CFormSelect
                                 aria-label="Select a Payment Method"
                                 options={[
-                                    'PaymentMethod',
+                                    'Select Payment Method',
                                     { label: 'Cash', value: '1' },
                                     { label: 'Card', value: '2' },
                                     { label: 'Transfer', value: '3' }

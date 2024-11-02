@@ -6,6 +6,8 @@ const Classes = React.lazy(() => import('./views/pages/classes_management/classe
 const User = React.lazy(() => import('./views/pages/users/users.js'))
 const Inventory = React.lazy(() => import('./views/pages/inventory/inventory.js'))
 const Payment = React.lazy(() => import('./views/pages/payment/payment.js'))
+const Rutine = React.lazy(() => import('./views/pages/rutine/rutine.js'))
+const exercise = React.lazy(() => import('./views/pages/exercise/exercise.js'))
 const routes = [
   { path: '/', exact: true, name: 'Home' },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },
@@ -14,6 +16,8 @@ const routes = [
   { path: '/user', name: 'Users', element: User },
   { path: '/inventory', name: 'Inventory', element: Inventory },
   { path: '/payment', name: 'Payment', element: Payment },
+  { path: '/rutine', name: 'Rutine', element: Rutine },
+  { path: '/exercise', name: 'Exercise', element: exercise },
 ]
 
 export default routes

@@ -12,8 +12,11 @@ import {
   cilEqualizer,
   cilBell,
   cilBarChart,
+  cilChartLine,
+  cilBurn,
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+
 
 const _nav = [
   {
@@ -63,25 +66,38 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Progress',
-    to: '/404',
+    to: '/',
     icon: <CIcon icon={cilBarChart} customClassName="nav-icon" />,
   },
   {
-    component: CNavItem,
-    name: 'Rutine',
-    to: '/notifications/badges',
+    component: CNavGroup,
+    name: 'Guides',
     icon: <CIcon icon={cilChartPie} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: 'Rutine',
+        to: '/rutine',
+        icon: <CIcon icon={cilChartLine} customClassName="nav-icon" />,
+      },
+      {
+        component: CNavItem,
+        name: 'Exercises',
+        to: '/exercise',
+        icon: <CIcon icon={cilBurn} customClassName="nav-icon" />,
+      },
+    ]
   },
   {
     component: CNavItem,
-    name: 'Notification',
-    to: '/widgets',
+    name: 'Reports',
+    to: '/',
     icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
   },
   {
     component: CNavItem,
     name: 'Administration',
-    to: '/404',
+    to: '/widgets',
     icon: <CIcon icon={cilEqualizer} customClassName="nav-icon" />,
   },
   {

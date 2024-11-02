@@ -1,10 +1,12 @@
 import CIcon from '@coreui/icons-react'
 import {
-    cilClock,
-    cilInbox,
-    cilCheckAlt,
-    cilTag,
+    cilSpeedometer,
+    cilUser,
     cilColorBorder,
+    cilWeightlifitng,
+    cilDescription,
+    cilChart,
+
 } from '@coreui/icons'
 import {
     CCard,
@@ -22,56 +24,55 @@ import {
     CTableHeaderCell,
     CFormSelect,
     CTableBody,
+    CFormTextarea,
 
 } from '@coreui/react';
 
-const Inventory = () => {
+const exercise = () => {
 
 
     return (
 
         <CCard className="mb-4">
             <CCardHeader>
-                <h4 className="mb-0">Inventory Management</h4>
+                <h4 className="mb-0">Exercise Management</h4>
             </CCardHeader>
             <CCardBody>
                 <CForm className="mb-4">
                     <CRow className="g-3">
-                        <CCol md={3}>
+                        <CCol md={12}>
+                            <label className='fw-bold'> Exercise Name</label>
                             <CFormInput
                                 type="text"
                                 placeholder="Name"
                                 value={""}
                             />
                         </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="number"
-                                placeholder="Quantity"
-                                value={""}
-                            />
+                        <CCol md={12}>
+                            <label className='fw-bold'> Description</label>
+                            <CFormTextarea
+                                id="exampleFormControlTextarea1"
+                                placeholder='Describe the Exercise'
+                                rows={3}
+
+                            ></CFormTextarea>
                         </CCol>
-                        <CCol md={3}>
+                        <CCol md={12}>
+                            <label className='fw-bold'> Type of Exercise</label>
                             <CFormSelect
-                                aria-label="Select status"
+                                aria-label="Main Exercise"
                                 options={[
-                                    'Select a Status',
-                                    { label: 'Active', value: '1' },
-                                    { label: 'Saved', value: '2' },
-                                    { label: 'Fixing', value: '3' }
+                                    'Select a Type',
+                                    { label: 'Strong', value: '1' },
+                                    { label: 'Cardio', value: '2' },
+                                    { label: 'Flexibility', value: '3' }
                                 ]}
                             />
                         </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="datetime-local"
-                                placeholder="Date Use"
-                                value={""}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CButton color="primary">
-                                Add
+
+                        <CCol md={12}>
+                            <CButton color="primary" className='w-100'>
+                                Add Rutine
                             </CButton>
                         </CCol>
                     </CRow>
@@ -80,16 +81,13 @@ const Inventory = () => {
                     <CTableHead>
                         <CTableRow>
                             <CTableHeaderCell>Name
-                                <CIcon icon={cilTag} customClassName="nav-icon icon-small" />
+                                <CIcon icon={cilWeightlifitng} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Quantity
-                                <CIcon icon={cilInbox} customClassName="nav-icon icon-small" />
+                            <CTableHeaderCell>Description
+                                <CIcon icon={cilDescription} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Status
-                                <CIcon icon={cilCheckAlt} customClassName="nav-icon icon-small" />
-                            </CTableHeaderCell>
-                            <CTableHeaderCell>DayUse
-                                <CIcon icon={cilClock} customClassName="nav-icon icon-small" />
+                            <CTableHeaderCell>Type
+                                <CIcon icon={cilChart} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
                             <CTableHeaderCell>Actions
                                 <CIcon icon={cilColorBorder} customClassName="nav-icon icon-small" />
@@ -98,10 +96,9 @@ const Inventory = () => {
                     </CTableHead>
                     <CTableBody>
                         <CTableRow>
-                            <CTableDataCell>{"Mancuernas"}</CTableDataCell>
-                            <CTableDataCell>{30}</CTableDataCell>
-                            <CTableDataCell>{"Available"}</CTableDataCell>
-                            <CTableDataCell>{"12 / 10 / 24 08:30"}</CTableDataCell>
+                            <CTableDataCell>{"Squats"}</CTableDataCell>
+                            <CTableDataCell>{"Bend your knees and lower your body as if you were going to sit down."}</CTableDataCell>
+                            <CTableDataCell>{"Strong"}</CTableDataCell>
                             <CTableDataCell>
                                 <CButton color="info" variant='outline' size="sm" className="me-2" >Edit</CButton>
                                 <CButton color="danger" variant='outline' size="sm" >Delete</CButton>
@@ -113,4 +110,4 @@ const Inventory = () => {
         </CCard>
     )
 }
-export default Inventory 
+export default exercise 
