@@ -79,8 +79,8 @@ const Users = () => {
                                     </CCol>
                                     <CCol className='mb-3' md={6}>
                                         <CFormInput
-                                            type="date(register)"
-                                            placeholder="Date(class)"
+                                            type="date"
+                                            placeholder="Date(register)"
                                             value={""}
                                         />
                                     </CCol>
@@ -93,7 +93,7 @@ const Users = () => {
                                             value={""}
                                         />
                                     </CCol>
-                                    <CCol md={3}>
+                                    <CCol md={6}>
                                         <CFormSelect
                                             aria-label="Select Type"
                                             options={[
@@ -104,7 +104,6 @@ const Users = () => {
                                             ]}
                                         />
                                     </CCol>
-
                                 </CRow>
                             </CModalBody>
                             <CModalFooter>
