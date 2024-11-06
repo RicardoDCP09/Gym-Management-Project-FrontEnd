@@ -18,21 +18,19 @@ import {
     CFormInput,
     CRow,
     CTable,
-    CTableDataCell,
     CTableHead,
     CTableRow,
     CTableHeaderCell,
     CTableBody,
     CModal,
-    CModalBody,
+    CModalBoody,
     CModalFooter,
     CModalHeader,
     CModalTitle,
     CFormSelect,
 } from '@coreui/react';
-import { useState } from 'react'
-const Users = () => {
-    const [visible, setVisible] = useState(false)
+const Userrs = () => {
+    const [visible, setVisible] = useState(true)
     return (
 
         <CCard className="mb-4">
@@ -96,12 +94,7 @@ const Users = () => {
                                     <CCol md={6}>
                                         <CFormSelect
                                             aria-label="Select Type"
-                                            options={[
-                                                'Select a Type Membership',
-                                                { label: 'User-Monthly', value: '1' },
-                                                { label: 'Vip-User-Yearly', value: '2' },
-                                                { label: 'Premium-User-Quarterly', value: '3' }
-                                            ]}
+                                            options={[]}
                                         />
                                     </CCol>
                                 </CRow>

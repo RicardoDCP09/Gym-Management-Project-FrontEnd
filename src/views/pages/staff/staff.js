@@ -35,7 +35,7 @@ import {
 import { useState } from 'react'
 const staff = () => {
     const [visible, setVisible] = useState(false)
-    const [visiblePermissions, setVisiblePermissions] = useState(false);
+    const [visiblePermissions, setVisiblePermissions] = useState(true);
 
 
     return (
@@ -47,7 +47,7 @@ const staff = () => {
             <CCardBody>
                 <CForm className="mb-4">
                     <CRow className="g-3">
-                        <CButton color="primary" onClick={() => setVisible(!visible)}>Add new member</CButton>
+                        <CButton color="primary" onClick={() => setVisible(visible)}>Add new member</CButton>
                         <CModal
                             backdrop="static"
                             visible={visible}
@@ -111,7 +111,7 @@ const staff = () => {
                                 </CRow>
                             </CModalBody>
                             <CModalFooter>
-                                <CButton color="secondary" onClick={() => setVisible(false)}>
+                                <CButton color="secondary" onClick={() => { }}>
                                     Close
                                 </CButton>
                                 <CButton color="primary">Add Member</CButton>
