@@ -1,3 +1,4 @@
+import { element } from 'prop-types'
 import React from 'react'
 
 const Dashboard = React.lazy(() => import('./views/dashboard/Dashboard'))
@@ -23,6 +24,7 @@ const routes = [
   { path: '/exercise', name: 'Exercise', element: Exercise },
   { path: '/progress', name: 'Progress', element: Progress },
   { path: '/reports', name: 'Reports', element: Reports },
+  { path: '/staff', name: 'Staff', element: Staff },
 ]
 
 export default routes

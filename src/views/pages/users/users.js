@@ -22,15 +22,17 @@ import {
     CTableRow,
     CTableHeaderCell,
     CTableBody,
+    CTableDataCell,
     CModal,
-    CModalBoody,
+    CModalBody,
     CModalFooter,
     CModalHeader,
     CModalTitle,
     CFormSelect,
 } from '@coreui/react';
-const Userrs = () => {
-    const [visible, setVisible] = useState(true)
+import { useState } from 'react'
+const Users = () => {
+    const [visible, setVisible] = useState(false)
     return (
 
         <CCard className="mb-4">
@@ -94,7 +96,12 @@ const Userrs = () => {
                                     <CCol md={6}>
                                         <CFormSelect
                                             aria-label="Select Type"
-                                            options={[]}
+                                            options={[
+                                                'Select a Type',
+                                                { label: 'User', value: '1' },
+                                                { label: 'Traineer', value: '2' },
+                                                { label: 'Admin', value: '3' },
+                                            ]}
                                         />
                                     </CCol>
                                 </CRow>
@@ -151,5 +158,5 @@ const Userrs = () => {
     )
 
 }
-export default Users
+export default Users;
 
