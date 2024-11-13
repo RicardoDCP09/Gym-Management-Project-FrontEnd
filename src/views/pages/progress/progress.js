@@ -14,6 +14,12 @@ import {
     CTableHeaderCell,
     CFormSelect,
     CTableBody,
+    CModal,
+    CModalHeader,
+    CModalBody,
+    CModalFooter,
+    CModalTitle,
+    CFormTextarea,
 
 } from '@coreui/react';
 import {
@@ -22,9 +28,11 @@ import {
 } from '@coreui/react-chartjs';
 
 import { getStyle } from '@coreui/utils'
+import { useState } from 'react'
 
 const progress = () => {
-
+    const [visibleEdit, setVisibleEdit] = useState(false)
+    const [visibleDelete, setVisibleDelete] = useState(false)
     return (
 
         <CCard className="mb-4">
@@ -152,8 +160,107 @@ const progress = () => {
                             <CTableDataCell>{"90Kg"}</CTableDataCell>
                             <CTableDataCell>{"60Kg"}</CTableDataCell>
                             <CTableDataCell>
-                                <CButton color="info" variant='outline' size="sm" className="me-2" >Edit</CButton>
-                                <CButton color="danger" variant='outline' size="sm" >Delete</CButton>
+                                <CButton color="info" onClick={() => setVisibleEdit(!visibleEdit)} variant='outline' size="sm" className="me-2" >Edit</CButton>
+                                <CModal
+                                    backdrop="static"
+                                    visible={visibleEdit}
+                                    onClose={() => setVisibleEdit(false)}
+                                    aria-labelledby="Modal Info"
+                                >
+                                    <CModalHeader>
+                                        <CModalTitle id="Create Users">Edit Membership</CModalTitle>
+                                    </CModalHeader>
+                                    <CModalBody>
+                                        <CRow className="mb-3">
+                                            <CCol md={4} className='mb-3'>
+                                                <label className='fw-bold'> Date Check</label>
+                                                <CFormInput
+                                                    type="date"
+                                                    value={""}
+                                                />
+                                            </CCol>
+                                            <CCol md={4} className='mb-3'>
+                                                <label className='fw-bold'> Weight(Kg)</label>
+                                                <CFormInput
+                                                    type="number"
+                                                    value={""}
+                                                />
+                                            </CCol>
+                                            <CCol md={4} className='mb-3'>
+                                                <label className='fw-bold'> Body Fat(%)</label>
+                                                <CFormInput
+                                                    type="number"
+                                                    value={""}
+                                                />
+                                            </CCol>
+                                            <CCol md={4} className='mb-3'>
+                                                <label className='fw-bold'> Muscle Gain(Kg)</label>
+                                                <CFormInput
+                                                    type="number"
+                                                    value={""}
+                                                />
+                                            </CCol>
+                                            <CCol md={4} className='mb-3'>
+                                                <label className='fw-bold'> Bench Press(Kg)</label>
+                                                <CFormInput
+                                                    type="number"
+                                                    value={""}
+                                                />
+                                            </CCol>
+                                            <CCol md={4} className='mb-3'>
+                                                <label className='fw-bold'>Squats(Kg)</label>
+                                                <CFormInput
+                                                    type="number"
+                                                    value={""}
+                                                />
+                                            </CCol>
+                                            <CCol md={12} className='mb-3'>
+                                                <label className='fw-bold'>Dead Lift (Kg)</label>
+                                                <CFormInput
+                                                    type="number"
+                                                    value={""}
+                                                />
+                                            </CCol>
+                                        </CRow>
+                                    </CModalBody>
+                                    <CModalFooter>
+                                        <CButton color="secondary" onClick={() => setVisibleEdit(false)}>
+                                            Close
+                                        </CButton>
+                                        <CButton color="primary">Save Edit</CButton>
+                                    </CModalFooter>
+
+                                </CModal>
+                                <CButton color="danger" onClick={() => setVisibleDelete(!visibleDelete)} variant='outline' size="sm">Delete</CButton>
+                                <CModal
+                                    backdrop="static"
+                                    visible={visibleDelete}
+                                    onClose={() => setVisibleDelete(false)}
+                                    aria-labelledby="Modal Info"
+                                >
+                                    <CModalHeader>
+                                        <CModalTitle id="Create Users">Do you want delete?</CModalTitle>
+                                    </CModalHeader>
+                                    <CModalBody>
+                                        <CRow className="mb-3">
+                                            <label className='fw-bold mb-2'>Please write "confirm" if you want to delete this membership</label>
+                                            <CCol className='mb-3' md={12}>
+                                                <CForm>
+                                                    <CFormTextarea
+                                                        id="Delete"
+                                                        rows={1}
+                                                    ></CFormTextarea>
+                                                </CForm>
+                                            </CCol>
+                                        </CRow>
+                                    </CModalBody>
+                                    <CModalFooter>
+                                        <CButton color="secondary" onClick={() => setVisibleDelete(false)}>
+                                            Close
+                                        </CButton>
+                                        <CButton color="primary">Delete</CButton>
+                                    </CModalFooter>
+                                </CModal>
                             </CTableDataCell>
                         </CTableRow>
                     </CTableBody>
