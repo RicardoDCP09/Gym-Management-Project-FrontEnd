@@ -1,40 +1,40 @@
-export const helpFetch = (baseUrl) => {
+const baseUrl = import.meta.env.VITE_BACKEND_URL
 
-    const customFetch = async (url, method, body = null) => {
-        try {
-            const options = {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            };
-            if (body) {
-                options.body = JSON.stringify(body);
-            }
+export const helpFetch = () => {
+  const customFetch = async (url, method, body = null) => {
+    try {
+      const options = {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+      if (body) {
+        options.body = JSON.stringify(body)
+      }
 
-            const response = await fetch(url, options);
+      const response = await fetch(url, options)
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
 
-            const data = await response.json();
-            return data;
-        }
-        catch (error) {
-            console.error(error);
-            return null;
-        }
+      const data = await response.json()
+      return data
+    } catch (error) {
+      console.error(error)
+      return null
     }
+  }
 
-    // Métodos 
-    const get = (endpoint) => customFetch(`${baseUrl}${endpoint}`, 'GET');
+  // Métodos
+  const get = (endpoint) => customFetch(`${baseUrl}${endpoint}`, 'GET')
 
-    const post = (endpoint, body) => customFetch(`${baseUrl}${endpoint}`, 'POST', body);
+  const post = (endpoint, body) => customFetch(`${baseUrl}${endpoint}`, 'POST', body)
 
-    const put = (endpoint, body, id) => customFetch(`${baseUrl}${endpoint}/${id}`, 'PUT', body);
+  const put = (endpoint, body, id) => customFetch(`${baseUrl}${endpoint}/${id}`, 'PUT', body)
 
-    const del = (endpoint, id) => customFetch(`${baseUrl}${endpoint}/${id}`, 'DELETE');
+  const del = (endpoint, id) => customFetch(`${baseUrl}${endpoint}/${id}`, 'DELETE')
 
-    return { get, post, put, del };
+  return { get, post, put, del, customFetch }
 }

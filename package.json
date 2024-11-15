@@ -16,7 +16,8 @@
     "build": "vite build",
     "lint": "eslint \"src/**/*.js\"",
     "serve": "vite preview",
-    "start": "vite"
+    "start": "vite",
+    "start:json-server": "npx json-server src/server/db.json --port 5000"
   },
   "dependencies": {
     "@coreui/chartjs": "^4.0.0",
