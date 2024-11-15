@@ -639,6 +639,22 @@
       "location": "Main Room",
       "status": "active",
       "day_use": "2024-08-15"
+    },
+    {
+      "id": "5",
+      "equipment_name": "Rowing Machines",
+      "quantity": 8,
+      "location": "Main Room",
+      "status": "fixing",
+      "day_use": "2024-09-20"
+    },
+    {
+      "id": "6",
+      "equipment_name": "Ellipticals",
+      "quantity": 5,
+      "location": "Main Room",
+      "status": "active",
+      "day_use": "2024-09-10"
     }
   ],
   "reports": [

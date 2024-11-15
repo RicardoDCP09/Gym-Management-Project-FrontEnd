@@ -27,7 +27,7 @@ export const helpFetch = (baseUrl) => {
         }
     }
 
-    // Métodos para realizar solicitudes
+    // Métodos 
     const get = (endpoint) => customFetch(`${baseUrl}${endpoint}`, 'GET');
 
     const post = (endpoint, body) => customFetch(`${baseUrl}${endpoint}`, 'POST', body);
