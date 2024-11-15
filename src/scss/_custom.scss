@@ -21,3 +21,16 @@
 .simplebar-content .active {
   background-color: #dd7b7b !important;
 }
+
+.sidebar-logo {
+  width: 230px; // Asegura que la imagen ocupe todo el ancho disponible
+  height: 80px; // Mantiene la proporción de la imagen
+  overflow: hidden; // Mantiene la proporción de la imagen
+  display: block; // Asegura que la imagen se muestre como un bloque
+  margin: 0 auto; // Centra la imagen horizontalmente
+  border-radius: 10px; // Bordes redondeados
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); // Sombra para un efecto de profundidad
+}
+.sidebar-logo img {
+  object-fit: cover; // Asegura que la imagen cubra todo el espacio sin distorsionarse
+}

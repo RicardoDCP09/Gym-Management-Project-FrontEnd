@@ -134,7 +134,7 @@ const Users = () => {
                             <CTableHeaderCell>RegisterDate
                                 <CIcon icon={cilClock} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Role
+                            <CTableHeaderCell>Membership
                                 <CIcon icon={cilContact} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
                             <CTableHeaderCell>Actions
@@ -148,7 +148,7 @@ const Users = () => {
                             <CTableDataCell>{"Colmenares"}</CTableDataCell>
                             <CTableDataCell>{"example@gmail.com"}</CTableDataCell>
                             <CTableDataCell>{"12 / 10 / 24 08:30"}</CTableDataCell>
-                            <CTableDataCell>{"User-Monthly"}</CTableDataCell>
+                            <CTableDataCell>{"Monthly"}</CTableDataCell>
                             <CTableDataCell>
                                 <CButton color="info" onClick={() => setVisibleEdit(!visibleEdit)} variant='outline' size="sm" className="me-2" >Edit</CButton>
                                 <CModal
@@ -206,9 +206,9 @@ const Users = () => {
                                                     aria-label="Select Type Membership"
                                                     options={[
                                                         'Select a Type Membership',
-                                                        { label: 'User-Monthly', value: '1' },
-                                                        { label: 'Vip-User-Yearly', value: '2' },
-                                                        { label: 'Premium-User-Quarterly', value: '3' }
+                                                        { label: 'Monthly', value: '1' },
+                                                        { label: 'Quarterly', value: '2' },
+                                                        { label: 'Yearly', value: '3' }
                                                     ]}
                                                 />
                                             </CCol>

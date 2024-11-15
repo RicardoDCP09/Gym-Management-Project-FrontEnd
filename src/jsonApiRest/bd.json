@@ -1,0 +1,682 @@
+{
+  "status_member": [
+    {
+      "id": "1",
+      "status": "active"
+    },
+    {
+      "id": "2",
+      "status": "inactive"
+    },
+    {
+      "id": "3",
+      "status": "expire"
+    }
+  ],
+  "status_class": [
+    {
+      "id": "1",
+      "status": "available"
+    },
+    {
+      "id": "2",
+      "status": "full"
+    },
+    {
+      "id": "3",
+      "status": "canceled"
+    }
+  ],
+  "status_reservation": [
+    {
+      "id": "1",
+      "status": "canceled"
+    },
+    {
+      "id": "2",
+      "status": "confirmed"
+    },
+    {
+      "id": "3",
+      "status": "outstanding"
+    }
+  ],
+  "status_payment": [
+    {
+      "id": "1",
+      "status": "confirmed"
+    },
+    {
+      "id": "2",
+      "status": "waiting"
+    },
+    {
+      "id": "3",
+      "status": "canceled"
+    }
+  ],
+  "status_inventory": [
+    {
+      "id": "1",
+      "status": "active"
+    },
+    {
+      "id": "2",
+      "status": "saved"
+    },
+    {
+      "id": "3",
+      "status": "fixing"
+    }
+  ],
+  "roles": [
+    {
+      "id": "1",
+      "name": "admin"
+    },
+    {
+      "id": "2",
+      "name": "coach"
+    },
+    {
+      "id": "3",
+      "name": "member"
+    }
+  ],
+  "permissions": [
+    {
+      "id": "1",
+      "name": "manage_users"
+    },
+    {
+      "id": "2",
+      "name": "manage_classes"
+    },
+    {
+      "id": "3",
+      "name": "manage_routines"
+    },
+    {
+      "id": "4",
+      "name": "manage_inventory"
+    },
+    {
+      "id": "5",
+      "name": "view_reports"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "name": "Alice",
+      "lastname": "Smith",
+      "email": "alice.smith@example.com",
+      "fecha_nac": "2003-10-14",
+      "register_date": "2023-10-01 08:00:00"
+    },
+    {
+      "id": "2",
+      "name": "Bob",
+      "lastname": "Johnson",
+      "email": "bob.johnson@example.com",
+      "fecha_nac": "1993-08-15",
+      "register_date": "2023-10-02 09:00:00"
+    },
+    {
+      "id": "3",
+      "name": "Charlie",
+      "lastname": "Brown",
+      "email": "charlie.brown@example.com",
+      "fecha_nac": "2008-10-14",
+      "register_date": "2023-10-03 10:00:00"
+    },
+    {
+      "id": "4",
+      "name": "David",
+      "lastname": "Wilson",
+      "email": "david.wilson@example.com",
+      "fecha_nac": "2013-10-14",
+      "register_date": "2023-10-04 11:00:00"
+    },
+    {
+      "id": "5",
+      "name": "Emma",
+      "lastname": "Davis",
+      "email": "emma.davis@example.com",
+      "fecha_nac": "2001-03-14",
+      "register_date": "2023-10-05 12:00:00"
+    },
+    {
+      "id": "6",
+      "name": "Frank",
+      "lastname": "Miller",
+      "email": "frank.miller@example.com",
+      "fecha_nac": "2005-08-14",
+      "register_date": "2023-10-06 13:00:00"
+    }
+  ],
+  "employees": [
+    {
+      "user_id": 1,
+      "schedule": "08:00:00",
+      "payment": 3000,
+      "date_start": "2023-10-01",
+      "id": "4c33"
+    },
+    {
+      "user_id": 2,
+      "schedule": "09:00:00",
+      "payment": 1500,
+      "date_start": "2023-10-05",
+      "id": "edda"
+    }
+  ],
+  "type_memberships": [
+    {
+      "id": "1",
+      "name": "Monthly",
+      "duration": 30,
+      "price": 500
+    },
+    {
+      "id": "2",
+      "name": "Quarterly",
+      "duration": 90,
+      "price": 1500
+    },
+    {
+      "id": "3",
+      "name": "Yearly",
+      "duration": 365,
+      "price": 6000
+    }
+  ],
+  "memberships": [
+    {
+      "id": "1",
+      "user_id": 3,
+      "type_membership": 1,
+      "date_start": "2023-10-01",
+      "date_finish": "2024-01-01",
+      "offer": "10% off renewal",
+      "status": "active"
+    },
+    {
+      "id": "2",
+      "user_id": 4,
+      "type_membership": 2,
+      "date_start": "2023-10-05",
+      "date_finish": "2024-01-05",
+      "offer": null,
+      "status": "active"
+    },
+    {
+      "id": "3",
+      "user_id": 5,
+      "type_membership": 1,
+      "date_start": "2023-10-07",
+      "date_finish": "2024-01-07",
+      "offer": "5% off classes",
+      "status": "active"
+    },
+    {
+      "id": "4",
+      "user_id": 6,
+      "type_membership": 3,
+      "date_start": "2023-10-10",
+      "date_finish": "2024-01-10",
+      "offer": "Free personal training session",
+      "status": "active"
+    }
+  ],
+  "user_roles": [
+    {
+      "user_id": 1,
+      "role_id": 1,
+      "id": "1283"
+    },
+    {
+      "user_id": 2,
+      "role_id": 2,
+      "id": "665b"
+    },
+    {
+      "user_id": 3,
+      "role_id": 3,
+      "id": "c9c2"
+    },
+    {
+      "user_id": 4,
+      "role_id": 3,
+      "id": "c0e8"
+    },
+    {
+      "user_id": 5,
+      "role_id": 3,
+      "id": "16fd"
+    },
+    {
+      "user_id": 6,
+      "role_id": 3,
+      "id": "5642"
+    }
+  ],
+  "role_permissions": [
+    {
+      "role_id": 1,
+      "permission_id": 1,
+      "id": "dff2"
+    },
+    {
+      "role_id": 1,
+      "permission_id": 2,
+      "id": "9c77"
+    },
+    {
+      "role_id": 1,
+      "permission_id": 3,
+      "id": "f875"
+    },
+    {
+      "role_id": 1,
+      "permission_id": 4,
+      "id": "13a9"
+    },
+    {
+      "role_id": 1,
+      "permission_id": 5,
+      "id": "8305"
+    },
+    {
+      "role_id": 2,
+      "permission_id": 2,
+      "id": "2f70"
+    }
+  ],
+  "exercises": [
+    {
+      "id": "1",
+      "name": "Push-Ups",
+      "description": "Push-ups focus on chest and triceps.",
+      "type": "Strength"
+    },
+    {
+      "id": "2",
+      "name": "Squats",
+      "description": "Leg strength exercise targeting quadriceps.",
+      "type": "Strength"
+    },
+    {
+      "id": "3",
+      "name": "Deadlift",
+      "description": "Lifting weight from the ground.",
+      "type": "Strength"
+    },
+    {
+      "id": "4",
+      "name": "Running",
+      "description": "Cardio workout on treadmill.",
+      "type": "Cardio"
+    },
+    {
+      "id": "5",
+      "name": "Biceps Curls",
+      "description": "Focus on upper arms.",
+      "type": "Strength"
+    },
+    {
+      "id": "6",
+      "name": "Plank",
+      "description": "Core stabilization exercise.",
+      "type": "Core"
+    }
+  ],
+  "routines": [
+    {
+      "id": "1",
+      "name": "Morning Strength",
+      "difficulty": "Intermediate",
+      "objective": "Build muscle strength",
+      "coach_id": 2,
+      "exercise_id": 1
+    },
+    {
+      "id": "2",
+      "name": "Leg Day",
+      "difficulty": "Advanced",
+      "objective": "Strengthen lower body",
+      "coach_id": 7,
+      "exercise_id": 2
+    },
+    {
+      "id": "3",
+      "name": "Cardio Burn",
+      "difficulty": "Easy",
+      "objective": "Improve cardiovascular endurance",
+      "coach_id": 8,
+      "exercise_id": 4
+    },
+    {
+      "id": "4",
+      "name": "Back Power",
+      "difficulty": "Intermediate",
+      "objective": "Develop back muscles",
+      "coach_id": 2,
+      "exercise_id": 3
+    },
+    {
+      "id": "5",
+      "name": "Core Blast",
+      "difficulty": "Hard",
+      "objective": "Build a stronger core",
+      "coach_id": 8,
+      "exercise_id": 6
+    },
+    {
+      "id": "6",
+      "name": "Bodyweight Routine",
+      "difficulty": "Easy",
+      "objective": "Increase mobility",
+      "coach_id": 10,
+      "exercise_id": 1
+    }
+  ],
+  "routine_exercises": [
+    {
+      "routine_id": 1,
+      "exercise_id": 1,
+      "id": "7284"
+    },
+    {
+      "routine_id": 1,
+      "exercise_id": 2,
+      "id": "8d5c"
+    },
+    {
+      "routine_id": 2,
+      "exercise_id": 2,
+      "id": "508e"
+    },
+    {
+      "routine_id": 2,
+      "exercise_id": 7,
+      "id": "dcf0"
+    },
+    {
+      "routine_id": 3,
+      "exercise_id": 4,
+      "id": "4ae1"
+    },
+    {
+      "routine_id": 3,
+      "exercise_id": 14,
+      "id": "4554"
+    }
+  ],
+  "classes": [
+    {
+      "id": "1",
+      "capacity": 15,
+      "coach_id": 2,
+      "class_time": "2024-10-15 08:00:00",
+      "status": "available",
+      "equipment_to_use": "Yoga Mats"
+    },
+    {
+      "id": "2",
+      "capacity": 20,
+      "coach_id": 7,
+      "class_time": "2024-10-16 10:00:00",
+      "status": "available",
+      "equipment_to_use": "Dumbbells"
+    },
+    {
+      "id": "3",
+      "capacity": 12,
+      "coach_id": 8,
+      "class_time": "2024-10-17 12:00:00",
+      "status": "full",
+      "equipment_to_use": "Treadmills"
+    },
+    {
+      "id": "4",
+      "capacity": 10,
+      "coach_id": 10,
+      "class_time": "2024-10-18 18:00:00",
+      "status": "available",
+      "equipment_to_use": "Kettlebells"
+    },
+    {
+      "id": "5",
+      "capacity": 25,
+      "coach_id": 13,
+      "class_time": "2024-10-19 09:00:00",
+      "status": "canceled",
+      "equipment_to_use": "Resistance Bands"
+    },
+    {
+      "id": "6",
+      "capacity": 18,
+      "coach_id": 2,
+      "class_time": "2024-10-20 07:00:00",
+      "status": "full",
+      "equipment_to_use": "Rowing Machines"
+    }
+  ],
+  "reservations": [
+    {
+      "id": "1",
+      "user_id": 3,
+      "class_id": 1,
+      "status": "canceled"
+    },
+    {
+      "id": "2",
+      "user_id": 4,
+      "class_id": 2,
+      "status": "canceled"
+    },
+    {
+      "id": "3",
+      "user_id": 5,
+      "class_id": 3,
+      "status": "confirmed"
+    },
+    {
+      "id": "4",
+      "user_id": 6,
+      "class_id": 4,
+      "status": "canceled"
+    },
+    {
+      "id": "5",
+      "user_id": 9,
+      "class_id": 5,
+      "status": "outstanding"
+    },
+    {
+      "id": "6",
+      "user_id": 11,
+      "class_id": 6,
+      "status": "canceled"
+    }
+  ],
+  "progress": [
+    {
+      "id": "1",
+      "user_id": 3,
+      "weight": 80.2,
+      "body_fat": 30,
+      "muscle_gain": 70,
+      "bench_press": 60,
+      "squats": 80,
+      "dead_lift": 50
+    },
+    {
+      "id": "2",
+      "user_id": 3,
+      "weight": 80.2,
+      "body_fat": 30,
+      "muscle_gain": 70,
+      "bench_press": 60,
+      "squats": 80,
+      "dead_lift": 50
+    },
+    {
+      "id": "3",
+      "user_id": 5,
+      "weight": 80.2,
+      "body_fat": 30,
+      "muscle_gain": 70,
+      "bench_press": 60,
+      "squats": 80,
+      "dead_lift": 50
+    },
+    {
+      "id": "4",
+      "user_id": 5,
+      "weight": 75,
+      "body_fat": 45,
+      "muscle_gain": 60,
+      "bench_press": 30,
+      "squats": 80,
+      "dead_lift": 60
+    },
+    {
+      "id": "5",
+      "user_id": 4,
+      "weight": 68.3,
+      "body_fat": 50,
+      "muscle_gain": 60,
+      "bench_press": 25,
+      "squats": 45,
+      "dead_lift": 50
+    },
+    {
+      "id": "6",
+      "user_id": 4,
+      "weight": 90.5,
+      "body_fat": 70,
+      "muscle_gain": 60,
+      "bench_press": 30,
+      "squats": 50,
+      "dead_lift": 70
+    }
+  ],
+  "payments": [
+    {
+      "id": "1",
+      "user_id": 3,
+      "amount": 50,
+      "payment_method": "Credit Card",
+      "status": "confirmed"
+    },
+    {
+      "id": "2",
+      "user_id": 4,
+      "amount": 30,
+      "payment_method": "Cash",
+      "status": "confirmed"
+    },
+    {
+      "id": "3",
+      "user_id": 5,
+      "amount": 45,
+      "payment_method": "Credit Card",
+      "status": "waiting"
+    },
+    {
+      "id": "4",
+      "user_id": 6,
+      "amount": 60,
+      "payment_method": "Bank Transfer",
+      "status": "confirmed"
+    },
+    {
+      "id": "5",
+      "user_id": 8,
+      "amount": 55,
+      "payment_method": "Cash",
+      "status": "canceled"
+    },
+    {
+      "id": "6",
+      "user_id": 9,
+      "amount": 40,
+      "payment_method": "Credit Card",
+      "status": "confirmed"
+    }
+  ],
+  "inventory": [
+    {
+      "id": "1",
+      "equipment_name": "Yoga Mats",
+      "quantity": 20,
+      "location": "Main Room",
+      "status": "active",
+      "day_use": "2024-09-01"
+    },
+    {
+      "id": "2",
+      "equipment_name": "Dumbbells",
+      "quantity": 50,
+      "location": "Main Room",
+      "status": "active",
+      "day_use": "2024-10-01"
+    },
+    {
+      "id": "3",
+      "equipment_name": "Kettlebells",
+      "quantity": 30,
+      "location": "Main Room",
+      "status": "active",
+      "day_use": "2024-11-01"
+    },
+    {
+      "id": "4",
+      "equipment_name": "Treadmills",
+      "quantity": 10,
+      "location": "Main Room",
+      "status": "active",
+      "day_use": "2024-08-15"
+    }
+  ],
+  "reports": [
+    {
+      "id": "1",
+      "type": "Attendance",
+      "user_id": 2,
+      "description": "October attendance report."
+    },
+    {
+      "id": "2",
+      "type": "Payment",
+      "user_id": 8,
+      "description": "Summary of payments in October."
+    },
+    {
+      "id": "3",
+      "type": "Inventory",
+      "user_id": 7,
+      "description": "Low stock alert: Spin bikes."
+    },
+    {
+      "id": "4",
+      "type": "Attendance",
+      "user_id": 10,
+      "description": "Weekly attendance report."
+    },
+    {
+      "id": "5",
+      "type": "Progress",
+      "user_id": 11,
+      "description": "Progress tracking: Routine 8."
+    },
+    {
+      "id": "6",
+      "type": "Payment",
+      "user_id": 13,
+      "description": "New payment registered: Membership."
+    }
+  ]
+}
