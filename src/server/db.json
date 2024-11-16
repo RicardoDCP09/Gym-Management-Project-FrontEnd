@@ -58,15 +58,15 @@
   "status_inventory": [
     {
       "id": "1",
-      "status": "active"
+      "status": "Active"
     },
     {
       "id": "2",
-      "status": "saved"
+      "status": "Saved"
     },
     {
       "id": "3",
-      "status": "fixing"
+      "status": "Fixing"
     }
   ],
   "roles": [
@@ -161,22 +161,22 @@
       "schedule": "08:00:00",
       "payment": 3000,
       "date_start": "2023-10-01",
-      "id": "4c33"
+      "id": "1"
     },
     {
       "user_id": 2,
       "schedule": "09:00:00",
       "payment": 1500,
       "date_start": "2023-10-05",
-      "id": "edda"
+      "id": "2"
     }
   ],
   "type_memberships": [
     {
       "id": "1",
       "name": "Monthly",
-      "duration": "27",
-      "price": "499"
+      "duration": "30",
+      "price": "500"
     },
     {
       "id": "2",
@@ -189,6 +189,24 @@
       "name": "Yearly",
       "duration": 365,
       "price": 6000
+    }
+  ],
+  "type_exercises": [
+    {
+      "id": "1",
+      "name": "Strength"
+    },
+    {
+      "id": "2",
+      "name": "Flexibility"
+    },
+    {
+      "id": "3",
+      "name": "Core"
+    },
+    {
+      "id": "4",
+      "name": "Cardio"
     }
   ],
   "memberships": [
@@ -233,32 +251,32 @@
     {
       "user_id": 1,
       "role_id": 1,
-      "id": "1283"
+      "id": "1"
     },
     {
       "user_id": 2,
       "role_id": 2,
-      "id": "665b"
+      "id": "2"
     },
     {
       "user_id": 3,
       "role_id": 3,
-      "id": "c9c2"
+      "id": "3"
     },
     {
       "user_id": 4,
       "role_id": 3,
-      "id": "c0e8"
+      "id": "4"
     },
     {
       "user_id": 5,
       "role_id": 3,
-      "id": "16fd"
+      "id": "5"
     },
     {
       "user_id": 6,
       "role_id": 3,
-      "id": "5642"
+      "id": "6"
     }
   ],
   "role_permissions": [
@@ -298,37 +316,37 @@
       "id": "1",
       "name": "Push-Ups",
       "description": "Push-ups focus on chest and triceps.",
-      "type": "Strength"
+      "type": "1"
     },
     {
       "id": "2",
       "name": "Squats",
       "description": "Leg strength exercise targeting quadriceps.",
-      "type": "Strength"
+      "type": "1"
     },
     {
       "id": "3",
       "name": "Deadlift",
       "description": "Lifting weight from the ground.",
-      "type": "Strength"
+      "type": "1"
     },
     {
       "id": "4",
       "name": "Running",
       "description": "Cardio workout on treadmill.",
-      "type": "Cardio"
+      "type": "4"
     },
     {
       "id": "5",
       "name": "Biceps Curls",
       "description": "Focus on upper arms.",
-      "type": "Strength"
+      "type": "1"
     },
     {
       "id": "6",
       "name": "Plank",
       "description": "Core stabilization exercise.",
-      "type": "Core"
+      "type": "3"
     }
   ],
   "routines": [
@@ -613,7 +631,7 @@
       "equipment_name": "Yoga Mats",
       "quantity": 20,
       "location": "Main Room",
-      "status": "active",
+      "status": "1",
       "day_use": "2024-09-01"
     },
     {
@@ -621,7 +639,7 @@
       "equipment_name": "Dumbbells",
       "quantity": 50,
       "location": "Main Room",
-      "status": "active",
+      "status": "1",
       "day_use": "2024-10-01"
     },
     {
@@ -629,7 +647,7 @@
       "equipment_name": "Kettlebells",
       "quantity": 30,
       "location": "Main Room",
-      "status": "active",
+      "status": "1",
       "day_use": "2024-11-01"
     },
     {
@@ -637,7 +655,7 @@
       "equipment_name": "Treadmills",
       "quantity": 10,
       "location": "Main Room",
-      "status": "active",
+      "status": "1",
       "day_use": "2024-08-15"
     },
     {
@@ -645,7 +663,7 @@
       "equipment_name": "Rowing Machines",
       "quantity": 8,
       "location": "Main Room",
-      "status": "fixing",
+      "status": "3",
       "day_use": "2024-09-20"
     },
     {
@@ -653,7 +671,7 @@
       "equipment_name": "Ellipticals",
       "quantity": 5,
       "location": "Main Room",
-      "status": "active",
+      "status": "1",
       "day_use": "2024-09-10"
     }
   ],
