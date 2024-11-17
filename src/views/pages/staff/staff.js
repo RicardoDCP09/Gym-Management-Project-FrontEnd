@@ -33,13 +33,88 @@ import {
 
 } from '@coreui/react';
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { helpFetch } from '../../../helpers/helpFetch';
 const staff = () => {
+    const API = helpFetch()
+    const [staff, setStaff] = useState([])
+    const [roles, setRoles] = useState([])
     const [visible, setVisible] = useState(false)
-    const [visiblePermissions, setVisiblePermissions] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
+    const [currentStaff, setCurrentStaff] = useState(null)
+    const [newStaff, setNewStaff] = useState({ name: '', lastname: '', email: '', register_date: '', role_id: '' })
+    const [deleteConfirmation, setDeleteConfirmation] = useState('')
+    useEffect(() => {
+        const fetchStaff = async () => {
+            const userData = await API.get('users')
+            const userRoles = await API.get('user_roles')
+            const combinedData = userData.map(user => {
+                const role = userRoles.find(role => role.user_id === user.id)
+                return { ...user, role_id: role ? role.role_id : null }
+            })
+            setStaff(combinedData)
+        }
+        fetchStaff()
+    }, [])
 
+    useEffect(() => {
+        const fetchRoles = async () => {
+            const data = await API.get('roles')
+            setRoles(data)
+        }
+        fetchRoles()
+    }, [])
+
+    const handleAddStaff = async () => {
+        const addedUser = await API.post('users', {
+            name: newStaff.name,
+            lastname: newStaff.lastname,
+            email: newStaff.email,
+            register_date: newStaff.register_date
+        })
+        await API.post('user_roles', { user_id: addedUser.id, role_id: newStaff.role_id })
+        setStaff([...staff, { ...addedUser, role_id: newStaff.role_id }])
+        setNewStaff({ name: '', lastname: '', email: '', register_date: '', role_id: '' })
+        setVisible(false)
+    }
+    const handleEditStaff = async () => {
+        if (!currentStaff || !currentStaff.id) {
+            console.error("Current staff member is not set or does not have an ID.")
+            return
+        }
+        try {
+            const updatedUser = await API.put('users', {
+                name: currentStaff.name,
+                lastname: currentStaff.lastname,
+                email: currentStaff.email,
+                register_date: currentStaff.register_date
+            }, currentStaff.id)
+            await API.put('user_roles', { role_id: currentStaff.role_id }, currentStaff.id)
+            setStaff(staff.map(member => member.id === currentStaff.id ? { ...updatedUser, role_id: currentStaff.role_id } : member))
+            setVisibleEdit(false)
+        } catch (error) {
+            console.error("Error updating staff member:", error)
+        }
+    }
+    const handleDeleteStaff = async () => {
+        if (deleteConfirmation === 'confirm') {
+            const staffId = currentStaff.id
+            try {
+                await API.del('users', staffId)
+                await API.del('user_roles', staffId)
+                setStaff(staff.filter(member => member.id !== staffId))
+                setVisibleDelete(false)
+            } catch (error) {
+                console.error("Error deleting staff member:", error)
+            }
+        }
+    }
+
+    const getRoleName = (roleId) => {
+        const role = roles.find(role => role.id === roleId)
+        return role ? role.name : 'Unknown'
+    }
 
     return (
 
@@ -48,7 +123,7 @@ const staff = () => {
                 <h4 className="mb-0">Staff Management</h4>
             </CCardHeader>
             <CCardBody>
-                <CForm className="mb-4">
+                <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddStaff() }}>
                     <CRow className="g-3">
                         <CButton color="primary" onClick={() => setVisible(!visible)}>Add new member</CButton>
                         <CModal
@@ -66,14 +141,16 @@ const staff = () => {
                                         <CFormInput
                                             type="text"
                                             placeholder="Name"
-                                            value={""}
+                                            value={newStaff?.name || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
                                         />
                                     </CCol>
                                     <CCol className='mb-3' md={6}>
                                         <CFormInput
                                             type="text"
                                             placeholder="Last Name"
-                                            value={""}
+                                            value={newStaff?.lastName || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, lastName: e.target.value })}
                                         />
                                     </CCol>
                                 </CRow>

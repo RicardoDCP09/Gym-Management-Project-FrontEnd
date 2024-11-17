@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
@@ -12,12 +12,51 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-  CCardImage,
 } from '@coreui/react'
+
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { useNavigate } from 'react-router-dom'
+import { helpFetch } from '../../../helpers/helpFetch'
 
 const Login = () => {
+  const API = helpFetch()
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem('user');
+    if (loggedInUser) {
+      navigate('/dashboard');
+    }
+  }, [navigate]);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+
+    try {
+      const usersRes = await API.get('users');
+
+      if (!usersRes.err) {
+        const user = usersRes.find(user => user.email === username && user.password === password);
+
+        if (user) {
+          console.log('Login successful:', user);
+          localStorage.setItem('user', JSON.stringify(user));
+          navigate('/dashboard');
+        } else {
+          setErrorMessage('Invalid username or password');
+        }
+      } else {
+        setErrorMessage('Error fetching user data');
+      }
+    } catch (error) {
+      setErrorMessage('An unexpected error occurred.');
+    }
+  };
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -26,14 +65,20 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4" style={{ backgroundColor: '#ce4242' }}>
                 <CCardBody>
-                  <CForm>
+                  <CForm onSubmit={handleLogin}>
                     <h1 className="text-white">Login</h1>
                     <p className="text-white">Sign In to your account</p>
+                    {errorMessage && <p className="text-danger">{errorMessage}</p>}
                     <CInputGroup className=" text-white mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput
+                        placeholder="Username"
+                        autoComplete="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
                     </CInputGroup>
                     <CInputGroup className="text-white mb-4">
                       <CInputGroupText>
@@ -43,19 +88,20 @@ const Login = () => {
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <Link to="/dashboard">
-                          <CButton
-                            style={{ backgroundColor: '#942727' }}
-                            className="text-white px-4"
-                            shape="rounded-pill"
-                          >
-                            Login
-                          </CButton>
-                        </Link>
+                        <CButton
+                          color='primary'
+                          className="text-white px-4"
+                          shape="rounded-pill"
+                          type='submit'
+                        >
+                          Login
+                        </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
                         <CButton color="link" className="text-white px-0">

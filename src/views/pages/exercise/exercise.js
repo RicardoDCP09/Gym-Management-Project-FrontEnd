@@ -1,7 +1,5 @@
 import CIcon from '@coreui/icons-react'
 import {
-    cilSpeedometer,
-    cilUser,
     cilColorBorder,
     cilWeightlifitng,
     cilDescription,
@@ -191,7 +189,7 @@ const exercise = () => {
                                         aria-labelledby="Modal Info"
                                     >
                                         <CModalHeader>
-                                            <CModalTitle id="Create Users">Edit Membership</CModalTitle>
+                                            <CModalTitle id="Create Memberships">Edit Membership</CModalTitle>
                                         </CModalHeader>
                                         <CModalBody>
                                             <CRow className="mb-3">
