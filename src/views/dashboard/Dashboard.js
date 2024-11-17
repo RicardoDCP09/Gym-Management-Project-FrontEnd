@@ -26,10 +26,6 @@ const Dashboard = () => {
     try {
       const usersData = await API.get('users');
       const rolesData = await API.get('roles');
-
-      console.log('Fetched users:', usersData);
-      console.log('Fetched roles:', rolesData);
-
       setUsers(usersData);
       setRoles(rolesData);
       setLoading(false);
@@ -69,7 +65,6 @@ const Dashboard = () => {
       },
     ],
   };
-
 
   return (
     <>
