@@ -11,8 +11,8 @@ const Rutine = React.lazy(() => import('./views/pages/rutine/rutine.js'))
 const Exercise = React.lazy(() => import('./views/pages/exercise/exercise.js'))
 const Progress = React.lazy(() => import('./views/pages/progress/progress.js'))
 const Reports = React.lazy(() => import('./views/pages/reportss/report.js'))
-const Staff = React.lazy(() => import('src/views/pages/staff/staff.js'))
-const Login = React.lazy(() => import('src/views/pages/login/login.js'))
+const Staff = React.lazy(() => import('./views/pages/staff/staff.js'))
+const Login = React.lazy(() => import('./views/pages/login/login.js'))
 
 const routes = [
   { path: '/', exact: true, name: 'Login', element: Login },

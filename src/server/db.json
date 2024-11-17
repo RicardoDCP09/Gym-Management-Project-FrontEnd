@@ -226,7 +226,7 @@
       "id": "1",
       "name": "Monthly",
       "duration": 30,
-      "price": 500
+      "price": "501"
     },
     {
       "id": "2",
@@ -396,7 +396,7 @@
       "id": "6",
       "name": "Plank",
       "description": "Core stabilization exercise.",
-      "type": "3"
+      "type": "2"
     }
   ],
   "routines": [
@@ -595,9 +595,9 @@
       "date": "2024-10-20",
       "weight": "80.2",
       "bodyFat": "30",
-      "muscleGain": "70",
-      "benchPress": "60",
-      "squats": "80",
+      "muscleGain": "60",
+      "benchPress": "50",
+      "squats": "45",
       "deadLift": "50"
     },
     {
@@ -643,17 +643,6 @@
       "benchPress": "30",
       "squats": "50",
       "deadLift": "68"
-    },
-    {
-      "id": "d26b",
-      "date": "",
-      "weight": "80",
-      "bodyFat": "80",
-      "muscleGain": "80",
-      "benchPress": "80",
-      "squats": "80",
-      "deadLift": "80",
-      "user_id": "4"
     }
   ],
   "payments": [
