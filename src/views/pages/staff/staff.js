@@ -40,6 +40,7 @@ const staff = () => {
     const [staff, setStaff] = useState([])
     const [roles, setRoles] = useState([])
     const [visible, setVisible] = useState(false)
+    const [visiblePermissions, setVisiblePermissions] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
     const [currentStaff, setCurrentStaff] = useState(null)
@@ -149,7 +150,7 @@ const staff = () => {
                                         <CFormInput
                                             type="text"
                                             placeholder="Last Name"
-                                            value={newStaff?.lastName || ''}
+                                            value={newStaff?.lastname || ''}
                                             onChange={(e) => setNewStaff({ ...newStaff, lastName: e.target.value })}
                                         />
                                     </CCol>
