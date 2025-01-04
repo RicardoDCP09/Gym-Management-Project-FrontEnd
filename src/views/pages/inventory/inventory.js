@@ -36,6 +36,7 @@ const Inventory = () => {
     const [equipments, setEquipments] = useState([])
     const [statuses, setStatuses] = useState([]);
     const [currentInventory, setCurrentInventory] = useState(null)
+    const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
     const [newItem, setNewItem] = useState({ equipment_name: '', quantity: '', status: '', day_use: '' })
@@ -63,6 +64,7 @@ const Inventory = () => {
         const addedInventory = await API.post('inventory', newItem);
         setEquipments([...equipments, addedInventory]);
         setNewItem({ equipment_name: '', quantity: '', status: '', day_use: '' });
+        setVisible(false)
     };
 
     const handleEditInventory = async () => {
@@ -112,49 +114,69 @@ const Inventory = () => {
             <CCardBody>
                 <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddInventory(); }}>
                     <CRow className="g-3">
-                        <CCol md={3}>
-                            <CFormInput
-                                type="text"
-                                placeholder="Name"
-                                value={newItem?.equipment_name || ''}
-                                onChange={(e) => setNewItem({ ...newItem, equipment_name: e.target.value })}
-                            />
+                        <CCol className="d-flex justify-content-start">
+                            <CButton className='me-2' color="primary" onClick={() => setVisible(!visible)}>Add Item</CButton>
                         </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="number"
-                                placeholder="Quantity"
-                                value={newItem?.quantity || ''}
-                                onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormSelect
-                                aria-label="Select status"
-                                value={newItem.status}
-                                onChange={(e) => setNewItem({ ...newItem, status: e.target.value })}
-                            >
-                                <option value="">Select a Status</option>
-                                {statuses.map((status) => (
-                                    <option key={status.id} value={status.id}>
-                                        {status.status}
-                                    </option>
-                                ))}
-                            </CFormSelect>
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="date"
-                                placeholder="Date Use"
-                                value={newItem.day_use}
-                                onChange={(e) => setNewItem({ ...newItem, day_use: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CButton color="primary" type='submit'>
-                                Add
-                            </CButton>
-                        </CCol>
+                        <CModal
+                            backdrop="static"
+                            visible={visible}
+                            onClose={() => setVisible(false)}
+                            aria-labelledby="Modal create Items"
+                        >
+                            <CModalHeader>
+                                <CModalTitle id="Create Item">New Item</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody>
+                                <CRow className="mb-3">
+                                    <CCol md={6}>
+                                        <CFormInput
+                                            type="text"
+                                            placeholder="Name"
+                                            value={newItem?.equipment_name || ''}
+                                            onChange={(e) => setNewItem({ ...newItem, equipment_name: e.target.value })}
+                                        />
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <CFormInput
+                                            type="number"
+                                            placeholder="Quantity"
+                                            value={newItem?.quantity || ''}
+                                            onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })}
+                                        />
+                                    </CCol>
+                                </CRow>
+                                <CRow className="mb-3">
+                                    <CCol md={6}>
+                                        <CFormSelect
+                                            aria-label="Select status"
+                                            value={newItem.status}
+                                            onChange={(e) => setNewItem({ ...newItem, status: e.target.value })}
+                                        >
+                                            <option value="">Select a Status</option>
+                                            {statuses.map((status) => (
+                                                <option key={status.id} value={status.id}>
+                                                    {status.status}
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <CFormInput
+                                            type="date"
+                                            placeholder="Date Use"
+                                            value={newItem.day_use}
+                                            onChange={(e) => setNewItem({ ...newItem, day_use: e.target.value })}
+                                        />
+                                    </CCol>
+                                </CRow>
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="secondary" onClick={() => setVisible(false)}>
+                                    Close
+                                </CButton>
+                                <CButton color="primary" onClick={() => { handleAddInventory() }}>Add Item</CButton>
+                            </CModalFooter>
+                        </CModal>
                     </CRow>
                 </CForm>
                 <CTable hover responsive>

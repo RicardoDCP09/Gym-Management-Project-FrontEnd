@@ -529,14 +529,6 @@
       "coach_id": "2",
       "class_time": "2024-10-31T00:00",
       "status": "1"
-    },
-    {
-      "id": "48ff",
-      "name": "David",
-      "capacity": "20",
-      "coach_id": "3",
-      "class_time": "2024-10-30T06:43",
-      "status": "1"
     }
   ],
   "reservations": [
@@ -608,7 +600,7 @@
       "bodyFat": "30",
       "muscleGain": "70",
       "benchPress": "60",
-      "squats": "80",
+      "squats": "90",
       "deadLift": "50"
     },
     {
@@ -639,7 +631,7 @@
       "date": "2024-08-10",
       "weight": "90.5",
       "bodyFat": "69",
-      "muscleGain": "59",
+      "muscleGain": "61",
       "benchPress": "30",
       "squats": "50",
       "deadLift": "68"
@@ -735,13 +727,6 @@
       "location": "Main Room",
       "status": "1",
       "day_use": "2024-09-10"
-    },
-    {
-      "id": "1f5e",
-      "equipment_name": "Maria la de la cuca Fria",
-      "quantity": "2",
-      "status": "1",
-      "day_use": "2024-11-12"
     }
   ],
   "reports": [

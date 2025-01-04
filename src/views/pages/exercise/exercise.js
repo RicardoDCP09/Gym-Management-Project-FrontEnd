@@ -37,6 +37,7 @@ const exercise = () => {
     const API = helpFetch()
     const [exercise, setExercise] = useState([])
     const [statusex, setStatusex] = useState([])
+    const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
     const [currentExercise, setCurrentExercise] = useState(false)
@@ -66,6 +67,7 @@ const exercise = () => {
         const addedExercise = await API.post('exercises', newExercise)
         setExercise([...exercise, addedExercise])
         setNewExercise({ name: '', description: '', type: '' })
+        setVisible(false)
     };
 
     const handleEditExercise = async () => {
@@ -114,47 +116,63 @@ const exercise = () => {
             <CCardBody>
                 <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddExercise() }}>
                     <CRow className="g-3">
-                        <CCol md={12}>
-                            <label className='fw-bold'> Exercise Name</label>
-                            <CFormInput
-                                type="text"
-                                placeholder="Name"
-                                value={newExercise?.name || ''}
-                                onChange={(e) => setNewExercise({ ...newExercise, name: e.target.value })}
-                            />
+                        <CCol className="d-flex justify-content-start">
+                            <CButton className='me-2' color="primary" onClick={() => setVisible(!visible)}>Add Exercise</CButton>
                         </CCol>
-                        <CCol md={12}>
-                            <label className='fw-bold'> Description</label>
-                            <CFormTextarea
-                                id="Description"
-                                placeholder='Describe the Exercise'
-                                rows={3}
-                                value={newExercise?.description || ''}
-                                onChange={(e) => setNewExercise({ ...newExercise, description: e.target.value })}
-                            ></CFormTextarea>
-                        </CCol>
-                        <CCol md={12}>
-                            <label className='fw-bold'> Type of Exercise</label>
-                            <CFormSelect
-                                aria-label="Main Exercise"
-                                value={newExercise?.type || ''}
-                                onChange={(e) => setNewExercise({ ...newExercise, type: e.target.value })}
-                            >
-                                <option value="">Select a type</option>
-                                {statusex.map((status) => (
-                                    <option key={status.id}
-                                        value={status.id}>
-                                        {status.name}
-                                    </option>
-                                ))}
-                            </CFormSelect>
-                        </CCol>
+                        <CModal
+                            backdrop="static"
+                            visible={visible}
+                            onClose={() => setVisible(false)}
+                            aria-labelledby="Modal create Classes"
+                        >
+                            <CModalHeader>
+                                <CModalTitle id="Create Exercise">New Exercise</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody>
+                                <CCol md={12}>
+                                    <label className='fw-bold'> Exercise Name</label>
+                                    <CFormInput
+                                        type="text"
+                                        placeholder="Name"
+                                        value={newExercise?.name || ''}
+                                        onChange={(e) => setNewExercise({ ...newExercise, name: e.target.value })}
+                                    />
+                                </CCol>
+                                <CCol md={12}>
+                                    <label className='fw-bold'> Description</label>
+                                    <CFormTextarea
+                                        id="Description"
+                                        placeholder='Describe the Exercise'
+                                        rows={3}
+                                        value={newExercise?.description || ''}
+                                        onChange={(e) => setNewExercise({ ...newExercise, description: e.target.value })}
+                                    ></CFormTextarea>
+                                </CCol>
+                                <CCol md={12}>
+                                    <label className='fw-bold'> Type of Exercise</label>
+                                    <CFormSelect
+                                        aria-label="Main Exercise"
+                                        value={newExercise?.type || ''}
+                                        onChange={(e) => setNewExercise({ ...newExercise, type: e.target.value })}
+                                    >
+                                        <option value="">Select a type</option>
+                                        {statusex.map((status) => (
+                                            <option key={status.id}
+                                                value={status.id}>
+                                                {status.name}
+                                            </option>
+                                        ))}
+                                    </CFormSelect>
+                                </CCol>
 
-                        <CCol md={12}>
-                            <CButton color="primary" className='w-100' type='submit'>
-                                Add Rutine
-                            </CButton>
-                        </CCol>
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="secondary" onClick={() => setVisible(false)}>
+                                    Close
+                                </CButton>
+                                <CButton color="primary" onClick={() => { handleAddExercise() }}>Add Exercise</CButton>
+                            </CModalFooter>
+                        </CModal>
                     </CRow>
                 </CForm>
                 <CTable hover responsive>

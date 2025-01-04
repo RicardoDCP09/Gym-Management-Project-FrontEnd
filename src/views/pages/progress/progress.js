@@ -19,9 +19,7 @@ import {
     CModalBody,
     CModalFooter,
     CModalTitle,
-    CFormTextarea,
-    CContainer
-
+    CContainer,
 } from '@coreui/react';
 import { CChart } from '@coreui/react-chartjs';
 import { getStyle } from '@coreui/utils'
@@ -36,6 +34,7 @@ const progress = () => {
     const [selectedUser, setSelectedUser] = useState([])
     const [currentProgress, setCurrentProgress] = useState(null)
     const [filteredProgress, setFilteredProgress] = useState([]);
+    const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
     const [newProgress, setNewProgress] = useState({ date: '', weight: '', bodyFat: '', muscleGain: '', benchPress: '', squats: '', deadLift: '' })
@@ -70,6 +69,7 @@ const progress = () => {
         setProgress((prevProgress) => [...prevProgress, addProgress]);
         setFilteredProgress((prevFiltered) => [...prevFiltered, addProgress]);
         setNewProgress({ date: '', weight: '', bodyFat: '', muscleGain: '', benchPress: '', squats: '', deadLift: '' });
+        setVisible(false);
     };
 
     const handleEditProgress = async () => {
@@ -114,8 +114,74 @@ const progress = () => {
     };
 
 
+    // Data Grafica 
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-
+    const data = {
+        labels: months,
+        datasets: [
+            {
+                label: 'Weight (kg)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                pointBorderColor: '#fff',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(255, 99, 132, 1)',
+                data: filteredProgress.map(progress => progress.weight || 0),
+            },
+            {
+                label: 'Body Fat (%)',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                pointBorderColor: '#fff',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(54, 162, 235, 1)',
+                data: filteredProgress.map(progress => progress.bodyFat || 0),
+            },
+            {
+                label: 'Muscle Gain (kg)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                pointBackgroundColor: 'rgba(75, 192, 192, 1)',
+                pointBorderColor: '#fff',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(75, 192, 192, 1)',
+                data: filteredProgress.map(progress => progress.muscleGain || 0),
+            },
+            {
+                label: 'Bench Press (kg)',
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                pointBackgroundColor: 'rgba(153, 102, 255, 1)',
+                pointBorderColor: '#fff',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(153, 102, 255, 1)',
+                data: filteredProgress.map(progress => progress.benchPress || 0),
+            },
+            {
+                label: 'Squats (kg)',
+                backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                borderColor: 'rgba(255, 159, 64, 1)',
+                pointBackgroundColor: 'rgba(255, 159, 64, 1)',
+                pointBorderColor: '#fff',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(255, 159, 64, 1)',
+                data: filteredProgress.map(progress => progress.squats || 0),
+            },
+            {
+                label: 'Dead Lift (kg)',
+                backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                borderColor: 'rgba(255, 206, 86, 1)',
+                pointBackgroundColor: 'rgba(255, 206, 86, 1)',
+                pointBorderColor: '#fff',
+                pointHighlightFill: '#fff',
+                pointHighlightStroke: 'rgba(255, 206, 86, 1)',
+                data: filteredProgress.map(progress => progress.deadLift || 0),
+            },
+        ],
+    };
     return (
 
         <CCard className="mb-4">
@@ -143,67 +209,87 @@ const progress = () => {
                                 ))}
                             </CFormSelect>
                         </CCol>
-                        <CCol md={4}>
-                            <label className='fw-bold'> Date Check</label>
-                            <CFormInput
-                                type="date"
-                                value={newProgress?.date || ''}
-                                onChange={(e) => setNewProgress({ ...newProgress, date: e.target.value })}
-                            />
+                        <CCol className="d-flex justify-content-start">
+                            <CButton className='me-2' color="primary" onClick={() => setVisible(!visible)}>Add Progress</CButton>
                         </CCol>
-                        <CCol md={4}>
-                            <label className='fw-bold'> Weight(Kg)</label>
-                            <CFormInput
-                                type="number"
-                                value={newProgress?.weight || ''}
-                                onChange={(e) => setNewProgress({ ...newProgress, weight: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={4}>
-                            <label className='fw-bold'> Body Fat(%)</label>
-                            <CFormInput
-                                type="number"
-                                value={newProgress?.bodyFat || ''}
-                                onChange={(e) => setNewProgress({ ...newProgress, bodyFat: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={4}>
-                            <label className='fw-bold'> Muscle Gain(Kg)</label>
-                            <CFormInput
-                                type="number"
-                                value={newProgress?.muscleGain || ''}
-                                onChange={(e) => setNewProgress({ ...newProgress, muscleGain: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={4}>
-                            <label className='fw-bold'> Bench Press(Kg)</label>
-                            <CFormInput
-                                type="number"
-                                value={newProgress?.benchPress || ''}
-                                onChange={(e) => setNewProgress({ ...newProgress, benchPress: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={4}>
-                            <label className='fw-bold'>Squats(Kg)</label>
-                            <CFormInput
-                                type="number"
-                                value={newProgress?.squats || ''}
-                                onChange={(e) => setNewProgress({ ...newProgress, squats: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={12}>
-                            <label className='fw-bold'>Dead Lift (Kg)</label>
-                            <CFormInput
-                                type="number"
-                                value={newProgress?.deadLift || ''}
-                                onChange={(e) => setNewProgress({ ...newProgress, deadLift: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={12}>
-                            <CButton color="primary" className='w-100' type='submit'>
-                                Add Register
-                            </CButton>
-                        </CCol>
+                        <CModal
+                            backdrop="static"
+                            visible={visible}
+                            onClose={() => setVisible(false)}
+                            aria-labelledby="Modal create Progress"
+                        >
+                            <CModalHeader>
+                                <CModalTitle id="Create Progress">New Register</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody>
+                                <CRow className="mb-3">
+                                    <CCol md={4}>
+                                        <label className='fw-bold'> Date Check</label>
+                                        <CFormInput
+                                            type="date"
+                                            value={newProgress?.date || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, date: e.target.value })}
+                                        />
+                                    </CCol>
+                                    <CCol md={4}>
+                                        <label className='fw-bold'> Weight(Kg)</label>
+                                        <CFormInput
+                                            type="number"
+                                            value={newProgress?.weight || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, weight: e.target.value })}
+                                        />
+                                    </CCol>
+                                    <CCol md={4}>
+                                        <label className='fw-bold'> Body Fat(%)</label>
+                                        <CFormInput
+                                            type="number"
+                                            value={newProgress?.bodyFat || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, bodyFat: e.target.value })}
+                                        />
+                                    </CCol>
+                                </CRow>
+                                <CRow className="mb-3">
+                                    <CCol md={4}>
+                                        <label className='fw-bold'> Muscle Gain(Kg)</label>
+                                        <CFormInput
+                                            type="number"
+                                            value={newProgress?.muscleGain || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, muscleGain: e.target.value })}
+                                        />
+                                    </CCol>
+                                    <CCol md={4}>
+                                        <label className='fw-bold'> Bench Press(Kg)</label>
+                                        <CFormInput
+                                            type="number"
+                                            value={newProgress?.benchPress || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, benchPress: e.target.value })}
+                                        />
+                                    </CCol>
+                                    <CCol md={4}>
+                                        <label className='fw-bold'>Squats(Kg)</label>
+                                        <CFormInput
+                                            type="number"
+                                            value={newProgress?.squats || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, squats: e.target.value })}
+                                        />
+                                    </CCol>
+                                    <CCol md={12}>
+                                        <label className='fw-bold'>Dead Lift (Kg)</label>
+                                        <CFormInput
+                                            type="number"
+                                            value={newProgress?.deadLift || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, deadLift: e.target.value })}
+                                        />
+                                    </CCol>
+                                </CRow>
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="secondary" onClick={() => setVisible(false)}>
+                                    Close
+                                </CButton>
+                                <CButton color="primary" onClick={() => { handleAddProgress() }}>Add Progress</CButton>
+                            </CModalFooter>
+                        </CModal>
                     </CRow>
                 </CForm>
                 <CTable hover responsive striped>
@@ -363,29 +449,10 @@ const progress = () => {
                         ))}
                     </CTableBody>
                 </CTable>
-                <CContainer className="graphSize">
+                <CContainer className="graphSize mb-20" style={{ width: '75%', height: '450px' }}>
                     <CChart
-                        type="radar"
-                        data={{
-                            labels: ['Weight', 'Body Fat', 'Muscle Gain', 'Bench Press', 'Squats', 'Dead Lift'],
-                            datasets: filteredProgress.map((progress, index) => ({
-                                label: `Check Progress ${index + 1}`,
-                                backgroundColor: `rgba(${(index + 1) * 50}, 100, 200, 0.2)`,
-                                borderColor: `rgba(${(index + 1) * 50}, 100, 200, 1)`,
-                                pointBackgroundColor: `rgba(${(index + 1) * 50}, 100, 200, 1)`,
-                                pointBorderColor: '#fff',
-                                pointHighlightFill: '#fff',
-                                pointHighlightStroke: `rgba(${(index + 1) * 50}, 100, 200, 1)`,
-                                data: [
-                                    progress.weight || 0,
-                                    progress.bodyFat || 0,
-                                    progress.muscleGain || 0,
-                                    progress.benchPress || 0,
-                                    progress.squats || 0,
-                                    progress.deadLift || 0,
-                                ],
-                            })),
-                        }}
+                        type="line"
+                        data={data}
                         options={{
                             plugins: {
                                 legend: {
@@ -393,23 +460,37 @@ const progress = () => {
                                         color: getStyle('--cui-body-color'),
                                     },
                                 },
+                                tooltip: {
+                                    callbacks: {
+                                        label: function (context) {
+                                            let label = context.dataset.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            label += context.raw;
+                                            return label;
+                                        }
+                                    }
+                                }
                             },
                             scales: {
-                                r: {
-                                    grid: {
-                                        color: getStyle('--cui-border-color-translucent'),
-                                    },
+                                y: {
+                                    beginAtZero: true,
                                     ticks: {
-                                        color: getStyle('--cui-body-color'),
-                                    },
-                                },
+                                        stepSize: 10,
+                                        callback: function (value) {
+                                            return value; // Mostrar valores tal cual
+                                        }
+                                    }
+                                }
                             },
+                            maintainAspectRatio: false,
                         }}
+                        height={300}
                     />
                 </CContainer>
             </CCardBody>
         </CCard >
-
     )
 }
 export default progress

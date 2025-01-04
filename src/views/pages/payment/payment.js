@@ -42,6 +42,7 @@ const Payment = () => {
     const [statusPayment, setStatusPayment] = useState([])
     const [methodPay, setMethodPay] = useState([])
     const [currentPay, setCurrentPay] = useState(null)
+    const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
     const [newPay, setNewPay] = useState({ amount: '', payment_method: '', status: '', dayPayment: '' })
@@ -80,9 +81,10 @@ const Payment = () => {
     }, [])
 
     const handleAddPay = async () => {
-        const addPay = await API.post('payments', newPay)
-        setPayment([...payment, addPay])
-        setNewPay({ amount: '', payment_method: '', status: '', dayPayment: '' })
+        const addPay = await API.post('payments', newPay);
+        setPayment([...payment, addPay]);
+        setNewPay({ amount: '', payment_method: '', status: '', dayPayment: '' });
+        setVisible(false)
     }
 
     const handleEditPay = async () => {
@@ -145,72 +147,94 @@ const Payment = () => {
             <CCardBody>
                 <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddPay() }}>
                     <CRow className="g-3">
-                        <CCol md={3}>
-                            <CFormSelect
-                                aria-label="Select a User"
-                                value={newPay?.user_id}
-                                onChange={(e) => {
-                                    const user_id = e.target.value;
-                                    setNewPay({ ...newPay, user_id });
-                                }}
-                            >
-                                <option value="">Select a User</option>
-                                {userPay.map((users) => (
-                                    <option key={users.id} value={users.id}>
-                                        {users.name + ' ' + users.lastname}
-                                    </option>
-                                ))}
-                            </CFormSelect>
+                        <CCol className="d-flex justify-content-start">
+                            <CButton className='me-2' color="primary" onClick={() => setVisible(!visible)}>Add Pay</CButton>
                         </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="text-number"
-                                placeholder="Amount"
-                                value={newPay?.amount || ''}
-                                onChange={(e) => setNewPay({ ...newPay, amount: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormSelect
-                                aria-label="Select a Status for the class"
-                                value={newPay?.status || ''}
-                                onChange={(e) => setNewPay({ ...newPay, status: e.target.value })}
-                            ><option value="" >Select a Status </option>
-                                {statusPayment.map((status) => (
-                                    <option key={status.id}
-                                        value={status.id}>
-                                        {status.status}
-                                    </option>
-                                ))}
-                            </CFormSelect>
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormSelect
-                                aria-label="Select a Status for the class"
-                                value={newPay?.payment_method || ''}
-                                onChange={(e) => setNewPay({ ...newPay, payment_method: e.target.value })}
-                            ><option value="" >Select a Payment Method </option>
-                                {methodPay.map((method) => (
-                                    <option key={method.id}
-                                        value={method.id}>
-                                        {method.status}
-                                    </option>
-                                ))}
-                            </CFormSelect>
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="date"
-                                placeholder="date(class)"
-                                value={newPay?.dayPayment || ''}
-                                onChange={(e) => setNewPay({ ...newPay, dayPayment: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CButton color="primary" type='submit'>
-                                Add
-                            </CButton>
-                        </CCol>
+                        <CModal
+                            backdrop="static"
+                            visible={visible}
+                            onClose={() => setVisible(false)}
+                            aria-labelledby="Modal create Payment"
+                        >
+                            <CModalHeader>
+                                <CModalTitle id="Create Pay">New Payment</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody>
+                                <CRow className="mb-3">
+                                    <CCol md={6}>
+                                        <CFormSelect
+                                            aria-label="Select a User"
+                                            value={newPay?.user_id}
+                                            onChange={(e) => {
+                                                const user_id = e.target.value;
+                                                setNewPay({ ...newPay, user_id });
+                                            }}
+                                        >
+                                            <option value="">Select a User</option>
+                                            {userPay.map((users) => (
+                                                <option key={users.id} value={users.id}>
+                                                    {users.name + ' ' + users.lastname}
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <CFormInput
+                                            type="text-number"
+                                            placeholder="Amount"
+                                            value={newPay?.amount || ''}
+                                            onChange={(e) => setNewPay({ ...newPay, amount: e.target.value })}
+                                        />
+                                    </CCol>
+                                </CRow>
+                                <CRow className="mb-3">
+                                    <CCol md={6}>
+                                        <CFormSelect
+                                            aria-label="Select a Status for the class"
+                                            value={newPay?.status || ''}
+                                            onChange={(e) => setNewPay({ ...newPay, status: e.target.value })}
+                                        ><option value="" >Select a Status </option>
+                                            {statusPayment.map((status) => (
+                                                <option key={status.id}
+                                                    value={status.id}>
+                                                    {status.status}
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <CFormSelect
+                                            aria-label="Select a Status for the class"
+                                            value={newPay?.payment_method || ''}
+                                            onChange={(e) => setNewPay({ ...newPay, payment_method: e.target.value })}
+                                        ><option value="" >Select a Payment Method </option>
+                                            {methodPay.map((method) => (
+                                                <option key={method.id}
+                                                    value={method.id}>
+                                                    {method.status}
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
+                                    </CCol>
+                                </CRow>
+                                <CRow className="mb-3">
+                                    <CCol md={6}>
+                                        <CFormInput
+                                            type="date"
+                                            placeholder="date(class)"
+                                            value={newPay?.dayPayment || ''}
+                                            onChange={(e) => setNewPay({ ...newPay, dayPayment: e.target.value })}
+                                        />
+                                    </CCol>
+                                </CRow>
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="secondary" onClick={() => setVisible(false)}>
+                                    Close
+                                </CButton>
+                                <CButton color="primary" onClick={() => { handleAddPay() }}>Add Item</CButton>
+                            </CModalFooter>
+                        </CModal>
                     </CRow>
                 </CForm>
                 <CTable hover responsive>

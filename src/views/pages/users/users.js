@@ -136,7 +136,9 @@ const Users = () => {
             <CCardBody>
                 <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddUser(); }}>
                     <CRow className="g-3">
-                        <CButton color="primary" onClick={() => setVisible(!visible)}>Create User</CButton>
+                        <CCol className='d-flex justify-content-start'>
+                            <CButton className='me-2' color="primary" onClick={() => setVisible(!visible)}>Add User</CButton>
+                        </CCol>
                         <CModal
                             backdrop="static"
                             visible={visible}

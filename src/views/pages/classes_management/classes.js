@@ -28,8 +28,8 @@ import {
     CModalBody,
     CModalFooter,
     CModalTitle,
-    CFormTextarea,
 } from '@coreui/react';
+
 import { useState, useEffect } from 'react'
 import { helpFetch } from '../../../helpers/helpFetch';
 const Classes = () => {
@@ -38,6 +38,7 @@ const Classes = () => {
     const [traineer, setTrainer] = useState([])
     const [statusClass, setStatusClass] = useState([])
     const [currentClass, setCurrentClass] = useState(null)
+    const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
     const [newClass, setNewClass] = useState({ name: '', capacity: '', coach_id: '', class_time: '', status: '' })
@@ -71,6 +72,7 @@ const Classes = () => {
         const addClass = await API.post('classes', newClass)
         setClasses([...classes, addClass])
         setNewClass({ name: '', capacity: '', coach_id: '', class_time: '', status: '' })
+        setVisible(false)
     }
 
     const handleEditClass = async () => {
@@ -126,64 +128,87 @@ const Classes = () => {
             <CCardBody>
                 <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddClass() }}  >
                     <CRow className="g-3">
-                        <CCol md={3}>
-                            <CFormInput
-                                type="text"
-                                placeholder="Name"
-                                value={newClass?.name || ''}
-                                onChange={(e) => setNewClass({ ...newClass, name: e.target.value })}
-                            />
+                        <CCol className="d-flex justify-content-start">
+                            <CButton className='me-2' color="primary" onClick={() => setVisible(!visible)}>Add Class</CButton>
                         </CCol>
-                        <CCol md={3}>
-                            <CFormSelect
-                                aria-label="Select a Trainer"
-                                value={newClass?.coach_id || ''}
-                                onChange={(e) => setNewClass({ ...newClass, coach_id: e.target.value })}
-                            >
-                                <option value="">Select a Trainer</option>
-                                {traineer.filter((trainer) => trainer.role === "2").map((trainer) => (
-                                    <option key={trainer.id}
-                                        value={trainer.id}>
-                                        {trainer.name} {trainer.lastname}
-                                    </option>
-                                ))}
-                            </CFormSelect>
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="number"
-                                placeholder="amount(People)"
-                                value={newClass?.capacity || ''}
-                                onChange={(e) => setNewClass({ ...newClass, capacity: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormSelect
-                                aria-label="Select a Status for the class"
-                                value={newClass?.status || ''}
-                                onChange={(e) => setNewClass({ ...newClass, status: e.target.value })}
-                            ><option value="" >Select a Status </option>
-                                {statusClass.map((status) => (
-                                    <option key={status.id}
-                                        value={status.id}>
-                                        {status.status}
-                                    </option>
-                                ))}
-                            </CFormSelect>
-                        </CCol>
-                        <CCol md={3}>
-                            <CFormInput
-                                type="datetime-local"
-                                placeholder="date(class)"
-                                value={newClass?.class_time || ''}
-                                onChange={(e) => setNewClass({ ...newClass, class_time: e.target.value })}
-                            />
-                        </CCol>
-                        <CCol md={3}>
-                            <CButton color="primary" type="submit">
-                                Add
-                            </CButton>
-                        </CCol>
+                        <CModal
+                            backdrop="static"
+                            visible={visible}
+                            onClose={() => setVisible(false)}
+                            aria-labelledby="Modal create Classes"
+                        >
+                            <CModalHeader>
+                                <CModalTitle id="Create Class">New Class</CModalTitle>
+                            </CModalHeader>
+                            <CModalBody>
+
+                                <CRow className="mb-3">
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
+                                            type="text"
+                                            placeholder="Name"
+                                            value={newClass?.name || ''}
+                                            onChange={(e) => setNewClass({ ...newClass, name: e.target.value })}
+                                        />
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <CFormSelect
+                                            aria-label="Select a Trainer"
+                                            value={newClass?.coach_id || ''}
+                                            onChange={(e) => setNewClass({ ...newClass, coach_id: e.target.value })}
+                                        >
+                                            <option value="">Select a Trainer</option>
+                                            {traineer.filter((trainer) => trainer.role === "2").map((trainer) => (
+                                                <option key={trainer.id}
+                                                    value={trainer.id}>
+                                                    {trainer.name} {trainer.lastname}
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
+                                    </CCol>
+                                </CRow>
+                                <CRow className="mb-3">
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
+                                            type="number"
+                                            placeholder="amount(People)"
+                                            value={newClass?.capacity || ''}
+                                            onChange={(e) => setNewClass({ ...newClass, capacity: e.target.value })}
+                                        />
+                                    </CCol>
+                                    <CCol md={6}>
+                                        <CFormSelect
+                                            aria-label="Select a Status for the class"
+                                            value={newClass?.status || ''}
+                                            onChange={(e) => setNewClass({ ...newClass, status: e.target.value })}
+                                        ><option value="" >Select a Status </option>
+                                            {statusClass.map((status) => (
+                                                <option key={status.id}
+                                                    value={status.id}>
+                                                    {status.status}
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
+                                    </CCol>
+                                </CRow>
+                                <CRow className="mb-3">
+                                    <CCol md={6}>
+                                        <CFormInput
+                                            type="datetime-local"
+                                            placeholder="date(class)"
+                                            value={newClass?.class_time || ''}
+                                            onChange={(e) => setNewClass({ ...newClass, class_time: e.target.value })}
+                                        />
+                                    </CCol>
+                                </CRow>
+                            </CModalBody>
+                            <CModalFooter>
+                                <CButton color="secondary" onClick={() => setVisible(false)}>
+                                    Close
+                                </CButton>
+                                <CButton color="primary" onClick={() => { handleAddClass() }}>Add User</CButton>
+                            </CModalFooter>
+                        </CModal>
                     </CRow>
                 </CForm>
                 <CTable hover responsive>
