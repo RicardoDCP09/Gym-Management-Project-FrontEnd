@@ -37,8 +37,8 @@ import { helpFetch } from '../../../helpers/helpFetch';
 const Users = () => {
     const API = helpFetch()
     const [users, setUsers] = useState([])
-    const [usersRole, setUserRole] = useState([]); //Role Usuarios
-    const [usersMemberRole, setUsersMemberRole] = useState([]); // Tipos de membresias
+    const [usersRole, setUserRole] = useState([]);
+    const [usersMemberRole, setUsersMemberRole] = useState([]);
     const [currentUser, setCurrentUser] = useState(null)
     const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
@@ -50,8 +50,19 @@ const Users = () => {
     useEffect(() => {
         const fetchUser = async () => {
             const data = await API.get('users')
+            const userRoles = await API.get('user_roles')
+            const userProgress = await API.get('progress')
             const filteredUserData = data.filter(user => user.role === '3');
-            setUsers(filteredUserData)
+            const combinedData = filteredUserData.map(user => {
+                const roleRelation = userRoles.find(role => role.user_id === user.id)
+                const progressRelation = userProgress.find(progress => progress.user_id === user.id)
+                return {
+                    ...user,
+                    user_role_id: roleRelation ? roleRelation.id : null,
+                    user_progress: progressRelation ? progressRelation.id : null
+                };
+            })
+            setUsers(combinedData)
         }
         fetchUser()
     }, [])
@@ -75,8 +86,23 @@ const Users = () => {
 
 
     const handleAddUser = async () => {
-        const addedUser = await API.post('users', newUser)
-        setUsers([...users, addedUser])
+        const addedUser = await API.post('users', {
+            name: newUser.name,
+            lastname: newUser.lastname,
+            email: newUser.email,
+            password: newUser.password,
+            phone: newUser.phone,
+            fechaNac: newUser.fechaNac,
+            registerDate: newUser.registerDate,
+            typeMembership: newUser.typeMembership,
+            role: newUser.role
+        });
+        const newUserRole = {
+            user_id: addedUser.id,
+            role_id: newUser.role,
+        }
+        const addedRole = await API.post('user_roles', newUserRole)
+        setUsers([...users, { ...addedUser, user_role_id: addedRole.id }]);
         setNewUser({ name: '', lastname: '', email: '', password: '', phone: '', fechaNac: '', registerDate: '', typeMembership: '', role: '' })
         setVisible(false)
     };
@@ -86,13 +112,46 @@ const Users = () => {
             console.error("Current user data is incomplete or does not have an ID and role id.");
             return;
         }
+        console.log("currentStaff para editar:", currentUser);
+
         try {
             const updatedUser = await API.put(
-                'users', currentUser, currentUser.id,)
+                'users',
+                {
+                    id: currentUser.id,
+                    name: currentUser.name,
+                    lastname: currentUser.lastname,
+                    email: currentUser.email,
+                    password: currentUser.password,
+                    phone: currentUser.phone,
+                    fechaNac: currentUser.fechaNac,
+                    registerDate: currentUser.registerDate,
+                    typeMembership: currentUser.typeMembership,
+                    role: currentUser.role
+                }, currentUser.id
+            );
+            let userRolesId = currentUser.user_role_id
+            if (userRolesId) {
+                await API.put(
+                    'user_roles',
+                    {
+                        id: userRolesId,
+                        user_id: currentUser.id,
+                        role_id: currentUser.role
+                    }, userRolesId
+                )
+            } else {
+                const newUserRole = await API.post('user_roles', {
+                    user_id: currentUser.id,
+                    role_id: currentUser.role,
+                });
+                userRolesId = newUserRole.id;
+            }
+
             setUsers((prevUsers) =>
                 prevUsers.map((user) =>
                     user.id === currentUser.id
-                        ? { ...user, ...updatedUser }
+                        ? { ...user, ...updatedUser, user_role_id: userRolesId }
                         : user
                 )
             );
@@ -106,8 +165,12 @@ const Users = () => {
     const handleDeleteUser = async () => {
         if (deleteConfirmation === 'confirm') {
             const userId = currentUser.id
+            const userRoleId = currentUser.user_role_id
+            const userProgress = currentUser.user_progress
             try {
-                const deletedUser = await API.del('users', userId)
+                await API.del('users', userId)
+                await API.del('user_roles', userRoleId)
+                await API.del('progress', userProgress)
                 setUsers(users.filter((user) => user.id !== userId))
                 setVisibleDelete(false)
             } catch (error) {
@@ -354,8 +417,8 @@ const Users = () => {
                                                     <CFormInput
                                                         type="date"
                                                         placeholder="Date(birthday)"
-                                                        value={currentUser?.registerDate || '' || currentDate}
-                                                        onChange={(e) => setCurrentUser({ ...currentUser, registerDate: e.target.value })}
+                                                        value={currentUser?.fechaNac || '' || currentDate}
+                                                        onChange={(e) => setCurrentUser({ ...currentUser, fechaNac: e.target.value })}
                                                     />
                                                 </CCol>
 

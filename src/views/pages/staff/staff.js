@@ -53,7 +53,6 @@ const staff = () => {
                 const roleRelation = userRoles.find(role => role.user_id === user.id);
                 return {
                     ...user,
-                    role_id: roleRelation ? roleRelation.role_id : null,
                     user_role_id: roleRelation ? roleRelation.id : null,
                 };
 
@@ -95,7 +94,7 @@ const staff = () => {
             role_id: newStaff.role
         };
         const addedRole = await API.post('user_roles', newUserRole);
-        setStaff([...staff, { ...addedUser, role_id: newStaff.role, user_role_id: addedRole.id }]);
+        setStaff([...staff, { ...addedUser, user_role_id: addedRole.id }]);
         setNewStaff({ name: '', lastname: '', email: '', password: '', phone: '', fechaNac: '', registerDate: '', typeMembership: '', role: '', payment: '' });
         setVisible(false);
     };
@@ -146,7 +145,7 @@ const staff = () => {
             setStaff((prevUsers) =>
                 prevUsers.map((staff) =>
                     staff.id === currentStaff.id
-                        ? { ...staff, ...updatedUser, role: currentStaff.role, user_role_id: userRoleId }
+                        ? { ...staff, ...updatedUser, user_role_id: userRoleId }
                         : staff
                 )
             );
@@ -163,8 +162,8 @@ const staff = () => {
             const staffId = currentStaff.id;
             const userRoleId = currentStaff.user_role_id;
             try {
-                await API.del(`users`, staffId);
-                await API.del(`user_roles`, userRoleId);
+                await API.del('users', staffId);
+                await API.del('user_roles', userRoleId);
                 setStaff(staff.filter(member => member.id !== staffId));
                 setVisibleDelete(false);
                 console.log(`Eliminación exitosa del usuario y su rol.`);

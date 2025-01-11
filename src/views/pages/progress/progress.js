@@ -37,7 +37,7 @@ const progress = () => {
     const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
-    const [newProgress, setNewProgress] = useState({ date: '', weight: '', bodyFat: '', muscleGain: '', benchPress: '', squats: '', deadLift: '' })
+    const [newProgress, setNewProgress] = useState({ user_id: '', date: '', weight: '', bodyFat: '', muscleGain: '', benchPress: '', squats: '', deadLift: '' })
     const [deleteConfirmation, setDeleteConfirmation] = useState('')
 
     useEffect(() => {
@@ -68,7 +68,7 @@ const progress = () => {
         const addProgress = await API.post('progress', newProgress);
         setProgress((prevProgress) => [...prevProgress, addProgress]);
         setFilteredProgress((prevFiltered) => [...prevFiltered, addProgress]);
-        setNewProgress({ date: '', weight: '', bodyFat: '', muscleGain: '', benchPress: '', squats: '', deadLift: '' });
+        setNewProgress({ user_id: '', date: '', weight: '', bodyFat: '', muscleGain: '', benchPress: '', squats: '', deadLift: '' });
         setVisible(false);
     };
 

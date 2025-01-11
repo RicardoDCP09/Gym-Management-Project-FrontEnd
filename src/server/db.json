@@ -269,20 +269,20 @@
     {
       "id": "1",
       "name": "Monthly",
-      "duration": 30,
-      "price": "501"
+      "duration": "30",
+      "price": "500"
     },
     {
       "id": "2",
       "name": "Quarterly",
-      "duration": 90,
-      "price": 1500
+      "duration": "90",
+      "price": "1500"
     },
     {
       "id": "3",
       "name": "Yearly",
-      "duration": 365,
-      "price": 6000
+      "duration": "365",
+      "price": "6000"
     }
   ],
   "type_exercises": [
@@ -306,8 +306,8 @@
   "memberships": [
     {
       "id": "1",
-      "user_id": 3,
-      "type_membership": 1,
+      "user_id": "3",
+      "type_membership": "1",
       "date_start": "2023-10-01",
       "date_finish": "2024-01-01",
       "offer": "10% off renewal",
@@ -315,8 +315,8 @@
     },
     {
       "id": "2",
-      "user_id": 4,
-      "type_membership": 2,
+      "user_id": "4",
+      "type_membership": "2",
       "date_start": "2023-10-05",
       "date_finish": "2024-01-05",
       "offer": null,
@@ -324,8 +324,8 @@
     },
     {
       "id": "3",
-      "user_id": 5,
-      "type_membership": 1,
+      "user_id": "5",
+      "type_membership": "1",
       "date_start": "2023-10-07",
       "date_finish": "2024-01-07",
       "offer": "5% off classes",
@@ -333,8 +333,8 @@
     },
     {
       "id": "4",
-      "user_id": 6,
-      "type_membership": 3,
+      "user_id": "6",
+      "type_membership": "3",
       "date_start": "2023-10-10",
       "date_finish": "2024-01-10",
       "offer": "Free personal training session",
