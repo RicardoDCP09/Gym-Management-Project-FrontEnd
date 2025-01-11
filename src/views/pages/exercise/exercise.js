@@ -52,6 +52,7 @@ const exercise = () => {
         fetchExercises()
 
     }, [])
+
     useEffect(() => {
         const fetchExercises = async () => {
             const data = await API.get('type_exercises')
@@ -82,8 +83,8 @@ const exercise = () => {
                 currentExercise.id);
             setExercise((prevExercise) =>
                 prevExercise.map((exercise) =>
-                    exercise.id === currentExercise.id
-                        ? { ...exercise, ...updatedExercise } : exercise))
+                    exercise.id === currentExercise.id ?
+                        { ...exercise, ...updatedExercise } : exercise))
             setVisibleEdit(false)
         } catch (error) {
             console.log(error)

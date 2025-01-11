@@ -83,18 +83,58 @@
       "status": "Fixing"
     }
   ],
-  "roles": [
+  "status_difficulty": [
     {
       "id": "1",
-      "name": "admin"
+      "name": "Easy"
     },
     {
       "id": "2",
-      "name": "coach"
+      "name": "Intermediate"
     },
     {
       "id": "3",
-      "name": "member"
+      "name": "Advanced"
+    },
+    {
+      "id": "4",
+      "name": "Hard"
+    }
+  ],
+  "report_type": [
+    {
+      "id": "1",
+      "name": "Progress"
+    },
+    {
+      "id": "2",
+      "name": "Status"
+    },
+    {
+      "id": "3",
+      "name": "Assistance"
+    },
+    {
+      "id": "4",
+      "name": "Financial"
+    },
+    {
+      "id": "5",
+      "name": "Inventory"
+    }
+  ],
+  "roles": [
+    {
+      "id": "1",
+      "name": "Admin"
+    },
+    {
+      "id": "2",
+      "name": "Coach"
+    },
+    {
+      "id": "3",
+      "name": "Member"
     }
   ],
   "permissions": [
@@ -140,7 +180,7 @@
       "password": "password123",
       "phone": "01422366325",
       "fechaNac": "1993-08-15",
-      "registerDate": "2023-10-02",
+      "registerDate": "2023-10-01",
       "typeMembership": "",
       "role": "2"
     },
@@ -207,18 +247,22 @@
   ],
   "employees": [
     {
-      "user_id": 1,
-      "schedule": "08:00:00",
+      "user_id": "1",
       "payment": 3000,
       "date_start": "2023-10-01",
       "id": "1"
     },
     {
-      "user_id": 2,
-      "schedule": "09:00:00",
+      "user_id": "2",
       "payment": 1500,
       "date_start": "2023-10-05",
       "id": "2"
+    },
+    {
+      "user_id": "3",
+      "payment": 1500,
+      "date_start": "2023-09-05",
+      "id": "3"
     }
   ],
   "type_memberships": [
@@ -299,34 +343,39 @@
   ],
   "user_roles": [
     {
-      "user_id": 1,
-      "role_id": 1,
-      "id": "1"
+      "id": "1",
+      "user_id": "1",
+      "role_id": "1"
     },
     {
-      "user_id": 2,
-      "role_id": 2,
-      "id": "2"
+      "id": "2",
+      "user_id": "2",
+      "role_id": "2"
     },
     {
-      "user_id": 3,
-      "role_id": 3,
-      "id": "3"
+      "id": "3",
+      "user_id": "3",
+      "role_id": "2"
     },
     {
-      "user_id": 4,
-      "role_id": 3,
-      "id": "4"
+      "id": "3",
+      "user_id": "4",
+      "role_id": "3"
     },
     {
-      "user_id": 5,
-      "role_id": 3,
-      "id": "5"
+      "id": "5",
+      "user_id": "5",
+      "role_id": "3"
     },
     {
-      "user_id": 6,
-      "role_id": 3,
-      "id": "6"
+      "id": "6",
+      "user_id": "6",
+      "role_id": "3"
+    },
+    {
+      "id": "7",
+      "user_id": "7",
+      "role_id": "3"
     }
   ],
   "role_permissions": [
@@ -399,54 +448,54 @@
       "type": "2"
     }
   ],
-  "routines": [
+  "rutines": [
     {
       "id": "1",
       "name": "Morning Strength",
-      "difficulty": "Intermediate",
+      "difficulty": "1",
       "objective": "Build muscle strength",
-      "coach_id": 2,
-      "exercise_id": 1
+      "coach_id": "2",
+      "exercise_id": "1"
     },
     {
       "id": "2",
       "name": "Leg Day",
-      "difficulty": "Advanced",
+      "difficulty": "2",
       "objective": "Strengthen lower body",
-      "coach_id": 7,
-      "exercise_id": 2
+      "coach_id": "3",
+      "exercise_id": "2"
     },
     {
       "id": "3",
       "name": "Cardio Burn",
-      "difficulty": "Easy",
+      "difficulty": "1",
       "objective": "Improve cardiovascular endurance",
-      "coach_id": 8,
-      "exercise_id": 4
+      "coach_id": "2",
+      "exercise_id": "4"
     },
     {
       "id": "4",
       "name": "Back Power",
-      "difficulty": "Intermediate",
+      "difficulty": "3",
       "objective": "Develop back muscles",
-      "coach_id": 2,
-      "exercise_id": 3
+      "coach_id": "2",
+      "exercise_id": "3"
     },
     {
       "id": "5",
       "name": "Core Blast",
-      "difficulty": "Hard",
+      "difficulty": "3",
       "objective": "Build a stronger core",
-      "coach_id": 8,
-      "exercise_id": 6
+      "coach_id": "3",
+      "exercise_id": "6"
     },
     {
       "id": "6",
       "name": "Bodyweight Routine",
-      "difficulty": "Easy",
+      "difficulty": "4",
       "objective": "Increase mobility",
-      "coach_id": 10,
-      "exercise_id": 1
+      "coach_id": "3",
+      "exercise_id": "1"
     }
   ],
   "routine_exercises": [
@@ -732,38 +781,38 @@
   "reports": [
     {
       "id": "1",
-      "type": "Attendance",
-      "user_id": 2,
+      "type": "3",
+      "user_id": "4",
       "description": "October attendance report."
     },
     {
       "id": "2",
-      "type": "Payment",
-      "user_id": 8,
+      "type": "4",
+      "user_id": "7",
       "description": "Summary of payments in October."
     },
     {
       "id": "3",
-      "type": "Inventory",
-      "user_id": 7,
+      "type": "5",
+      "user_id": "2",
       "description": "Low stock alert: Spin bikes."
     },
     {
       "id": "4",
-      "type": "Attendance",
-      "user_id": 10,
+      "type": "3",
+      "user_id": "6",
       "description": "Weekly attendance report."
     },
     {
       "id": "5",
-      "type": "Progress",
-      "user_id": 11,
+      "type": "1",
+      "user_id": "4",
       "description": "Progress tracking: Routine 8."
     },
     {
       "id": "6",
-      "type": "Payment",
-      "user_id": 13,
+      "type": "4",
+      "user_id": "6",
       "description": "New payment registered: Membership."
     }
   ]

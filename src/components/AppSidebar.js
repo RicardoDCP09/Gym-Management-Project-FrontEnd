@@ -8,9 +8,10 @@ import {
   CSidebarFooter,
   CSidebarHeader,
   CSidebarToggler,
+  CImage
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-
+import { CIcon } from '@coreui/icons-react'
+import { cilHome } from '@coreui/icons'
 import { AppSidebarNav } from './AppSidebarNav'
 
 // sidebar nav config
@@ -35,9 +36,9 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <div className="sidebar-logo">
-            <img src='src\assets\images\Proofrdm.jpeg' alt='logo' />
-          </div>
+          <CImage src='src\assets\images\Proofrdm.jpeg' alt='logo' className="sidebar-brand-full sidebar-logo " height={45} width={200} />
+          <CIcon customClassName="sidebar-brand-narrow" icon={cilHome} height={32} />
+
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

@@ -50,7 +50,8 @@ const Users = () => {
     useEffect(() => {
         const fetchUser = async () => {
             const data = await API.get('users')
-            setUsers(data)
+            const filteredUserData = data.filter(user => user.role === '3');
+            setUsers(filteredUserData)
         }
         fetchUser()
     }, [])
@@ -58,7 +59,8 @@ const Users = () => {
     useEffect(() => {
         const fetchStateUser = async () => {
             const data = await API.get('roles')
-            setUserRole(data)
+            const filteredUserRole = data.filter(role => role.id === '3');
+            setUserRole(filteredUserRole)
         }
         fetchStateUser()
     }, [])
@@ -67,7 +69,6 @@ const Users = () => {
         const fetchStateMemberRole = async () => {
             const data = await API.get('type_memberships')
             setUsersMemberRole(data)
-            console.log("Tipos de membresía obtenidos:", data);
         }
         fetchStateMemberRole()
     }, [])
@@ -82,23 +83,25 @@ const Users = () => {
 
     const handleEditUser = async () => {
         if (!currentUser || !currentUser.id) {
-            console.error("Current item is not set or does not have an ID.");
+            console.error("Current user data is incomplete or does not have an ID and role id.");
             return;
         }
         try {
             const updatedUser = await API.put(
-                'users',
-                currentUser,
-                currentUser.id)
-            setUsers((prevUser) =>
-                prevUser.map((user) =>
+                'users', currentUser, currentUser.id,)
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
                     user.id === currentUser.id
-                        ? { ...user, ...updatedUser } : user));
-            setVisibleEdit(false)
+                        ? { ...user, ...updatedUser }
+                        : user
+                )
+            );
+            setVisibleEdit(false);
         } catch (error) {
-            console.error(error);
+            console.error("Error while updating user and user_roles:", error);
         }
     };
+
 
     const handleDeleteUser = async () => {
         if (deleteConfirmation === 'confirm') {
@@ -192,7 +195,6 @@ const Users = () => {
                                             placeholder="date of birth"
                                             value={newUser?.fechaNac || ''}
                                             onChange={(e) => setNewUser({ ...newUser, fechaNac: e.target.value })}
-
                                         /><small className="text-muted">Please select the date of birth.</small>
                                     </CCol>
 

@@ -28,9 +28,6 @@ import {
     CModalHeader,
     CModalTitle,
     CFormSelect,
-    CFormCheck,
-    CFormTextarea
-
 } from '@coreui/react';
 
 import { useState, useEffect } from 'react'
@@ -44,81 +41,141 @@ const staff = () => {
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
     const [currentStaff, setCurrentStaff] = useState(null)
-    const [newStaff, setNewStaff] = useState({ name: '', lastname: '', email: '', register_date: '', role_id: '' })
+    const [newStaff, setNewStaff] = useState({ name: '', lastname: '', email: '', password: '', phone: '', fechaNac: '', registerDate: '', typeMembership: '', role: '', payment: '', user_role_id: null })
     const [deleteConfirmation, setDeleteConfirmation] = useState('')
+
     useEffect(() => {
         const fetchStaff = async () => {
             const userData = await API.get('users')
             const userRoles = await API.get('user_roles')
-            const combinedData = userData.map(user => {
-                const role = userRoles.find(role => role.user_id === user.id)
-                return { ...user, role_id: role ? role.role_id : null }
-            })
-            setStaff(combinedData)
-        }
-        fetchStaff()
-    }, [])
+            const filteredUserData = userData.filter(user => user.role === '1' || user.role === '2');
+            const combinedData = filteredUserData.map(user => {
+                const roleRelation = userRoles.find(role => role.user_id === user.id);
+                return {
+                    ...user,
+                    role_id: roleRelation ? roleRelation.role_id : null,
+                    user_role_id: roleRelation ? roleRelation.id : null,
+                };
+
+            });
+            setStaff(combinedData);
+        };
+
+        fetchStaff();
+    }, []);
 
     useEffect(() => {
         const fetchRoles = async () => {
             const data = await API.get('roles')
-            setRoles(data)
+            const filteredUserRole = data.filter(role => role.id === '1' || role.id === '2');
+            setRoles(filteredUserRole)
         }
         fetchRoles()
     }, [])
-
-    const handleAddStaff = async () => {
-        const addedUser = await API.post('users', {
-            name: newStaff.name,
-            lastname: newStaff.lastname,
-            email: newStaff.email,
-            register_date: newStaff.register_date
-        })
-        await API.post('user_roles', { user_id: addedUser.id, role_id: newStaff.role_id })
-        setStaff([...staff, { ...addedUser, role_id: newStaff.role_id }])
-        setNewStaff({ name: '', lastname: '', email: '', register_date: '', role_id: '' })
-        setVisible(false)
-    }
-    const handleEditStaff = async () => {
-        if (!currentStaff || !currentStaff.id) {
-            console.error("Current staff member is not set or does not have an ID.")
-            return
-        }
-        try {
-            const updatedUser = await API.put('users', {
-                name: currentStaff.name,
-                lastname: currentStaff.lastname,
-                email: currentStaff.email,
-                register_date: currentStaff.register_date
-            }, currentStaff.id)
-            await API.put('user_roles', { role_id: currentStaff.role_id }, currentStaff.id)
-            setStaff(staff.map(member => member.id === currentStaff.id ? { ...updatedUser, role_id: currentStaff.role_id } : member))
-            setVisibleEdit(false)
-        } catch (error) {
-            console.error("Error updating staff member:", error)
-        }
-    }
-    const handleDeleteStaff = async () => {
-        if (deleteConfirmation === 'confirm') {
-            const staffId = currentStaff.id
-            try {
-                await API.del('users', staffId)
-                await API.del('user_roles', staffId)
-                setStaff(staff.filter(member => member.id !== staffId))
-                setVisibleDelete(false)
-            } catch (error) {
-                console.error("Error deleting staff member:", error)
-            }
-        }
-    }
 
     const getRoleName = (roleId) => {
         const role = roles.find(role => role.id === roleId)
         return role ? role.name : 'Unknown'
     }
 
-    return (
+    const handleAddStaff = async () => {
+        const addedUser = await API.post('users', {
+            name: newStaff.name,
+            lastname: newStaff.lastname,
+            email: newStaff.email,
+            password: newStaff.password,
+            phone: newStaff.phone,
+            fechaNac: newStaff.fechaNac,
+            registerDate: newStaff.registerDate,
+            typeMembership: newStaff.typeMembership,
+            role: newStaff.role
+        });
+        const newUserRole = {
+            user_id: addedUser.id,
+            role_id: newStaff.role
+        };
+        const addedRole = await API.post('user_roles', newUserRole);
+        setStaff([...staff, { ...addedUser, role_id: newStaff.role, user_role_id: addedRole.id }]);
+        setNewStaff({ name: '', lastname: '', email: '', password: '', phone: '', fechaNac: '', registerDate: '', typeMembership: '', role: '', payment: '' });
+        setVisible(false);
+    };
 
+
+    const handleEditStaff = async () => {
+        if (!currentStaff || !currentStaff.id) {
+            console.error("Datos insuficientes para actualizar el usuario o el rol.", currentStaff);
+            return;
+        }
+        console.log("currentStaff para editar:", currentStaff);
+
+        try {
+            const updatedUser = await API.put(
+                'users',
+                {
+                    id: currentStaff.id,
+                    name: currentStaff.name,
+                    lastname: currentStaff.lastname,
+                    email: currentStaff.email,
+                    password: currentStaff.password,
+                    phone: currentStaff.phone,
+                    fechaNac: currentStaff.fechaNac,
+                    registerDate: currentStaff.registerDate,
+                    typeMembership: currentStaff.typeMembership,
+                    role: currentStaff.role
+                }, currentStaff.id
+            );
+
+            let userRoleId = currentStaff.user_role_id;
+            if (userRoleId) {
+                await API.put(
+                    'user_roles',
+                    {
+                        id: userRoleId,
+                        user_id: currentStaff.id,
+                        role_id: currentStaff.role,
+                    }, userRoleId
+                );
+            } else {
+                const newUserRole = await API.post('user_roles', {
+                    user_id: currentStaff.id,
+                    role_id: currentStaff.role
+                });
+                userRoleId = newUserRole.id;
+            }
+
+            setStaff((prevUsers) =>
+                prevUsers.map((staff) =>
+                    staff.id === currentStaff.id
+                        ? { ...staff, ...updatedUser, role: currentStaff.role, user_role_id: userRoleId }
+                        : staff
+                )
+            );
+            setVisibleEdit(false);
+            console.log("Usuario y rol actualizados con éxito.");
+        } catch (error) {
+            console.error("Error al actualizar el usuario y el rol:", error);
+        }
+    };
+
+
+    const handleDeleteStaff = async () => {
+        if (deleteConfirmation === 'confirm') {
+            const staffId = currentStaff.id;
+            const userRoleId = currentStaff.user_role_id;
+            try {
+                await API.del(`users`, staffId);
+                await API.del(`user_roles`, userRoleId);
+                setStaff(staff.filter(member => member.id !== staffId));
+                setVisibleDelete(false);
+                console.log(`Eliminación exitosa del usuario y su rol.`);
+            } catch (error) {
+                console.error("Error durante la eliminación:", error);
+            }
+        }
+    };
+
+
+    return (
         <CCard className="mb-4">
             <CCardHeader>
                 <h4 className="mb-0">Staff Management</h4>
@@ -151,7 +208,7 @@ const staff = () => {
                                             type="text"
                                             placeholder="Last Name"
                                             value={newStaff?.lastname || ''}
-                                            onChange={(e) => setNewStaff({ ...newStaff, lastName: e.target.value })}
+                                            onChange={(e) => setNewStaff({ ...newStaff, lastname: e.target.value })}
                                         />
                                     </CCol>
                                 </CRow>
@@ -160,34 +217,62 @@ const staff = () => {
                                         <CFormInput
                                             type="text"
                                             placeholder="Email"
-                                            value={""}
+                                            value={newStaff?.email || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
                                         />
                                     </CCol>
                                     <CCol className='mb-3' md={6}>
                                         <CFormInput
+                                            type="password"
+                                            placeholder="Password"
+                                            value={newStaff?.password || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
+                                        />
+                                    </CCol>
+
+                                </CRow>
+                                <CRow>
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
+                                            type="date"
+                                            placeholder="date of birth"
+                                            value={newStaff?.fechaNac || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, fechaNac: e.target.value })}
+                                        /><small className="text-muted">Please select the date of birth.</small>
+                                    </CCol>
+
+                                    <CCol className='mb-3' md={6}>
+                                        <CFormInput
                                             type="date"
                                             placeholder="Date(Star Job)"
-                                            value={""}
-                                        />
+                                            value={newStaff?.registerDate || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, registerDate: e.target.value })}
+                                        /><small className="text-muted">Please select the Day of Register.</small>
                                     </CCol>
                                 </CRow>
                                 <CRow>
                                     <CCol className='mb-3' md={6}>
                                         <CFormInput
-                                            type="password"
-                                            placeholder="Password"
-                                            value={""}
+                                            type="text"
+                                            placeholder="Phone"
+                                            value={newStaff?.phone || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, phone: e.target.value })}
                                         />
                                     </CCol>
                                     <CCol md={6}>
                                         <CFormSelect
                                             aria-label="Select Role"
-                                            options={[
-                                                'Select a Role',
-                                                { label: 'Administrator', value: '1' },
-                                                { label: 'Traineer', value: '2' },
-                                            ]}
-                                        />
+                                            value={newStaff?.role || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, role: e.target.value })}
+                                        >
+                                            <option>Select a Role</option>
+                                            {roles.map((role) => (
+                                                <option key={role.id}
+                                                    value={role.id}>{
+                                                        role.name}
+                                                </option>
+                                            ))}
+                                        </CFormSelect>
                                     </CCol>
                                 </CRow>
                             </CModalBody>
@@ -195,7 +280,7 @@ const staff = () => {
                                 <CButton color="secondary" onClick={() => setVisible(false)}>
                                     Close
                                 </CButton>
-                                <CButton color="primary">Add Member</CButton>
+                                <CButton color="primary" onClick={() => { handleAddStaff() }} >Add Member</CButton>
                             </CModalFooter>
                         </CModal>
                     </CRow>
@@ -225,239 +310,151 @@ const staff = () => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        <CTableRow>
-                            <CTableDataCell>{"Jose "}</CTableDataCell>
-                            <CTableDataCell>{"Perez"}</CTableDataCell>
-                            <CTableDataCell>{"example@gmail.com"}</CTableDataCell>
-                            <CTableDataCell>{"12 / 01 / 24 08:30"}</CTableDataCell>
-                            <CTableDataCell>{"Traineer"}</CTableDataCell>
-                            <CTableDataCell>
-                                <CButton color="info" onClick={() => setVisibleEdit(!visibleEdit)} variant='outline' size="sm" className="me-2 mb-2" >Edit</CButton>
-                                <CModal
-                                    backdrop="static"
-                                    visible={visibleEdit}
-                                    onClose={() => setVisibleEdit(false)}
-                                    aria-labelledby="Modal Info"
-                                >
-                                    <CModalHeader>
-                                        <CModalTitle id="Create Users">Edit Membership</CModalTitle>
-                                    </CModalHeader>
-                                    <CModalBody>
-                                        <CRow className="mb-3">
-                                            <CCol className='mb-3' md={6}>
-                                                <CFormInput
-                                                    type="text"
-                                                    placeholder="Name"
-                                                    value={""}
-                                                />
-                                            </CCol>
-                                            <CCol className='mb-3' md={6}>
-                                                <CFormInput
-                                                    type="text"
-                                                    placeholder="Last Name"
-                                                    value={""}
-                                                />
-                                            </CCol>
-                                        </CRow>
-                                        <CRow className="mb-3">
-                                            <CCol className='mb-3' md={6}>
-                                                <CFormInput
-                                                    type="text"
-                                                    placeholder="Email"
-                                                    value={""}
-                                                />
-                                            </CCol>
-                                            <CCol className='mb-3' md={6}>
-                                                <CFormInput
-                                                    type="date"
-                                                    placeholder="Date(Star Job)"
-                                                    value={""}
-                                                />
-                                            </CCol>
-                                        </CRow>
-                                        <CRow>
-                                            <CCol className='mb-3' md={6}>
-                                                <CFormInput
-                                                    type="password"
-                                                    placeholder="Password"
-                                                    value={""}
-                                                />
-                                            </CCol>
-                                            <CCol md={6}>
-                                                <CFormSelect
-                                                    aria-label="Select Role"
-                                                    options={[
-                                                        'Select a Role',
-                                                        { label: 'Administrator', value: '1' },
-                                                        { label: 'Traineer', value: '2' },
-                                                    ]}
-                                                />
-                                            </CCol>
-                                        </CRow>
-                                    </CModalBody>
-                                    <CModalFooter>
-                                        <CButton color="secondary" onClick={() => setVisibleEdit(false)}>
-                                            Close
-                                        </CButton>
-                                        <CButton color="primary">Save Edit</CButton>
-                                    </CModalFooter>
+                        {staff.map((staffMember) => (
+                            <CTableRow key={staffMember?.id || ''}>
+                                <CTableDataCell>{staffMember?.name || ''}</CTableDataCell>
+                                <CTableDataCell>{staffMember?.lastname || ''}</CTableDataCell>
+                                <CTableDataCell>{staffMember?.email || ''}</CTableDataCell>
+                                <CTableDataCell>{staffMember?.registerDate || ''}</CTableDataCell>
+                                <CTableDataCell>{getRoleName(staffMember?.role || '')}</CTableDataCell>
+                                <CTableDataCell>
+                                    <CButton color="info" onClick={() => { setCurrentStaff(staffMember); setVisibleEdit(!visibleEdit) }} variant='outline' size="sm" className="me-2 mb-2" >Edit</CButton>
+                                    <CModal
+                                        backdrop="static"
+                                        visible={visibleEdit}
+                                        onClose={() => setVisibleEdit(false)}
+                                        aria-labelledby="Modal Info"
+                                    >
+                                        <CModalHeader>
+                                            <CModalTitle id="Create Users">Edit Membership</CModalTitle>
+                                        </CModalHeader>
+                                        <CModalBody>
+                                            <CRow className="mb-3">
+                                                <CCol className='mb-3' md={6}>
+                                                    <CFormInput
+                                                        type="text"
+                                                        placeholder="Name"
+                                                        value={currentStaff?.name || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, name: e.target.value })}
+                                                    />
+                                                </CCol>
+                                                <CCol className='mb-3' md={6}>
+                                                    <CFormInput
+                                                        type="text"
+                                                        placeholder="Last Name"
+                                                        value={currentStaff?.lastname || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, lastname: e.target.value })}
+                                                    />
+                                                </CCol>
+                                            </CRow>
+                                            <CRow className="mb-3">
+                                                <CCol className='mb-3' md={6}>
+                                                    <CFormInput
+                                                        type="text"
+                                                        placeholder="Email"
+                                                        value={currentStaff?.email || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, email: e.target.value })}
+                                                    />
+                                                </CCol>
+                                                <CCol className='mb-3' md={6}>
+                                                    <CFormInput
+                                                        type="password"
+                                                        placeholder="Password"
+                                                        value={currentStaff?.password || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, password: e.target.value })}
+                                                    />
+                                                </CCol>
+                                            </CRow>
+                                            <CRow>
+                                                <CCol className='mb-3' md={6}>
+                                                    <CFormInput
+                                                        type="date"
+                                                        placeholder="date of birth"
+                                                        value={currentStaff?.fechaNac || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, fechaNac: e.target.value })}
+                                                    /><small className="text-muted">Please select the date of birth.</small>
+                                                </CCol>
+                                                <CCol className='mb-3' md={6}>
+                                                    <CFormInput
+                                                        type="date"
+                                                        placeholder="Date(Star Job)"
+                                                        value={currentStaff?.registerDate || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, registerDate: e.target.value })}
+                                                    /><small className="text-muted">Please select the Day of Register.</small>
+                                                </CCol>
+                                            </CRow>
+                                            <CRow>
+                                                <CCol className='mb-3' md={6}>
+                                                    <CFormInput
+                                                        type="text"
+                                                        placeholder="Phone"
+                                                        value={currentStaff?.phone || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, phone: e.target.value })}
+                                                    />
+                                                </CCol>
+                                                <CCol md={6}>
+                                                    <CFormSelect
+                                                        aria-label="Select Role"
+                                                        value={currentStaff?.role || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, role: e.target.value })}
+                                                    >
+                                                        <option>Select a Role</option>
+                                                        {roles.map((role) => (
+                                                            <option key={role.id}
+                                                                value={role.id}>{
+                                                                    role.name}
+                                                            </option>
+                                                        ))}
+                                                    </CFormSelect>
+                                                </CCol>
+                                            </CRow>
+                                        </CModalBody>
+                                        <CModalFooter>
+                                            <CButton color="secondary" onClick={() => setVisibleEdit(false)}>
+                                                Close
+                                            </CButton>
+                                            <CButton color="primary" onClick={handleEditStaff}>Save Edit</CButton>
+                                        </CModalFooter>
 
-                                </CModal>
-                                <CButton color="danger" onClick={() => setVisibleDelete(!visibleDelete)} variant='outline' size="sm" className="me-2 mb-2">Delete</CButton>
-                                <CModal
-                                    backdrop="static"
-                                    visible={visibleDelete}
-                                    onClose={() => setVisibleDelete(false)}
-                                    aria-labelledby="Modal Info"
-                                >
-                                    <CModalHeader>
-                                        <CModalTitle id="Create Users">Do you want delete?</CModalTitle>
-                                    </CModalHeader>
-                                    <CModalBody>
-                                        <CRow className="mb-3">
-                                            <label className='fw-bold mb-2'>Please write "confirm" if you want to delete this membership</label>
-                                            <CCol className='mb-3' md={12}>
-                                                <CForm>
-                                                    <CFormTextarea
-                                                        id="Delete"
-                                                        rows={1}
-                                                    ></CFormTextarea>
-                                                </CForm>
-                                            </CCol>
-                                        </CRow>
-                                    </CModalBody>
-                                    <CModalFooter>
-                                        <CButton color="secondary" onClick={() => setVisibleDelete(false)}>
-                                            Close
-                                        </CButton>
-                                        <CButton color="primary">Delete</CButton>
-                                    </CModalFooter>
-                                </CModal>
-                                <CButton color="warning" onClick={() => setVisiblePermissions(!visiblePermissions)} variant='outline' size="sm" className="me-2 mb-2" >Permissions</CButton>
-                                <CModal
-                                    backdrop="static"
-                                    visible={visiblePermissions}
-                                    onClose={() => setVisiblePermissions(false)}
-                                    aria-labelledby="Permissions Modal"
-                                >
-                                    <CModalHeader>
-                                        <CModalTitle id="Create Users">Permissions </CModalTitle>
-                                    </CModalHeader>
-                                    <CModalBody>
-                                        <CTable hover responsive>
-                                            <CTableHead>
-                                                <CTableRow>
-                                                    <CTableHeaderCell>
-                                                        Permissions
-                                                    </CTableHeaderCell>
-                                                    <CTableHeaderCell>
-                                                        Member
-                                                    </CTableHeaderCell>
-                                                    <CTableHeaderCell>
-                                                        Traineer
-                                                    </CTableHeaderCell>
-                                                    <CTableHeaderCell>
-                                                        Administrator
-                                                    </CTableHeaderCell>
-                                                </CTableRow>
-                                            </CTableHead>
-                                            <CTableBody>
-                                                <CTableRow>
-                                                    <CTableDataCell>{
-                                                        "Ver Clases"}
-                                                    </CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                </CTableRow>
-                                                <CTableRow>
-                                                    <CTableDataCell>{
-                                                        "Modificar Clases"}
-                                                    </CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                </CTableRow>
-                                                <CTableRow>
-                                                    <CTableDataCell>{
-                                                        "Ver Usuarios"}
-                                                    </CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                </CTableRow>
-                                                <CTableRow>
-                                                    <CTableDataCell>{
-                                                        "Modificar Usuarios"}
-                                                    </CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                </CTableRow>
-                                                <CTableRow>
-                                                    <CTableDataCell>{
-                                                        "Ver Inventario"}
-                                                    </CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                </CTableRow>
-                                                <CTableRow>
-                                                    <CTableDataCell>{
-                                                        "Modificar Inventario"}
-                                                    </CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                    <CTableDataCell>{
-                                                        <CFormCheck type="checkbox" />
-                                                    }</CTableDataCell>
-                                                </CTableRow>
-                                            </CTableBody>
-                                        </CTable>
-                                    </CModalBody>
-                                    <CModalFooter>
-                                        <CButton color="secondary" onClick={() => setVisiblePermissions(false)}>
-                                            Close
-                                        </CButton>
-                                        <CButton color="primary">Save Changes</CButton>
-                                    </CModalFooter>
-                                </CModal>
-                            </CTableDataCell>
-                        </CTableRow>
+                                    </CModal>
+                                    <CButton color="danger" onClick={() => { setCurrentStaff(staffMember); setVisibleDelete(!visibleDelete) }} variant='outline' size="sm" className="me-2 mb-2">Delete</CButton>
+                                    <CModal
+                                        backdrop="static"
+                                        visible={visibleDelete}
+                                        onClose={() => setVisibleDelete(false)}
+                                        aria-labelledby="Modal Info"
+                                    >
+                                        <CModalHeader>
+                                            <CModalTitle id="Create Users">Do you want delete?</CModalTitle>
+                                        </CModalHeader>
+                                        <CModalBody>
+                                            <CRow className="mb-3">
+                                                <label className='fw-bold mb-2'>Please write "confirm" if you want to delete this membership</label>
+                                                <CCol className='mb-3' md={12}>
+                                                    <CForm>
+
+                                                        <CFormInput
+                                                            type="text"
+                                                            id="Delete"
+                                                            value={deleteConfirmation}
+                                                            onChange={e => {
+                                                                setDeleteConfirmation(e.target.value);
+                                                            }}
+                                                        />
+                                                    </CForm>
+                                                </CCol>
+                                            </CRow>
+                                        </CModalBody>
+                                        <CModalFooter>
+                                            <CButton color="secondary" onClick={() => setVisibleDelete(false)}>
+                                                Close
+                                            </CButton>
+                                            <CButton color="primary" onClick={handleDeleteStaff}>Delete</CButton>
+                                        </CModalFooter>
+                                    </CModal>
+                                </CTableDataCell>
+                            </CTableRow>
+                        ))}
                     </CTableBody>
                 </CTable>
             </CCardBody >
