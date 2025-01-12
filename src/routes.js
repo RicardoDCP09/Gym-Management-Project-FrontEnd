@@ -13,6 +13,7 @@ const Progress = React.lazy(() => import('./views/pages/progress/progress.js'))
 const Reports = React.lazy(() => import('./views/pages/reportss/report.js'))
 const Staff = React.lazy(() => import('./views/pages/staff/staff.js'))
 const Login = React.lazy(() => import('./views/pages/login/Login.js'))
+const Profile = React.lazy(() => import('./views/pages/profile/profile.js'))
 
 const routes = [
   { path: '/', exact: true, name: 'Login', element: Login },
@@ -27,6 +28,7 @@ const routes = [
   { path: '/progress', name: 'Progress', element: Progress },
   { path: '/reports', name: 'Reports', element: Reports },
   { path: '/staff', name: 'Staff', element: Staff },
+  { path: '/profile', name: 'Profile', element: Profile }
 ]
 
 export default routes

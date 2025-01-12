@@ -182,7 +182,9 @@ const staff = () => {
             <CCardBody>
                 <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddStaff() }}>
                     <CRow className="g-3">
-                        <CButton color="primary" onClick={() => setVisible(!visible)}>Add new member</CButton>
+                        <CCol className="d-flex justify-content-start">
+                            <CButton color="primary" onClick={() => setVisible(!visible)}>Add new member</CButton>
+                        </CCol>
                         <CModal
                             backdrop="static"
                             visible={visible}

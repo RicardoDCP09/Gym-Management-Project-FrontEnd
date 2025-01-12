@@ -39,3 +39,12 @@
   width: 50%;
   height: 50%;
 }
+
+
+.vertical-line {
+  border-left: 1px solid #ccc;
+  height: 100%;
+  position: absolute;
+  left: 50%;
+  margin-left: -1px;
+}
