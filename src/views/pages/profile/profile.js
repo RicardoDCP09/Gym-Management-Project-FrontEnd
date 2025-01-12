@@ -124,9 +124,10 @@ const UserProfile = () => {
         }
     };
 
-    if (!user) return <div>Loading...</div>;
 
+    if (!user) { <div>Loading...</div> };
     return (
+
         <CCard className="mb-4">
             <CCardHeader>
                 <h4 className="mb-0">User Profile</h4>
