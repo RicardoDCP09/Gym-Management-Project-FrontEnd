@@ -57,17 +57,17 @@ const Login = () => {
     }
   };
   return (
-    <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
+    <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center login_background ">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <CCardGroup>
+            <CCardGroup className='g-0 p-0'>
               <CCard className="p-4" style={{ backgroundColor: '#ce4242' }}>
                 <CCardBody>
                   <CForm onSubmit={handleLogin}>
                     <h1 className="text-white">Login</h1>
                     <p className="text-white">Sign In to your account</p>
-                    {errorMessage && <p className="text-danger">{errorMessage}</p>}
+                    {errorMessage && <p className="text-warning">{errorMessage}</p>}
                     <CInputGroup className=" text-white mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />

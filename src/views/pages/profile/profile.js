@@ -51,7 +51,7 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchRoles = async () => {
             const data = await API.get('roles')
-            const filteredUserRole = data.filter(role => role.id === '1' || role.id === '2');
+            const filteredUserRole = data.filter(role => role.id === '1' || role.id === '2' || role.id === '3');
             setRoles(filteredUserRole)
         }
         fetchRoles()
@@ -65,10 +65,6 @@ const UserProfile = () => {
         fetchStateMemberRole()
     }, [])
 
-    const getRoleName = (roleId) => {
-        const role = roles.find(role => role.id === roleId)
-        return role ? role.name : 'Unknown'
-    }
 
     const handleEditUser = async () => {
         if (!currentUser || !currentUser.id) {
@@ -97,6 +93,7 @@ const UserProfile = () => {
             );
 
             let userRolesId = currentUser.user_role_id;
+
             if (userRolesId) {
                 await API.put(
                     'user_roles',
@@ -125,6 +122,10 @@ const UserProfile = () => {
     };
 
 
+    const getRoleName = (roleId) => {
+        const role = roles.find(role => role.id === roleId)
+        return role ? role.name : 'Unknown'
+    }
     if (!user) { <div>Loading...</div> };
     return (
 
@@ -136,26 +137,26 @@ const UserProfile = () => {
                 <CRow>
                     <CCol md="3" className="border-end">
                         <div className="text-center mb-4">
-                            <CAvatar src={user.avatarUrl || './src/assets/images/avatars/8.jpg'} size="xl" className="mb-3" />
-                            <h4>{user.name} {user.lastname}</h4>
-                            <p>{"#" + user.id}</p>
+                            <CAvatar src={'./src/assets/images/avatars/8.jpg'} size="xl" className="mb-3" />
+                            <h4>{user?.name || ''} {user?.lastname || ''}</h4>
+                            <p>{"#" + user?.id || ''}</p>
                         </div>
                     </CCol>
                     <CCol md="9">
                         <CRow>
                             <CCol xs="6">
                                 <strong>Name:</strong>
-                                <p>{user.name} {user.lastname}</p>
+                                <p>{user?.name || ''} {user?.lastname || ''}</p>
                             </CCol>
                             <CCol xs="6">
                                 <strong>Phone:</strong>
-                                <p>{user.phone}</p>
+                                <p>{user?.phone || ''}</p>
                             </CCol>
                         </CRow>
                         <CRow>
                             <CCol xs="6">
                                 <strong>Email:</strong>
-                                <p>{user.email}</p>
+                                <p>{user?.email || ''}</p>
                             </CCol>
                             <CCol xs="6">
                                 <strong>Password:</strong>
@@ -165,7 +166,7 @@ const UserProfile = () => {
                         <CRow>
                             <CCol xs="6">
                                 <strong>Role:</strong>
-                                <p>{getRoleName(user.role)}</p>
+                                <p>{getRoleName(user?.role || '')}</p>
                             </CCol>
                             <CCol xs="6">
                                 <strong>Membership Type:</strong>
@@ -175,11 +176,11 @@ const UserProfile = () => {
                         <CRow>
                             <CCol xs="6">
                                 <strong>Registration Date:</strong>
-                                <p>{user.registerDate}</p>
+                                <p>{user?.registerDate || ''}</p>
                             </CCol>
                             <CCol xs="6">
                                 <strong>Birth Date:</strong>
-                                <p>{user.fechaNac}</p>
+                                <p>{user?.fechaNac || ''}</p>
                             </CCol>
                         </CRow>
                     </CCol>

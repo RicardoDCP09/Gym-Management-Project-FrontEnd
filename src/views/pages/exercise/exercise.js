@@ -256,7 +256,6 @@ const exercise = () => {
                                             </CButton>
                                             <CButton color="primary" onClick={handleEditExercise}>Save Edit</CButton>
                                         </CModalFooter>
-
                                     </CModal>
                                     <CButton color="danger" onClick={() => { setCurrentExercise(exercise); setVisibleDelete(!visibleDelete) }} variant='outline' size="sm">Delete</CButton>
                                     <CModal
