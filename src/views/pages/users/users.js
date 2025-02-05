@@ -43,34 +43,29 @@ const Users = () => {
     const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
-    const [newUser, setNewUser] = useState({ name: '', lastname: '', email: '', password: '', phone: '', fechaNac: '', registerDate: '', typeMembership: '', role: '' })
+    const [newUser, setNewUser] = useState({ name: '', lastname: '', email: '', password: '', phone: '', fechanac: '', registerdate: '', typemembership: '', role: '' })
     const [deleteConfirmation, setDeleteConfirmation] = useState('')
     const [currentDate, setCurrentDate] = useState('')
 
     useEffect(() => {
-        const fetchUser = async () => {
-            const data = await API.get('users')
-            const userRoles = await API.get('user_roles')
-            const userProgress = await API.get('progress')
-            const filteredUserData = data.filter(user => user.role === '3');
-            const combinedData = filteredUserData.map(user => {
-                const roleRelation = userRoles.find(role => role.user_id === user.id)
-                const progressRelation = userProgress.find(progress => progress.user_id === user.id)
-                return {
-                    ...user,
-                    user_role_id: roleRelation ? roleRelation.id : null,
-                    user_progress: progressRelation ? progressRelation.id : null
-                };
-            })
-            setUsers(combinedData)
-        }
-        fetchUser()
-    }, [])
+        const fetchStaff = async () => {
+            const userData = await API.get('users');
+            const combinedData = userData.map(user => ({
+                ...user,
+                fechanac: user.fechanac ? user.fechanac.split('T')[0] : '',
+                registerdate: user.registerdate ? user.registerdate.split('T')[0] : '',
+            }));
+            setUsers(combinedData);
+        };
+
+        fetchStaff();
+    }, []);
+
 
     useEffect(() => {
         const fetchStateUser = async () => {
             const data = await API.get('roles')
-            const filteredUserRole = data.filter(role => role.id === '3');
+            const filteredUserRole = data.filter(role => role.id_role === 3);
             setUserRole(filteredUserRole)
         }
         fetchStateUser()
@@ -78,7 +73,7 @@ const Users = () => {
 
     useEffect(() => {
         const fetchStateMemberRole = async () => {
-            const data = await API.get('type_memberships')
+            const data = await API.get('typememberships')
             setUsersMemberRole(data)
         }
         fetchStateMemberRole()
@@ -86,92 +81,58 @@ const Users = () => {
 
 
     const handleAddUser = async () => {
-        const addedUser = await API.post('users', {
-            name: newUser.name,
-            lastname: newUser.lastname,
-            email: newUser.email,
-            password: newUser.password,
-            phone: newUser.phone,
-            fechaNac: newUser.fechaNac,
-            registerDate: newUser.registerDate,
-            typeMembership: newUser.typeMembership,
-            role: newUser.role
-        });
-        const newUserRole = {
-            user_id: addedUser.id,
-            role_id: newUser.role,
+        try {
+            const addedUser = await API.post('staff', {
+                name: newUser.name,
+                lastname: newUser.lastname,
+                email: newUser.email,
+                password: newUser.password,
+                phone: newUser.phone,
+                fechanac: newUser.fechanac,
+                registerdate: newUser.registerdate,
+                typemembership: newUser.typemembership,
+                role: newUser.role
+            });
+            setUsers([...users, addedUser]);
+            setNewUser({ name: '', lastname: '', email: '', password: '', phone: '', fechanac: '', registerdate: '', typemembership: '', role: '' });
+            setVisible(false);
+        } catch (error) {
+            console.error("Error adding user:", error);
         }
-        const addedRole = await API.post('user_roles', newUserRole)
-        setUsers([...users, { ...addedUser, user_role_id: addedRole.id }]);
-        setNewUser({ name: '', lastname: '', email: '', password: '', phone: '', fechaNac: '', registerDate: '', typeMembership: '', role: '' })
-        setVisible(false)
     };
 
+
     const handleEditUser = async () => {
-        if (!currentUser || !currentUser.id) {
+        if (!currentUser || !currentUser.id_user) {
             console.error("Current user data is incomplete or does not have an ID and role id.");
             return;
         }
         console.log("currentStaff para editar:", currentUser);
 
         try {
-            const updatedUser = await API.put(
-                'users',
-                {
-                    id: currentUser.id,
-                    name: currentUser.name,
-                    lastname: currentUser.lastname,
-                    email: currentUser.email,
-                    password: currentUser.password,
-                    phone: currentUser.phone,
-                    fechaNac: currentUser.fechaNac,
-                    registerDate: currentUser.registerDate,
-                    typeMembership: currentUser.typeMembership,
-                    role: currentUser.role
-                }, currentUser.id
-            );
-            let userRolesId = currentUser.user_role_id
-            if (userRolesId) {
-                await API.put(
-                    'user_roles',
-                    {
-                        id: userRolesId,
-                        user_id: currentUser.id,
-                        role_id: currentUser.role
-                    }, userRolesId
-                )
-            } else {
-                const newUserRole = await API.post('user_roles', {
-                    user_id: currentUser.id,
-                    role_id: currentUser.role,
-                });
-                userRolesId = newUserRole.id;
-            }
-
+            const updatedUser = await API.put('users', currentUser, currentUser.id_user);
             setUsers((prevUsers) =>
-                prevUsers.map((user) =>
-                    user.id === currentUser.id
-                        ? { ...user, ...updatedUser, user_role_id: userRolesId }
-                        : user
+                prevUsers.map((Member) =>
+                    Member.id_user === currentUser.id_user
+                        ? { ...Member, ...updatedUser }
+                        : Member
                 )
             );
+
             setVisibleEdit(false);
+            console.log("Usuario actualizado con éxito.");
         } catch (error) {
-            console.error("Error while updating user and user_roles:", error);
+            console.error("Error al actualizar el usuario:", error);
         }
     };
 
 
     const handleDeleteUser = async () => {
         if (deleteConfirmation === 'confirm') {
-            const userId = currentUser.id
-            const userRoleId = currentUser.user_role_id
-            const userProgress = currentUser.user_progress
+            const userId = currentUser.id_user
             try {
-                await API.del('users', userId)
-                await API.del('user_roles', userRoleId)
-                await API.del('progress', userProgress)
-                setUsers(users.filter((user) => user.id !== userId))
+                const deleteClass = await API.del('users', userId)
+                setUsers(users.filter((user) => user.id_user !== userId))
                 setVisibleDelete(false)
             } catch (error) {
                 console.error("Error deleting Item:", error);
@@ -179,18 +140,15 @@ const Users = () => {
         }
     };
 
-
     const getTypeMembership = (memId) => {
-        const typeMembership = usersMemberRole.find((membership) => membership.id === memId);
+        const typeMembership = usersMemberRole.find((membership) => membership.id === Number(memId));
         return typeMembership ? typeMembership.name : 'No membership';
     };
 
-
     const getTypeRole = (roleId) => {
-        const typeRoles = usersRole.find((role) => role.id === roleId);
-        return typeRoles ? typeRoles.name : 'Unknown';
+        const typeRoles = usersRole.find((role) => role.id_role === Number(roleId));
+        return typeRoles ? typeRoles.name_role : 'Unknown';
     }
-
 
 
     return (
@@ -256,8 +214,8 @@ const Users = () => {
                                         <CFormInput
                                             type="date"
                                             placeholder="date of birth"
-                                            value={newUser?.fechaNac || ''}
-                                            onChange={(e) => setNewUser({ ...newUser, fechaNac: e.target.value })}
+                                            value={newUser?.fechanac ? newUser.fechanac.split('T')[0] : '' || ''}
+                                            onChange={(e) => setNewUser({ ...newUser, fechanac: e.target.value })}
                                         /><small className="text-muted">Please select the date of birth.</small>
                                     </CCol>
 
@@ -265,8 +223,8 @@ const Users = () => {
                                         <CFormInput
                                             type="date"
                                             placeholder="register"
-                                            value={newUser?.registerDate || ''}
-                                            onChange={(e) => setNewUser({ ...newUser, registerDate: e.target.value })}
+                                            value={newUser?.registerdate ? newUser.registerdate.split('T')[0] : '' || ''}
+                                            onChange={(e) => setNewUser({ ...newUser, registerdate: e.target.value })}
                                         /><small className="text-muted">Please select the Day of Register.</small>
                                     </CCol>
 
@@ -275,8 +233,8 @@ const Users = () => {
                                     <CCol md={6}>
                                         <CFormSelect
                                             aria-label="Select Type Membership"
-                                            value={newUser?.typeMembership || 'No membership'}
-                                            onChange={(e) => setNewUser({ ...newUser, typeMembership: e.target.value })}
+                                            value={newUser?.typemembership || 'No membership'}
+                                            onChange={(e) => setNewUser({ ...newUser, typemembership: e.target.value })}
 
                                         >  <option value="">Select Type Membership</option>
                                             {usersMemberRole.map((membership) => (
@@ -297,9 +255,9 @@ const Users = () => {
                                         >
                                             <option value="" >Select Role</option>
                                             {usersRole.map((role) => (
-                                                <option key={role.id}
-                                                    value={role.id}>
-                                                    {role.name}
+                                                <option key={role.id_role}
+                                                    value={role.id_role}>
+                                                    {role.name_role}
                                                 </option>
 
                                             ))}
@@ -355,16 +313,16 @@ const Users = () => {
                         </CTableRow>
                     </CTableHead>
                     <CTableBody>
-                        {users.map((users) => (
-                            <CTableRow key={users?.id || ''}>
-                                <CTableDataCell>{users?.name || ''}</CTableDataCell>
-                                <CTableDataCell>{users?.lastname || ''}</CTableDataCell>
-                                <CTableDataCell>{users?.email || ''}</CTableDataCell>
-                                <CTableDataCell>{users?.registerDate || ''}</CTableDataCell>
-                                <CTableDataCell>{getTypeMembership(users?.typeMembership || 'No Membership')}</CTableDataCell>
-                                <CTableDataCell>{getTypeRole(users?.role || '')}</CTableDataCell>
+                        {users.map((user) => (
+                            <CTableRow key={user.id_user}>
+                                <CTableDataCell>{user.name}</CTableDataCell>
+                                <CTableDataCell>{user.lastname}</CTableDataCell>
+                                <CTableDataCell>{user.email}</CTableDataCell>
+                                <CTableDataCell>{user.registerdate}</CTableDataCell>
+                                <CTableDataCell>{getTypeMembership(user.typemembership)}</CTableDataCell>
+                                <CTableDataCell>{getTypeRole(user.role)}</CTableDataCell>
                                 <CTableDataCell>
-                                    <CButton color="info" onClick={() => { setCurrentUser(users); setVisibleEdit(!visibleEdit) }} variant='outline' size="sm" className="me-2" >Edit</CButton>
+                                    <CButton color="info" onClick={() => { setCurrentUser(user); setVisibleEdit(!visibleEdit) }} variant='outline' size="sm" className="me-2" >Edit</CButton>
                                     <CModal
                                         backdrop="static"
                                         visible={visibleEdit}
@@ -402,7 +360,6 @@ const Users = () => {
                                                         onChange={(e) => setCurrentUser({ ...currentUser, email: e.target.value })}
                                                     />
                                                 </CCol>
-
                                                 <CCol className='mb-3' md={6}>
                                                     <CFormInput
                                                         type="password"
@@ -416,17 +373,28 @@ const Users = () => {
                                                 <CCol className='mb-3' md={6}>
                                                     <CFormInput
                                                         type="date"
-                                                        placeholder="Date(birthday)"
-                                                        value={currentUser?.fechaNac || '' || currentDate}
-                                                        onChange={(e) => setCurrentUser({ ...currentUser, fechaNac: e.target.value })}
-                                                    />
+                                                        placeholder="date of birth"
+                                                        value={currentUser?.fechanac ? currentUser.fechanac.split('T')[0] : '' || ''}
+                                                        onChange={(e) => setCurrentUser({ ...currentUser, fechanac: e.target.value })}
+                                                    /><small className="text-muted">Please select the date of birth.</small>
                                                 </CCol>
 
+                                                <CCol className='mb-3' md={6}>
+                                                    <CFormInput
+                                                        type="date"
+                                                        placeholder="register"
+                                                        value={currentUser?.registerdate ? currentUser.registerdate.split('T')[0] : '' || ''}
+                                                        onChange={(e) => setCurrentUser({ ...currentUser, registerdate: e.target.value })}
+                                                    /><small className="text-muted">Please select the Day of Register.</small>
+                                                </CCol>
+
+                                            </CRow>
+                                            <CRow>
                                                 <CCol md={6}>
                                                     <CFormSelect
                                                         aria-label="Select Type Membership"
-                                                        value={currentUser?.typeMembership || ''}
-                                                        onChange={(e) => setCurrentUser({ ...currentUser, typeMembership: e.target.value })}
+                                                        value={currentUser?.typemembership || 'No membership'}
+                                                        onChange={(e) => setCurrentUser({ ...currentUser, typemembership: e.target.value })}
 
                                                     >  <option value="">Select Type Membership</option>
                                                         {usersMemberRole.map((membership) => (
@@ -438,8 +406,7 @@ const Users = () => {
                                                         ))}
                                                     </CFormSelect>
                                                 </CCol>
-                                            </CRow>
-                                            <CRow>
+
                                                 <CCol className='mb-3' md={6}>
                                                     <CFormSelect
                                                         aria-label="Select Role"
@@ -448,24 +415,26 @@ const Users = () => {
                                                     >
                                                         <option value="" >Select Role</option>
                                                         {usersRole.map((role) => (
-                                                            <option key={role.id}
-                                                                value={role.id}>
-                                                                {role.name}
+                                                            <option key={role.id_role}
+                                                                value={role.id_role}>
+                                                                {role.name_role}
                                                             </option>
 
                                                         ))}
                                                     </CFormSelect>
                                                 </CCol>
-
-                                                <CCol className='mb-3' md={6}>
+                                            </CRow>
+                                            <CRow>
+                                                <CCol className='mb-3' md={12}>
                                                     <CFormInput
                                                         type="text"
                                                         placeholder="Phone"
                                                         value={currentUser?.phone || ''}
-                                                        onChange={(e) => setCurrentUser({ ...newUser, phone: e.target.value })}
+                                                        onChange={(e) => setCurrentUser({ ...currentUser, phone: e.target.value })}
                                                     />
                                                 </CCol>
                                             </CRow>
+
                                         </CModalBody>
                                         <CModalFooter>
                                             <CButton color="secondary" onClick={() => setVisibleEdit(false)}>

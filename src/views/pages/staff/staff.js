@@ -1,4 +1,4 @@
-import CIcon from '@coreui/icons-react'
+import CIcon from '@coreui/icons-react';
 import {
     cilClock,
     cilTag,
@@ -6,7 +6,7 @@ import {
     cilTags,
     cilAt,
     cilContact,
-} from '@coreui/icons'
+} from '@coreui/icons';
 import {
     CCard,
     CButton,
@@ -30,33 +30,28 @@ import {
     CFormSelect,
 } from '@coreui/react';
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { helpFetch } from '../../../helpers/helpFetch';
+
 const staff = () => {
-    const API = helpFetch()
-    const [staff, setStaff] = useState([])
-    const [roles, setRoles] = useState([])
-    const [visible, setVisible] = useState(false)
-    const [visiblePermissions, setVisiblePermissions] = useState(false)
-    const [visibleEdit, setVisibleEdit] = useState(false)
-    const [visibleDelete, setVisibleDelete] = useState(false)
-    const [currentStaff, setCurrentStaff] = useState(null)
-    const [newStaff, setNewStaff] = useState({ name: '', lastname: '', email: '', password: '', phone: '', fechaNac: '', registerDate: '', typeMembership: '', role: '', payment: '', user_role_id: null })
-    const [deleteConfirmation, setDeleteConfirmation] = useState('')
+    const API = helpFetch();
+    const [staff, setStaff] = useState([]);
+    const [roles, setRoles] = useState([]);
+    const [visible, setVisible] = useState(false);
+    const [visibleEdit, setVisibleEdit] = useState(false);
+    const [visibleDelete, setVisibleDelete] = useState(false);
+    const [currentStaff, setCurrentStaff] = useState(null);
+    const [newStaff, setNewStaff] = useState({ name: '', lastname: '', email: '', password: '', phone: '', fechanac: '', registerdate: '', typemembership: '', role: '' });
+    const [deleteConfirmation, setDeleteConfirmation] = useState('');
 
     useEffect(() => {
         const fetchStaff = async () => {
-            const userData = await API.get('users')
-            const userRoles = await API.get('user_roles')
-            const filteredUserData = userData.filter(user => user.role === '1' || user.role === '2');
-            const combinedData = filteredUserData.map(user => {
-                const roleRelation = userRoles.find(role => role.user_id === user.id);
-                return {
-                    ...user,
-                    user_role_id: roleRelation ? roleRelation.id : null,
-                };
-
-            });
+            const userData = await API.get('staff');
+            const combinedData = userData.map(user => ({
+                ...user,
+                fechanac: user.fechanac ? user.fechanac.split('T')[0] : '',
+                registerdate: user.registerdate ? user.registerdate.split('T')[0] : '',
+            }));
             setStaff(combinedData);
         };
 
@@ -65,114 +60,76 @@ const staff = () => {
 
     useEffect(() => {
         const fetchRoles = async () => {
-            const data = await API.get('roles')
-            const filteredUserRole = data.filter(role => role.id === '1' || role.id === '2');
-            setRoles(filteredUserRole)
-        }
-        fetchRoles()
-    }, [])
+            const data = await API.get('roles');
+            const filteredUserRole = data.filter(role => role.id_role === 1 || role.id_role === 2);
+            setRoles(filteredUserRole);
+        };
+        fetchRoles();
+    }, []);
 
     const getRoleName = (roleId) => {
-        const role = roles.find(role => role.id === roleId)
-        return role ? role.name : 'Unknown'
-    }
+        const typeRoles = roles.find((role) => role.id_role === roleId);
+        return typeRoles ? typeRoles.name_role : 'Unknown';
+    };
 
     const handleAddStaff = async () => {
-        const addedUser = await API.post('users', {
-            name: newStaff.name,
-            lastname: newStaff.lastname,
-            email: newStaff.email,
-            password: newStaff.password,
-            phone: newStaff.phone,
-            fechaNac: newStaff.fechaNac,
-            registerDate: newStaff.registerDate,
-            typeMembership: newStaff.typeMembership,
-            role: newStaff.role
-        });
-        const newUserRole = {
-            user_id: addedUser.id,
-            role_id: newStaff.role
-        };
-        const addedRole = await API.post('user_roles', newUserRole);
-        setStaff([...staff, { ...addedUser, user_role_id: addedRole.id }]);
-        setNewStaff({ name: '', lastname: '', email: '', password: '', phone: '', fechaNac: '', registerDate: '', typeMembership: '', role: '', payment: '' });
-        setVisible(false);
+        try {
+            const addedUser = await API.post('staff', {
+                name: newStaff.name,
+                lastname: newStaff.lastname,
+                email: newStaff.email,
+                password: newStaff.password,
+                phone: newStaff.phone,
+                fechanac: newStaff.fechanac,
+                registerdate: newStaff.registerdate,
+                typemembership: newStaff.typemembership,
+                role: newStaff.role
+            });
+            setStaff([...staff, addedUser]);
+            setNewStaff({ name: '', lastname: '', email: '', password: '', phone: '', fechanac: '', registerdate: '', typemembership: '', role: '' });
+            setVisible(false);
+        } catch (error) {
+            console.error("Error adding staff:", error);
+        }
     };
-
 
     const handleEditStaff = async () => {
-        if (!currentStaff || !currentStaff.id) {
-            console.error("Datos insuficientes para actualizar el usuario o el rol.", currentStaff);
+        if (!currentStaff || !currentStaff.id_user) {
+            console.error("No staff member selected");
             return;
         }
-        console.log("currentStaff para editar:", currentStaff);
-
         try {
-            const updatedUser = await API.put(
-                'users',
-                {
-                    id: currentStaff.id,
-                    name: currentStaff.name,
-                    lastname: currentStaff.lastname,
-                    email: currentStaff.email,
-                    password: currentStaff.password,
-                    phone: currentStaff.phone,
-                    fechaNac: currentStaff.fechaNac,
-                    registerDate: currentStaff.registerDate,
-                    typeMembership: currentStaff.typeMembership,
-                    role: currentStaff.role
-                }, currentStaff.id
-            );
 
-            let userRoleId = currentStaff.user_role_id;
-            if (userRoleId) {
-                await API.put(
-                    'user_roles',
-                    {
-                        id: userRoleId,
-                        user_id: currentStaff.id,
-                        role_id: currentStaff.role,
-                    }, userRoleId
-                );
-            } else {
-                const newUserRole = await API.post('user_roles', {
-                    user_id: currentStaff.id,
-                    role_id: currentStaff.role
-                });
-                userRoleId = newUserRole.id;
-            }
-
+            const updatedUser = await API.put('staff', currentStaff, currentStaff.id_user);
             setStaff((prevUsers) =>
-                prevUsers.map((staff) =>
-                    staff.id === currentStaff.id
-                        ? { ...staff, ...updatedUser, user_role_id: userRoleId }
-                        : staff
+                prevUsers.map((staffMember) =>
+                    staffMember.id_user === currentStaff.id_user
+                        ? { ...staffMember, ...updatedUser }
+                        : staffMember
                 )
             );
+
             setVisibleEdit(false);
-            console.log("Usuario y rol actualizados con éxito.");
+            console.log("Usuario actualizado con éxito.");
         } catch (error) {
-            console.error("Error al actualizar el usuario y el rol:", error);
+            console.error("Error al actualizar el usuario:", error);
         }
     };
-
-
     const handleDeleteStaff = async () => {
         if (deleteConfirmation === 'confirm') {
-            const staffId = currentStaff.id;
-            const userRoleId = currentStaff.user_role_id;
+            const staffId = currentStaff.id_user; // Asegúrate de que estás usando el ID correcto
             try {
-                await API.del('users', staffId);
-                await API.del('user_roles', userRoleId);
-                setStaff(staff.filter(member => member.id !== staffId));
+                const deleteClass = await API.del('staff', staffId)
+                setStaff(staff.filter((member) => member.id_user !== staffId)); // Actualiza el estado para eliminar al usuario
                 setVisibleDelete(false);
-                console.log(`Eliminación exitosa del usuario y su rol.`);
+                console.log(`Eliminación exitosa del usuario.`);
             } catch (error) {
                 console.error("Error durante la eliminación:", error);
             }
+        } else {
+            console.warn("Confirmación de eliminación no válida.");
         }
     };
-
 
     return (
         <CCard className="mb-4">
@@ -180,7 +137,7 @@ const staff = () => {
                 <h4 className="mb-0">Staff Management</h4>
             </CCardHeader>
             <CCardBody>
-                <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddStaff() }}>
+                <CForm className="mb-4" onSubmit={(e) => { e.preventDefault(); handleAddStaff(); }}>
                     <CRow className="g-3">
                         <CCol className="d-flex justify-content-start">
                             <CButton color="primary" onClick={() => setVisible(!visible)}>Add new member</CButton>
@@ -230,24 +187,22 @@ const staff = () => {
                                             onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
                                         />
                                     </CCol>
-
                                 </CRow>
                                 <CRow>
                                     <CCol className='mb-3' md={6}>
                                         <CFormInput
                                             type="date"
-                                            placeholder="date of birth"
-                                            value={newStaff?.fechaNac || ''}
-                                            onChange={(e) => setNewStaff({ ...newStaff, fechaNac: e.target.value })}
+                                            placeholder="Date of Birth"
+                                            value={newStaff?.fechanac || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, fechanac: e.target.value })}
                                         /><small className="text-muted">Please select the date of birth.</small>
                                     </CCol>
-
                                     <CCol className='mb-3' md={6}>
                                         <CFormInput
                                             type="date"
-                                            placeholder="Date(Star Job)"
-                                            value={newStaff?.registerDate || ''}
-                                            onChange={(e) => setNewStaff({ ...newStaff, registerDate: e.target.value })}
+                                            placeholder="Date (Start Job)"
+                                            value={newStaff?.registerdate || ''}
+                                            onChange={(e) => setNewStaff({ ...newStaff, registerdate: e.target.value })}
                                         /><small className="text-muted">Please select the Day of Register.</small>
                                     </CCol>
                                 </CRow>
@@ -268,10 +223,7 @@ const staff = () => {
                                         >
                                             <option>Select a Role</option>
                                             {roles.map((role) => (
-                                                <option key={role.id}
-                                                    value={role.id}>{
-                                                        role.name}
-                                                </option>
+                                                <option key={role.id_role} value={role.id_role}>{role.name_role}</option>
                                             ))}
                                         </CFormSelect>
                                     </CCol>
@@ -281,7 +233,7 @@ const staff = () => {
                                 <CButton color="secondary" onClick={() => setVisible(false)}>
                                     Close
                                 </CButton>
-                                <CButton color="primary" onClick={() => { handleAddStaff() }} >Add Member</CButton>
+                                <CButton color="primary" onClick={handleAddStaff}>Add Member</CButton>
                             </CModalFooter>
                         </CModal>
                     </CRow>
@@ -293,16 +245,16 @@ const staff = () => {
                             <CTableHeaderCell>Name
                                 <CIcon icon={cilTag} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Last-Name
+                            <CTableHeaderCell>Last Name
                                 <CIcon icon={cilTags} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
                             <CTableHeaderCell>Email
                                 <CIcon icon={cilAt} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>RegisterDate
+                            <CTableHeaderCell>Register Date
                                 <CIcon icon={cilClock} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
-                            <CTableHeaderCell>Role
+                            < CTableHeaderCell>Role
                                 <CIcon icon={cilContact} customClassName="nav-icon icon-small" />
                             </CTableHeaderCell>
                             <CTableHeaderCell>Actions
@@ -312,14 +264,14 @@ const staff = () => {
                     </CTableHead>
                     <CTableBody>
                         {staff.map((staffMember) => (
-                            <CTableRow key={staffMember?.id || ''}>
+                            <CTableRow key={staffMember?.id_user || ''}>
                                 <CTableDataCell>{staffMember?.name || ''}</CTableDataCell>
                                 <CTableDataCell>{staffMember?.lastname || ''}</CTableDataCell>
                                 <CTableDataCell>{staffMember?.email || ''}</CTableDataCell>
-                                <CTableDataCell>{staffMember?.registerDate || ''}</CTableDataCell>
+                                <CTableDataCell>{staffMember?.registerdate || ''}</CTableDataCell>
                                 <CTableDataCell>{getRoleName(staffMember?.role || '')}</CTableDataCell>
                                 <CTableDataCell>
-                                    <CButton color="info" onClick={() => { setCurrentStaff(staffMember); setVisibleEdit(!visibleEdit) }} variant='outline' size="sm" className="me-2 mb-2" >Edit</CButton>
+                                    <CButton color="info" onClick={() => { setCurrentStaff(staffMember); setVisibleEdit(!visibleEdit); }} variant='outline' size="sm" className="me-2 mb-2">Edit</CButton>
                                     <CModal
                                         backdrop="static"
                                         visible={visibleEdit}
@@ -370,17 +322,17 @@ const staff = () => {
                                                 <CCol className='mb-3' md={6}>
                                                     <CFormInput
                                                         type="date"
-                                                        placeholder="date of birth"
-                                                        value={currentStaff?.fechaNac || ''}
-                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, fechaNac: e.target.value })}
+                                                        placeholder="Date of Birth"
+                                                        value={currentStaff?.fechanac || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, fechanac: e.target.value })}
                                                     /><small className="text-muted">Please select the date of birth.</small>
                                                 </CCol>
                                                 <CCol className='mb-3' md={6}>
                                                     <CFormInput
                                                         type="date"
-                                                        placeholder="Date(Star Job)"
-                                                        value={currentStaff?.registerDate || ''}
-                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, registerDate: e.target.value })}
+                                                        placeholder="Date (Start Job)"
+                                                        value={currentStaff?.registerdate || ''}
+                                                        onChange={(e) => setCurrentStaff({ ...currentStaff, registerdate: e.target.value })}
                                                     /><small className="text-muted">Please select the Day of Register.</small>
                                                 </CCol>
                                             </CRow>
@@ -401,10 +353,7 @@ const staff = () => {
                                                     >
                                                         <option>Select a Role</option>
                                                         {roles.map((role) => (
-                                                            <option key={role.id}
-                                                                value={role.id}>{
-                                                                    role.name}
-                                                            </option>
+                                                            <option key={role.id_role} value={role.id_role}>{role.name_role}</option>
                                                         ))}
                                                     </CFormSelect>
                                                 </CCol>
@@ -416,9 +365,8 @@ const staff = () => {
                                             </CButton>
                                             <CButton color="primary" onClick={handleEditStaff}>Save Edit</CButton>
                                         </CModalFooter>
-
                                     </CModal>
-                                    <CButton color="danger" onClick={() => { setCurrentStaff(staffMember); setVisibleDelete(!visibleDelete) }} variant='outline' size="sm" className="me-2 mb-2">Delete</CButton>
+                                    <CButton color="danger" onClick={() => { setCurrentStaff(staffMember); setVisibleDelete(!visibleDelete); }} variant='outline' size="sm" className="me-2 mb-2">Delete</CButton>
                                     <CModal
                                         backdrop="static"
                                         visible={visibleDelete}
@@ -426,14 +374,13 @@ const staff = () => {
                                         aria-labelledby="Modal Info"
                                     >
                                         <CModalHeader>
-                                            <CModalTitle id="Create Users">Do you want delete?</CModalTitle>
+                                            <CModalTitle id="Create Users">Do you want to delete?</CModalTitle>
                                         </CModalHeader>
                                         <CModalBody>
                                             <CRow className="mb-3">
                                                 <label className='fw-bold mb-2'>Please write "confirm" if you want to delete this membership</label>
                                                 <CCol className='mb-3' md={12}>
                                                     <CForm>
-
                                                         <CFormInput
                                                             type="text"
                                                             id="Delete"
@@ -458,8 +405,9 @@ const staff = () => {
                         ))}
                     </CTableBody>
                 </CTable>
-            </CCardBody >
-        </CCard >
-    )
-}
-export default staff 
+            </CCardBody>
+        </CCard>
+    );
+};
+
+export default staff;

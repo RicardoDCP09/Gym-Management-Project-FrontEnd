@@ -1,40 +1,61 @@
-const baseUrl = import.meta.env.VITE_BACKEND_URL
+// helpFetch.js
+const baseUrl = import.meta.env.VITE_BACKEND_URL; // Asegúrate de que esta variable esté configurada correctamente
 
 export const helpFetch = () => {
-  const customFetch = async (url, method, body = null) => {
-    try {
-      const options = {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-      if (body) {
-        options.body = JSON.stringify(body)
-      }
-
-      const response = await fetch(url, options)
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
-      }
-
-      const data = await response.json()
-      return data
-    } catch (error) {
-      console.error(error)
-      return null
+  const handleErrors = (response) => {
+    if (!response.ok) {
+      return Promise.reject({
+        err: true,
+        status: response.status || '00',
+        statusText: response.statusText || 'error'
+      });
     }
-  }
+    return response.json();
+  };
 
-  // Métodos
-  const get = (endpoint) => customFetch(`${baseUrl}${endpoint}`, 'GET')
+  const customFetch = async (url, options = {}) => {
+    const defaultHeaders = {
+      'Content-Type': 'application/json',
+    };
 
-  const post = (endpoint, body) => customFetch(`${baseUrl}${endpoint}`, 'POST', body)
+    const controller = new AbortController();
+    options.signal = controller.signal;
+    options.method = options.method || 'GET'; // Asignar 'GET' si no se proporciona un método
 
-  const put = (endpoint, body, id) => customFetch(`${baseUrl}${endpoint}/${id}`, 'PUT', body)
+    const token = localStorage.getItem('token');
+    if (token) {
+      options.headers = {
+        ...defaultHeaders,
+        "Authorization": `Bearer ${token}` // Usar comillas invertidas para la plantilla literal
+      };
+    } else {
+      options.headers = defaultHeaders;
+    }
 
-  const del = (endpoint, id) => customFetch(`${baseUrl}${endpoint}/${id}`, 'DELETE')
+    if (options.body) {
+      options.body = JSON.stringify(options.body);
+    }
 
-  return { get, post, put, del, customFetch }
-}
+    const timeout = options.timeout || 5000; // Asignar 5000 si no se proporciona un timeout
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
+
+    try {
+      const response = await fetch(`${baseUrl}${url}`, options);
+      clearTimeout(timeoutId);
+      return await handleErrors(response);
+    } catch (err) {
+      if (err.name === 'AbortError') {
+        return { err: true, status: '408', statusText: 'Request timed out' };
+      }
+      return { err: true, status: '500', statusText: 'Internal Server Error' };
+    }
+  };
+
+  // Métodos para hacer solicitudes
+  const get = (endpoint) => customFetch(endpoint, { method: 'GET' });
+  const post = (endpoint, body) => customFetch(endpoint, { method: 'POST', body });
+  const put = (endpoint, body, id) => customFetch(`${endpoint}/${id}`, { method: 'PUT', body });
+  const del = (endpoint, id) => customFetch(`${endpoint}/${id}`, { method: 'DELETE' });
+
+  return { get, post, put, del, customFetch };
+};

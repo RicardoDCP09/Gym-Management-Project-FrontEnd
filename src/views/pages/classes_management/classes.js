@@ -54,7 +54,7 @@ const Classes = () => {
 
     useEffect(() => {
         const fetchTraineer = async () => {
-            const data = await API.get('users')
+            const data = await API.get('staff')
             setTrainer(data)
         }
         fetchTraineer()
@@ -62,7 +62,7 @@ const Classes = () => {
 
     useEffect(() => {
         const fetchStatusClass = async () => {
-            const data = await API.get('status_class')
+            const data = await API.get('statusClass')
             setStatusClass(data)
         }
         fetchStatusClass()
@@ -115,7 +115,7 @@ const Classes = () => {
     }
 
     const getTraineer = (trainerID) => {
-        const trainer = traineer.find((users) => users.id === trainerID)
+        const trainer = traineer.find((users) => users.id_user === trainerID)
         return trainer ? trainer.name + ' ' + trainer.lastname : 'Unknown';
     }
 
@@ -158,9 +158,9 @@ const Classes = () => {
                                             onChange={(e) => setNewClass({ ...newClass, coach_id: e.target.value })}
                                         >
                                             <option value="">Select a Trainer</option>
-                                            {traineer.filter((trainer) => trainer.role === "2").map((trainer) => (
-                                                <option key={trainer.id}
-                                                    value={trainer.id}>
+                                            {traineer.filter((trainer) => trainer.role === 2).map((trainer) => (
+                                                <option key={trainer.id_user}
+                                                    value={trainer.id_user}>
                                                     {trainer.name} {trainer.lastname}
                                                 </option>
                                             ))}
@@ -236,7 +236,7 @@ const Classes = () => {
                     </CTableHead>
                     <CTableBody>
                         {classes.map((classes) => (
-                            <CTableRow key={classes?.id || ''}>
+                            <CTableRow key={classes?.id_class || ''}>
                                 <CTableDataCell>{classes?.name || ''}</CTableDataCell>
                                 <CTableDataCell>{classes?.capacity || ''}</CTableDataCell>
                                 <CTableDataCell>{getTraineer(classes?.coach_id || '')}</CTableDataCell>
@@ -270,9 +270,9 @@ const Classes = () => {
                                                         onChange={(e) => setCurrentClass({ ...currentClass, coach_id: e.target.value })}
                                                     >
                                                         <option value="">Select a Trainer</option>
-                                                        {traineer.filter((trainer) => trainer.role === "2").map((trainer) => (
-                                                            <option key={trainer.id}
-                                                                value={trainer.id}>
+                                                        {traineer.filter((trainer) => trainer.role === 2).map((trainer) => (
+                                                            <option key={trainer.id_user}
+                                                                value={trainer.id_user}>
                                                                 {trainer.name} {trainer.lastname}
                                                             </option>
                                                         ))}

@@ -72,7 +72,7 @@ const exercise = () => {
     };
 
     const handleEditExercise = async () => {
-        if (!currentExercise || !currentExercise.id) {
+        if (!currentExercise || !currentExercise.id_exercise) {
             console.error("Current Exercises is not set or does not haven id")
             return;
         }
@@ -80,10 +80,10 @@ const exercise = () => {
             const updatedExercise = await API.put(
                 'exercises',
                 currentExercise,
-                currentExercise.id);
+                currentExercise.id_exercise);
             setExercise((prevExercise) =>
                 prevExercise.map((exercise) =>
-                    exercise.id === currentExercise.id ?
+                    exercise.id_exercise === currentExercise.id_exercise ?
                         { ...exercise, ...updatedExercise } : exercise))
             setVisibleEdit(false)
         } catch (error) {
@@ -93,10 +93,10 @@ const exercise = () => {
 
     const handleDeleteExercise = async () => {
         if (deleteConfirmation === 'confirm') {
-            const exerciseId = currentExercise.id;
+            const exerciseId = currentExercise.id_exercise;
             try {
                 const deletedExercise = await API.del('exercises', exerciseId);
-                setExercise(exercise.filter((exercise) => exercise.id !== exerciseId));
+                setExercise(exercise.filter((exercise) => exercise.id_exercise !== exerciseId));
                 setVisibleDelete(false)
             } catch (error) {
                 console.error("Error deleteing the exercise: ", error);
@@ -105,7 +105,7 @@ const exercise = () => {
     };
 
     const getTypeExercise = (exerciseId) => {
-        const typeExercise = statusex.find((exercise) => exercise.id === exerciseId);
+        const typeExercise = statusex.find((exercise) => exercise.id_texercises === Number(exerciseId));
         return typeExercise ? typeExercise.name : 'Unknown';
     }
     return (
@@ -158,8 +158,8 @@ const exercise = () => {
                                     >
                                         <option value="">Select a type</option>
                                         {statusex.map((status) => (
-                                            <option key={status.id}
-                                                value={status.id}>
+                                            <option key={status.id_texercises}
+                                                value={status.id_texercises}>
                                                 {status.name}
                                             </option>
                                         ))}
@@ -195,7 +195,7 @@ const exercise = () => {
                     </CTableHead>
                     <CTableBody>
                         {exercise.map((exercise) => (
-                            <CTableRow key={exercise?.id || ''}>
+                            <CTableRow key={exercise?.id_exercise || ''}>
                                 <CTableDataCell>{exercise?.name || ''}</CTableDataCell>
                                 <CTableDataCell>{exercise?.description || ''}</CTableDataCell>
                                 <CTableDataCell>{getTypeExercise(exercise?.type || '')}</CTableDataCell>
@@ -241,8 +241,8 @@ const exercise = () => {
                                                     >
                                                         <option value="">Select a type</option>
                                                         {statusex.map((statusex) => (
-                                                            <option key={statusex.id}
-                                                                value={statusex.id}>
+                                                            <option key={statusex.id_texercises}
+                                                                value={statusex.id_texercises}>
                                                                 {statusex.name}
                                                             </option>
                                                         ))}

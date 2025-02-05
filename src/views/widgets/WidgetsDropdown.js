@@ -20,9 +20,11 @@ const WidgetsDropdown = (props) => {
   const [users, setUsers] = useState([]);
   const [payments, setPayments] = useState([]);
   const [classes, setClasses] = useState([]);
+  const [staff, setStaff] = useState([]); // Nuevo estado para el staff
   const widgetChartRef1 = useRef(null);
   const widgetChartRef2 = useRef(null);
   const widgetChartRef3 = useRef(null);
+  const widgetChartRef4 = useRef(null); // Referencia para el gráfico de staff
 
   useEffect(() => {
     const fetchData = async () => {
@@ -35,6 +37,9 @@ const WidgetsDropdown = (props) => {
 
         const classesData = await API.get('classes');
         setClasses(classesData);
+
+        const staffData = await API.get('staff'); // Llamada al endpoint de staff
+        setStaff(staffData); // Guardar los datos de staff
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -44,8 +49,10 @@ const WidgetsDropdown = (props) => {
   }, []);
 
   const totalUsers = users.length;
+  const totalStaff = staff.length; // Calcular el total de staff
   const totalPayments = payments.reduce((acc, payment) => acc + (parseFloat(payment.amount) || 0), 0);
   const totalClasses = classes.length; // Calculamos el total de clases
+  const totalPeople = totalUsers + totalStaff; // Total combinado de usuarios y staff
 
   return (
     <CRow className={props.className} xs={{ gutter: 4 }}>
@@ -54,13 +61,13 @@ const WidgetsDropdown = (props) => {
           color="primary"
           value={
             <>
-              {totalUsers}{' '}
+              {totalPeople}{' '} {/* Mostrar total combinado */}
               <span className="fs-6 fw-normal">
                 (-12.4% <CIcon icon={cilArrowBottom} />)
               </span>
             </>
           }
-          title="Total Registered Users"
+          title="Total Registered Users and Staff"
           action={
             <CDropdown alignment="end">
               <CDropdownToggle color="transparent" caret={false} className="text-white p-0">
@@ -83,18 +90,18 @@ const WidgetsDropdown = (props) => {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                 datasets: [
                   {
-                    label: 'Users Over Time',
+                    label: 'Users and Staff Over Time',
                     backgroundColor: 'transparent',
                     borderColor: 'rgba(255,255,255,.55)',
                     pointBackgroundColor: getStyle('--cui-primary'),
                     data: [
-                      totalUsers,
-                      totalUsers * 0.9,
-                      totalUsers * 0.85,
-                      totalUsers * 0.95,
-                      totalUsers * 1.1,
-                      totalUsers * 1.2,
-                      totalUsers * 1.3,
+                      totalPeople,
+                      totalPeople * 0.9,
+                      totalPeople * 0.85,
+                      totalPeople * 0.95,
+                      totalPeople * 1.1,
+                      totalPeople * 1.2,
+                      totalPeople * 1.3,
                     ],
                   },
                 ],
@@ -210,6 +217,7 @@ const WidgetsDropdown = (props) => {
           }
         />
       </CCol>
+
       <CCol sm={6} xl={4} xxl={3}>
         <CWidgetStatsA
           color="warning"
@@ -232,9 +240,9 @@ const WidgetsDropdown = (props) => {
             <CChartLine
               ref={widgetChartRef3}
               className="mt-3 mx-3"
-              style={{ height: '70px' }} // Ajustamos la altura para que sea la misma que en los otros widgets
+              style={{ height: '70px' }}
               data={{
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'], // Meses
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
                 datasets: [
                   {
                     label: 'Classes Over Time',
@@ -249,7 +257,7 @@ const WidgetsDropdown = (props) => {
                       totalClasses * 1.2,
                       totalClasses * 1.3,
                       totalClasses * 1.4,
-                    ], // Aquí puedes ajustar la lógica para obtener el número de clases por mes si es necesario
+                    ],
                   },
                 ],
               }}
@@ -291,4 +299,4 @@ WidgetsDropdown.propTypes = {
   className: PropTypes.string,
 };
 
-export default WidgetsDropdown;
+export default WidgetsDropdown; 

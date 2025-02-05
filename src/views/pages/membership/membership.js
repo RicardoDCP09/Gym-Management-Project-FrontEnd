@@ -35,14 +35,14 @@ const Membership = () => {
 
   useEffect(() => {
     const fetchMemberships = async () => {
-      const data = await API.get('type_memberships')
+      const data = await API.get('typememberships')
       setMemberships(data)
     }
     fetchMemberships()
   }, [])
 
   const handleAddMembership = async () => {
-    const addedMembership = await API.post('type_memberships', newMembership)
+    const addedMembership = await API.post('typememberships', newMembership)
     setMemberships([...memberships, addedMembership])
     setNewMembership({ name: '', duration: '', price: '' })
   }
@@ -55,7 +55,7 @@ const Membership = () => {
 
     try {
       const updatedMembership = await API.put(
-        'type_memberships',
+        'typememberships',
         currentMembership,
         currentMembership.id,
       )
@@ -77,7 +77,7 @@ const Membership = () => {
     if (deleteConfirmation === 'confirm') {
       const membershipId = currentMembership.id
       try {
-        const deletedMembership = await API.del('type_memberships', membershipId)
+        const deletedMembership = await API.del('typememberships', membershipId)
         setMemberships(memberships.filter((membership) => membership.id !== membershipId))
         setVisibleDelete(false)
       } catch (error) {

@@ -88,16 +88,16 @@ const report = () => {
     }
 
     const handleEditReport = async () => {
-        if (!currentReport || !currentReport.id) {
+        if (!currentReport || !currentReport.id_report) {
             console.log('No report selected')
             return;
         }
         try {
             const updateReport = await API.put(
-                'reports', currentReport, currentReport.id)
+                'reports', currentReport, currentReport.id_report)
             setReport((prevReport) =>
                 prevReport.map((report) =>
-                    report.id === currentReport.id ?
+                    report.id_report === currentReport.id_report ?
                         { ...report, ...updateReport }
                         : report
                 )
@@ -110,10 +110,10 @@ const report = () => {
 
     const handleDeleteReport = async () => {
         if (deleteConfirmation === 'confirm') {
-            const reportId = currentReport.id;
+            const reportId = currentReport.id_report;
             try {
                 const deleteReport = await API.del('reports', reportId);
-                setReport(report.filter((report) => report.id !== reportId));
+                setReport(report.filter((report) => report.id_report !== reportId));
                 setVisibleDelete(false);
             } catch (error) {
                 console.log("Error deleting report: ", error);
@@ -126,7 +126,7 @@ const report = () => {
         return report ? report.name : 'Unknown';
     }
     const getUser = (userId) => {
-        const user = users.find((user) => user.id === userId);
+        const user = users.find((user) => user.id_user === userId);
         return user ? user.name + ' ' + user.lastname : 'Unknown';
     }
     return (
@@ -177,7 +177,7 @@ const report = () => {
                                         >
                                             <option value=''>Select a User</option>
                                             {users.map((user) => (
-                                                <option key={user.id} value={user.id}>
+                                                <option key={user.id_user} value={user.id_user}>
                                                     {user.name} {user.lastname}
                                                 </option>
                                             ))}
@@ -225,7 +225,7 @@ const report = () => {
                     </CTableHead>
                     <CTableBody>
                         {report.map((report) => (
-                            <CTableRow key={report?.id || ''}>
+                            <CTableRow key={report?.id_report || ''}>
                                 <CTableDataCell>{getReportType(report?.type || '')}</CTableDataCell>
                                 <CTableDataCell>{getUser(report?.user_id || '')}</CTableDataCell>
                                 <CTableDataCell>{report?.description || ''}</CTableDataCell>
@@ -266,7 +266,7 @@ const report = () => {
                                                     >
                                                         <option value=''>Select a User</option>
                                                         {users.map((user) => (
-                                                            <option key={user.id} value={user.id}>
+                                                            <option key={user.id_user} value={user.id_user}>
                                                                 {user.name} {user.lastname}
                                                             </option>
                                                         ))}

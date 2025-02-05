@@ -23,7 +23,7 @@ const ResetPassword = () => {
     const [newPassword, setNewPassword] = useState('');
     const [message, setMessage] = useState('');
     const [error, setError] = useState('');
-    const [showPassword, setShowPassword] = useState(false); // Estado para mostrar/ocultar la contraseña
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -50,13 +50,13 @@ const ResetPassword = () => {
                     <CCol md={6}>
                         <CCard>
                             <CCardHeader>
-                                <h3>Reset Password</h3>
+                                <h3>Restablecer Contraseña</h3>
                             </CCardHeader>
                             <CCardBody>
                                 {message && <CAlert color="success">{message}</CAlert>}
                                 {error && <CAlert color="danger"><CIcon icon={cilWarning} className="me-2" />{error}</CAlert>}
                                 <CForm onSubmit={handleSubmit}>
-                                    <h6>Insert Your new password</h6>
+                                    <h6>Ingresa tu nueva contraseña</h6>
                                     <CInputGroup className="mb-3">
                                         <CFormInput
                                             type={showPassword ? 'text' : 'password'}
@@ -69,7 +69,7 @@ const ResetPassword = () => {
                                             onClick={() => setShowPassword(!showPassword)}
                                             style={{ cursor: 'pointer' }}
                                         >
-                                            <CIcon icon={showPassword ? cilBan : cilCheckCircle} />
+                                            <CIcon icon={showPassword ? cilCheckCircle : cilBan} />
                                         </CInputGroupText>
                                     </CInputGroup>
                                     <CButton type="submit" color="primary">

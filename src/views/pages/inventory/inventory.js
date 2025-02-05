@@ -46,7 +46,11 @@ const Inventory = () => {
     useEffect(() => {
         const fetchInventory = async () => {
             const data = await API.get('inventory')
-            setEquipments(data);
+            const combinedData = data.map(item => ({
+                ...item,
+                day_use: item.day_use ? item.day_use.split('T')[0] : '',
+            }));
+            setEquipments(combinedData);
         }
         fetchInventory()
     }, [])
@@ -68,7 +72,7 @@ const Inventory = () => {
     };
 
     const handleEditInventory = async () => {
-        if (!currentInventory || !currentInventory.id) {
+        if (!currentInventory || !currentInventory.id_inventory) {
             console.error("Current item is not set or does not have an ID.");
             return;
         }
@@ -77,10 +81,10 @@ const Inventory = () => {
             const updatedInventory = await API.put(
                 'inventory',
                 currentInventory,
-                currentInventory.id);
+                currentInventory.id_inventory);
             setEquipments((prevEquipments) =>
                 prevEquipments.map((equipment) =>
-                    equipment.id === currentInventory.id
+                    equipment.id_inventory === currentInventory.id
                         ? { ...equipment, ...updatedInventory } : equipment));
             setVisibleEdit(false)
         } catch (error) {
@@ -94,7 +98,7 @@ const Inventory = () => {
             const inventoryId = currentInventory.id;
             try {
                 const deletedInventory = await API.del('inventory', inventoryId);
-                setEquipments(equipments.filter((equipment) => equipment.id !== inventoryId));
+                setEquipments(equipments.filter((equipment) => equipment.id_inventory !== inventoryId));
                 setVisibleDelete(false);
             } catch (error) {
                 console.error("Error deleting Item:", error);
@@ -164,7 +168,7 @@ const Inventory = () => {
                                         <CFormInput
                                             type="date"
                                             placeholder="Date Use"
-                                            value={newItem.day_use}
+                                            value={newItem?.day_use ? newItem.day_use.split('T')[0] : '' || ''}
                                             onChange={(e) => setNewItem({ ...newItem, day_use: e.target.value })}
                                         />
                                     </CCol>
@@ -201,7 +205,7 @@ const Inventory = () => {
                     </CTableHead>
                     <CTableBody>
                         {equipments.map((equipment) => (
-                            <CTableRow key={equipment?.id || ''}>
+                            <CTableRow key={equipment?.id_inventory || ''}>
                                 <CTableDataCell>{equipment?.equipment_name || ''}</CTableDataCell>
                                 <CTableDataCell>{equipment?.quantity || ''}</CTableDataCell>
                                 <CTableDataCell>{getStatusName(equipment?.status) || ''}</CTableDataCell>
@@ -255,8 +259,8 @@ const Inventory = () => {
                                                     <CFormInput
                                                         type="date"
                                                         placeholder="Date Use"
-                                                        value={newItem.day_use}
-                                                        onChange={(e) => setNewItem({ ...newItem, day_use: e.target.value })}
+                                                        value={currentInventory?.day_use ? currentInventory.day_use.split('T')[0] : '' || ''}
+                                                        onChange={(e) => setNewItem({ ...currentInventory, day_use: e.target.value })}
                                                     />
                                                 </CCol>
                                             </CRow>

@@ -26,14 +26,10 @@ import avatar8 from './../../assets/images/avatars/2.jpg'
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate()
-  /*
-    const handleLogout = () => {
-      localStorage.removeItem('token');
-      navigate('/');
-    };*/
+
   const handleLogout = () => {
-    localStorage.removeItem('user')
-    navigate('/')
+    localStorage.removeItem('token');
+    navigate('/');
   };
 
   return (

@@ -37,75 +37,110 @@ const progress = () => {
     const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
-    const [newProgress, setNewProgress] = useState({ user_id: '', date: '', weight: '', bodyFat: '', muscleGain: '', benchPress: '', squats: '', deadLift: '' })
+    const [newProgress, setNewProgress] = useState({ user_id: '', date: '', weight: '', bodyfat: '', musclegain: '', benchpress: '', squats: '', deadlift: '' })
     const [deleteConfirmation, setDeleteConfirmation] = useState('')
 
     useEffect(() => {
         const fetchProgress = async () => {
-            const data = await API.get('progress')
-            setProgress(data)
-        }
-        fetchProgress()
-    }, [])
+            try {
+                const data = await API.get('progress');
+                const combinedData = data.map(progress => ({
+                    ...progress,
+                    date: progress.date ? progress.date.split('T')[0] : '',
+                }));
+                setProgress(combinedData);
+
+
+            } catch (error) {
+                console.error("Error fetching progress data:", error);
+            }
+        };
+        fetchProgress();
+    }, []);
 
     useEffect(() => {
         const fetchUser = async () => {
-            const data = await API.get('users')
-            setSelectedUser(data)
-        }
-        fetchUser()
-    }, [])
+            try {
+                const data = await API.get('users');
+                setSelectedUser(data);
+                console.log("Fetched user data:", data);
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        };
+        fetchUser();
+    }, []);
 
     useEffect(() => {
         const userId = newProgress.user_id;
         if (userId) {
-            setFilteredProgress(progress.filter((p) => p.user_id === userId));
+            const filtered = progress.filter((p) => p.user_id === Number(userId));
+            console.log("Filtered progress data:", filtered); // Agrega este log
+            setFilteredProgress(filtered);
         }
     }, [progress, newProgress.user_id]);
 
 
     const handleAddProgress = async () => {
-        const addProgress = await API.post('progress', newProgress);
-        setProgress((prevProgress) => [...prevProgress, addProgress]);
-        setFilteredProgress((prevFiltered) => [...prevFiltered, addProgress]);
-        setNewProgress({ user_id: '', date: '', weight: '', bodyFat: '', muscleGain: '', benchPress: '', squats: '', deadLift: '' });
-        setVisible(false);
+        const progressToAdd = {
+            ...newProgress,
+            date: newProgress.date ? new Date(newProgress.date).toISOString() : '', // Asegúrate de que la fecha esté en el formato correcto
+        };
+
+        try {
+            const addProgress = await API.post('progress', progressToAdd);
+            setProgress((prevProgress) => [...prevProgress, addProgress]);
+            setFilteredProgress((prevFiltered) => [...prevFiltered, addProgress]);
+            setNewProgress({ user_id: '', date: '', weight: '', bodyfat: '', musclegain: '', benchpress: '', squats: '', deadlift: '' });
+            setVisible(false);
+        } catch (error) {
+            console.error("Error adding progress:", error);
+        }
     };
 
     const handleEditProgress = async () => {
-        if (!currentProgress || !currentProgress.id) {
+        if (!currentProgress || !currentProgress.id_progress) {
             console.error("Current Progress doesn't exist");
             return;
         }
         try {
             const updateProgress = await API.put(
                 'progress',
-                currentProgress,
-                currentProgress.id);
+                {
+                    ...currentProgress,
+                    date: currentProgress.date ? new Date(currentProgress.date).toISOString() : '', // Asegúrate de que la fecha esté en el formato correcto
+                },
+                currentProgress.id_progress
+            );
+
             setProgress((prevProgress) =>
                 prevProgress.map((progre) =>
-                    progre.id === currentProgress.id
+                    progre.id_progress === currentProgress.id_progress
                         ? { ...progre, ...updateProgress }
-                        : progre));
+                        : progre
+                )
+            );
 
             setFilteredProgress((prevFiltered) =>
                 prevFiltered.map((progre) =>
-                    progre.id === currentProgress.id
+                    progre.id_progress === currentProgress.id_progress
                         ? { ...progre, ...updateProgress }
-                        : progre));
+                        : progre
+                )
+            );
             setVisibleEdit(false);
         } catch (error) {
-            console.error(error);
+            console.error("Error updating progress:", error);
         }
     };
 
     const handleDeleteProgress = async () => {
         if (deleteConfirmation === 'confirm') {
-            const progressId = currentProgress.id;
+            const progressId = currentProgress.id_progress;
             try {
                 await API.del('progress', progressId);
-                setProgress(progress.filter(progress_ => progress_.id !== progressId));
-                setFilteredProgress((prevFiltered) => prevFiltered.filter((progress_) => progress_.id !== progressId));
+                setProgress(progress.filter(progress_ => progress_.id_progress !== progressId));
+                setFilteredProgress((prevFiltered) => prevFiltered.filter((progress_) => progress_.id_progress !== progressId));
                 setVisibleDelete(false);
             } catch (error) {
                 console.error("Error deleting Item: ", error);
@@ -138,7 +173,7 @@ const progress = () => {
                 pointBorderColor: '#fff',
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: 'rgba(54, 162, 235, 1)',
-                data: filteredProgress.map(progress => progress.bodyFat || 0),
+                data: filteredProgress.map(progress => progress.bodyfat || 0),
             },
             {
                 label: 'Muscle Gain (kg)',
@@ -148,7 +183,7 @@ const progress = () => {
                 pointBorderColor: '#fff',
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: 'rgba(75, 192, 192, 1)',
-                data: filteredProgress.map(progress => progress.muscleGain || 0),
+                data: filteredProgress.map(progress => progress.musclegain || 0),
             },
             {
                 label: 'Bench Press (kg)',
@@ -158,7 +193,7 @@ const progress = () => {
                 pointBorderColor: '#fff',
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: 'rgba(153, 102, 255, 1)',
-                data: filteredProgress.map(progress => progress.benchPress || 0),
+                data: filteredProgress.map(progress => progress.benchpress || 0),
             },
             {
                 label: 'Squats (kg)',
@@ -178,7 +213,7 @@ const progress = () => {
                 pointBorderColor: '#fff',
                 pointHighlightFill: '#fff',
                 pointHighlightStroke: 'rgba(255, 206, 86, 1)',
-                data: filteredProgress.map(progress => progress.deadLift || 0),
+                data: filteredProgress.map(progress => progress.deadlift || 0),
             },
         ],
     };
@@ -203,7 +238,7 @@ const progress = () => {
                             >
                                 <option value="">Select a User</option>
                                 {selectedUser.map((users) => (
-                                    <option key={users.id} value={users.id}>
+                                    <option key={users.id_user} value={users.id_user}>
                                         {users.name + ' ' + users.lastname}
                                     </option>
                                 ))}
@@ -219,7 +254,7 @@ const progress = () => {
                             aria-labelledby="Modal create Progress"
                         >
                             <CModalHeader>
-                                <CModalTitle id="Create Progress">New Register</CModalTitle>
+                                <CModalTitle id="Create Progress">New Progress</CModalTitle>
                             </CModalHeader>
                             <CModalBody>
                                 <CRow className="mb-3">
@@ -227,7 +262,7 @@ const progress = () => {
                                         <label className='fw-bold'> Date Check</label>
                                         <CFormInput
                                             type="date"
-                                            value={newProgress?.date || ''}
+                                            value={newProgress?.date ? newProgress.date.split('T')[0] : '' || ''}
                                             onChange={(e) => setNewProgress({ ...newProgress, date: e.target.value })}
                                         />
                                     </CCol>
@@ -243,8 +278,8 @@ const progress = () => {
                                         <label className='fw-bold'> Body Fat(%)</label>
                                         <CFormInput
                                             type="number"
-                                            value={newProgress?.bodyFat || ''}
-                                            onChange={(e) => setNewProgress({ ...newProgress, bodyFat: e.target.value })}
+                                            value={newProgress?.bodyfat || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, bodyfat: e.target.value })}
                                         />
                                     </CCol>
                                 </CRow>
@@ -253,16 +288,16 @@ const progress = () => {
                                         <label className='fw-bold'> Muscle Gain(Kg)</label>
                                         <CFormInput
                                             type="number"
-                                            value={newProgress?.muscleGain || ''}
-                                            onChange={(e) => setNewProgress({ ...newProgress, muscleGain: e.target.value })}
+                                            value={newProgress?.musclegain || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, musclegain: e.target.value })}
                                         />
                                     </CCol>
                                     <CCol md={4}>
                                         <label className='fw-bold'> Bench Press(Kg)</label>
                                         <CFormInput
                                             type="number"
-                                            value={newProgress?.benchPress || ''}
-                                            onChange={(e) => setNewProgress({ ...newProgress, benchPress: e.target.value })}
+                                            value={newProgress?.benchpress || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, benchpress: e.target.value })}
                                         />
                                     </CCol>
                                     <CCol md={4}>
@@ -277,8 +312,8 @@ const progress = () => {
                                         <label className='fw-bold'>Dead Lift (Kg)</label>
                                         <CFormInput
                                             type="number"
-                                            value={newProgress?.deadLift || ''}
-                                            onChange={(e) => setNewProgress({ ...newProgress, deadLift: e.target.value })}
+                                            value={newProgress?.deadlift || ''}
+                                            onChange={(e) => setNewProgress({ ...newProgress, deadlift: e.target.value })}
                                         />
                                     </CCol>
                                 </CRow>
@@ -323,14 +358,14 @@ const progress = () => {
                     </CTableHead>
                     <CTableBody>
                         {filteredProgress.map((progress) => (
-                            <CTableRow key={progress?.id || ''}>
+                            <CTableRow key={progress?.id_progress || ''}>
                                 <CTableDataCell>{progress?.date || ''}</CTableDataCell>
                                 <CTableDataCell>{progress?.weight || ''}</CTableDataCell>
-                                <CTableDataCell>{progress?.bodyFat || ''}%</CTableDataCell>
-                                <CTableDataCell>{progress?.muscleGain || ''}%</CTableDataCell>
-                                <CTableDataCell>{progress?.benchPress || ''}</CTableDataCell>
+                                <CTableDataCell>{progress?.bodyfat || ''}%</CTableDataCell>
+                                <CTableDataCell>{progress?.musclegain || ''}%</CTableDataCell>
+                                <CTableDataCell>{progress?.benchpress || ''}</CTableDataCell>
                                 <CTableDataCell>{progress?.squats || ''}</CTableDataCell>
-                                <CTableDataCell>{progress?.deadLift || ''}</CTableDataCell>
+                                <CTableDataCell>{progress?.deadlift || ''}</CTableDataCell>
                                 <CTableDataCell>
                                     <CButton color="info" onClick={() => { setCurrentProgress(progress); setVisibleEdit(!visibleEdit) }} variant='outline' size="sm" className="me-2" >Edit</CButton>
                                     <CModal
@@ -348,7 +383,7 @@ const progress = () => {
                                                     <label className='fw-bold'> Date Check</label>
                                                     <CFormInput
                                                         type="date"
-                                                        value={currentProgress?.date || ''}
+                                                        value={currentProgress?.date ? currentProgress.date.split('T')[0] : '' || ''}
                                                         onChange={(e) => setCurrentProgress({ ...currentProgress, date: e.target.value })}
                                                     />
                                                 </CCol>
@@ -364,24 +399,24 @@ const progress = () => {
                                                     <label className='fw-bold'> Body Fat(%)</label>
                                                     <CFormInput
                                                         type="number"
-                                                        value={currentProgress?.bodyFat || ''}
-                                                        onChange={(e) => setCurrentProgress({ ...currentProgress, bodyFat: e.target.value })}
+                                                        value={currentProgress?.bodyfat || ''}
+                                                        onChange={(e) => setCurrentProgress({ ...currentProgress, bodyfat: e.target.value })}
                                                     />
                                                 </CCol>
                                                 <CCol md={4} className='mb-3'>
                                                     <label className='fw-bold'> Muscle Gain(Kg)</label>
                                                     <CFormInput
                                                         type="number"
-                                                        value={currentProgress?.muscleGain || ''}
-                                                        onChange={(e) => setCurrentProgress({ ...currentProgress, muscleGain: e.target.value })}
+                                                        value={currentProgress?.musclegain || ''}
+                                                        onChange={(e) => setCurrentProgress({ ...currentProgress, musclegain: e.target.value })}
                                                     />
                                                 </CCol>
                                                 <CCol md={4} className='mb-3'>
                                                     <label className='fw-bold'> Bench Press(Kg)</label>
                                                     <CFormInput
                                                         type="number"
-                                                        value={currentProgress?.benchPress || ''}
-                                                        onChange={(e) => setCurrentProgress({ ...currentProgress, benchPress: e.target.value })}
+                                                        value={currentProgress?.benchpress || ''}
+                                                        onChange={(e) => setCurrentProgress({ ...currentProgress, benchpress: e.target.value })}
                                                     />
                                                 </CCol>
                                                 <CCol md={4} className='mb-3'>
@@ -396,8 +431,8 @@ const progress = () => {
                                                     <label className='fw-bold'>Dead Lift (Kg)</label>
                                                     <CFormInput
                                                         type="number"
-                                                        value={currentProgress?.deadLift || ''}
-                                                        onChange={(e) => setCurrentProgress({ ...currentProgress, deadLift: e.target.value })}
+                                                        value={currentProgress?.deadlift || ''}
+                                                        onChange={(e) => setCurrentProgress({ ...currentProgress, deadlift: e.target.value })}
                                                     />
                                                 </CCol>
                                             </CRow>

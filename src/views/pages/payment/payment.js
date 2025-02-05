@@ -45,13 +45,17 @@ const Payment = () => {
     const [visible, setVisible] = useState(false)
     const [visibleEdit, setVisibleEdit] = useState(false)
     const [visibleDelete, setVisibleDelete] = useState(false)
-    const [newPay, setNewPay] = useState({ amount: '', payment_method: '', status: '', dayPayment: '' })
+    const [newPay, setNewPay] = useState({ amount: '', payment_method: '', status: '', daypayment: '' })
     const [deleteConfirmation, setDeleteConfirmation] = useState('')
 
     useEffect(() => {
         const fetchPayment = async () => {
             const data = await API.get('payments')
-            setPayment(data)
+            const combinedData = data.map(payment => ({
+                ...payment,
+                daypayment: payment.daypayment ? payment.daypayment.split('T')[0] : '',
+            }));
+            setPayment(combinedData)
         }
         fetchPayment()
     }, [])
@@ -83,12 +87,12 @@ const Payment = () => {
     const handleAddPay = async () => {
         const addPay = await API.post('payments', newPay);
         setPayment([...payment, addPay]);
-        setNewPay({ amount: '', payment_method: '', status: '', dayPayment: '' });
+        setNewPay({ amount: '', payment_method: '', status: '', daypayment: '' });
         setVisible(false)
     }
 
     const handleEditPay = async () => {
-        if (!currentPay || !currentPay.id) {
+        if (!currentPay || !currentPay.id_payment) {
             console.error("No payment selected for edit");
             return;
         }
@@ -97,11 +101,11 @@ const Payment = () => {
             const updatedPay = await API.put(
                 'payments',
                 currentPay,
-                currentPay.id);
+                currentPay.id_payment);
 
             setPayment((prevPay) =>
                 prevPay.map((pay) =>
-                    pay.id === currentPay.id ? { ...pay, ...updatedPay } : pay
+                    pay.id_payment === currentPay.id_payment ? { ...pay, ...updatedPay } : pay
                 )
             );
             setVisibleEdit(false);
@@ -112,10 +116,10 @@ const Payment = () => {
 
     const handleDeletePay = async () => {
         if (deleteConfirmation === 'confirm') {
-            const payId = currentPay.id
+            const payId = currentPay.id_payment
             try {
                 const deletePay = await API.del('payments', payId)
-                setPayment(payment.filter((pay) => pay.id !== payId))
+                setPayment(payment.filter((pay) => pay.id_payment !== payId))
                 setVisibleDelete(false)
             } catch (error) {
                 console.error("Error deleting payment ", error)
@@ -124,7 +128,7 @@ const Payment = () => {
     }
 
     const getUserPay = (userId) => {
-        const user = userPay.find((user) => user.id === userId);
+        const user = userPay.find((user) => user.id_user === userId);
         return user ? user.name + ' ' + user.lastname : 'Unknown';
     };
 
@@ -172,7 +176,7 @@ const Payment = () => {
                                         >
                                             <option value="">Select a User</option>
                                             {userPay.map((users) => (
-                                                <option key={users.id} value={users.id}>
+                                                <option key={users.id_user} value={users.id_user}>
                                                     {users.name + ' ' + users.lastname}
                                                 </option>
                                             ))}
@@ -222,8 +226,8 @@ const Payment = () => {
                                         <CFormInput
                                             type="date"
                                             placeholder="date(class)"
-                                            value={newPay?.dayPayment || ''}
-                                            onChange={(e) => setNewPay({ ...newPay, dayPayment: e.target.value })}
+                                            value={newPay?.daypayment ? newPay.daypayment.split('T')[0] : '' || ''}
+                                            onChange={(e) => setNewPay({ ...newPay, daypayment: e.target.value })}
                                         />
                                     </CCol>
                                 </CRow>
@@ -262,12 +266,12 @@ const Payment = () => {
                     </CTableHead>
                     <CTableBody>
                         {payment.map((pay) => (
-                            <CTableRow key={pay?.id || ''}>
+                            <CTableRow key={pay?.id_payment || ''}>
                                 <CTableDataCell>{getUserPay(pay?.user_id || '')}</CTableDataCell>
                                 <CTableDataCell>${pay?.amount || ''}</CTableDataCell>
                                 <CTableDataCell>{getPayMethod(pay?.payment_method || '')}</CTableDataCell>
                                 <CTableDataCell>{getstatusPay(pay?.status || '')}</CTableDataCell>
-                                <CTableDataCell>{pay?.dayPayment || ''}</CTableDataCell>
+                                <CTableDataCell>{pay?.daypayment || ''}</CTableDataCell>
                                 <CTableDataCell>
                                     <CButton color="info" onClick={() => { setCurrentPay(pay); setVisibleEdit(!visibleEdit) }} variant='outline' size="sm" className="me-2" >Edit</CButton>
                                     <CModal
@@ -292,7 +296,7 @@ const Payment = () => {
                                                     >
                                                         <option value="">Select a User</option>
                                                         {userPay.map((users) => (
-                                                            <option key={users.id} value={users.id}>
+                                                            <option key={users.id_user} value={users.id_user}>
                                                                 {users.name + ' ' + users.lastname}
                                                             </option>
                                                         ))}
@@ -338,8 +342,8 @@ const Payment = () => {
                                                     <CFormInput
                                                         type="date"
                                                         placeholder="Date Payment"
-                                                        value={currentPay?.dayPayment || ''}
-                                                        onChange={(e) => setCurrentPay({ ...currentPay, dayPayment: e.target.value })}
+                                                        value={currentPay?.daypayment ? currentPay.daypayment.split('T')[0] : '' || ''}
+                                                        onChange={(e) => setCurrentPay({ ...currentPay, daypayment: e.target.value })}
                                                     />
                                                 </CCol>
                                             </CRow>

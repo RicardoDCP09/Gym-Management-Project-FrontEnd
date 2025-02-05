@@ -17,8 +17,7 @@ import {
   CModalHeader,
   CModalFooter,
   CModalTitle,
-  CSpinner,
-  CAlert
+  CSpinner
 } from '@coreui/react';
 import CIcon from '@coreui/icons-react';
 import { cilLockLocked, cilUser } from '@coreui/icons';
@@ -27,18 +26,16 @@ import { helpFetch } from '../../../helpers/helpFetch';
 const Login = () => {
   const API = helpFetch();
   const [visibleRecoverPasswordModal, setVisibleRecoverPasswordModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [recoverEmail, setRecoverEmail] = useState('');
-  const [recoverMessage, setRecoverMessage] = useState('');
-  const [recoverError, setRecoverError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [recoverEmail, setRecoverEmail] = useState(''); // State for recover email
   const navigate = useNavigate();
 
   useEffect(() => {
-    const loggedInUser = localStorage.getItem('user');
-    if (loggedInUser) {
+    const token = localStorage.getItem('token');
+    if (token) {
       navigate('/dashboard');
     }
   }, [navigate]);
@@ -48,7 +45,6 @@ const Login = () => {
     setErrorMessage('');
     setIsLoading(true);
 
-    // Validar entradas
     if (!username || !password) {
       setErrorMessage('Por favor, ingresa tu nombre de usuario y contraseña.');
       setIsLoading(false);
@@ -56,20 +52,14 @@ const Login = () => {
     }
 
     try {
-      const usersRes = await API.get('users');
+      const response = await API.post('login', { email: username, password });
 
-      if (!usersRes.err) {
-        const user = usersRes.find(user => user.email === username && user.password === password);
-
-        if (user) {
-          console.log('Login successful:', user);
-          localStorage.setItem('user', JSON.stringify(user));
-          navigate('/dashboard');
-        } else {
-          setErrorMessage('Usuario o contraseña incorrectos.');
-        }
+      if (!response.err) {
+        localStorage.setItem('token', response.token);
+        console.log('Login successful:', response.token);
+        navigate('/dashboard');
       } else {
-        setErrorMessage('Error al obtener los datos del usuario.');
+        setErrorMessage(response.message || 'Error en el inicio de sesión');
       }
     } catch (error) {
       setErrorMessage('Ocurrió un error inesperado. Por favor, intenta de nuevo.');
@@ -79,27 +69,18 @@ const Login = () => {
     }
   };
 
-  const handleRecoverPassword = async () => {
-    setRecoverError('');
-    setRecoverMessage('');
-
-    // Validar el correo electrónico
+  const handleRecoverPassword = async (e) => {
+    e.preventDefault(); // Prevent default form submission
     if (!recoverEmail) {
-      setRecoverError('Por favor, ingresa tu correo electrónico.');
+      setErrorMessage('Por favor, ingresa tu correo electrónico.');
       return;
     }
 
     try {
-      const response = await API.post('recover-password', { email: recoverEmail });
-
-      if (!response.err) {
-        setRecoverMessage('Se ha enviado un correo electrónico con instrucciones para recuperar tu contraseña.');
-        setRecoverEmail('');
-      } else {
-        setRecoverError(response.message || 'Error al enviar el correo de recuperación.');
-      }
+      const response = await API.post('recover', { email: recoverEmail }); // Use POST instead of GET
+      setErrorMessage(response.message || 'Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña.');
     } catch (error) {
-      setRecoverError('Ocurrió un error inesperado. Por favor, intenta de nuevo.');
+      setErrorMessage('Ocurrió un error al enviar el correo electrónico.');
       console.error('Error en handleRecoverPassword:', error);
     }
   };
@@ -114,14 +95,14 @@ const Login = () => {
                 <CCardBody>
                   <CForm onSubmit={handleLogin}>
                     <h1 className="text-white">Login</h1>
-                    <p className="text-white">Sign In to your account</p>
+                    <p className="text-white">Inicia sesión en tu cuenta</p>
                     {errorMessage && <p className="text-warning">{errorMessage}</p>}
                     <CInputGroup className="text-white mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
                       <CFormInput
-                        placeholder="Username"
+                        placeholder="Correo electrónico"
                         autoComplete="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
@@ -133,7 +114,7 @@ const Login = () => {
                       </CInputGroupText>
                       <CFormInput
                         type="password"
-                        placeholder="Password"
+                        placeholder="Contraseña"
                         autoComplete="current-password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
@@ -148,7 +129,7 @@ const Login = () => {
                           type="submit"
                           disabled={isLoading}
                         >
-                          {isLoading ? <CSpinner size="sm" /> : 'Login'}
+                          {isLoading ? <CSpinner size="sm" /> : 'Iniciar sesión'}
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
@@ -157,7 +138,7 @@ const Login = () => {
                           className="text-white px-0"
                           onClick={() => setVisibleRecoverPasswordModal(!visibleRecoverPasswordModal)}
                         >
-                          Forgot password?
+                          ¿Olvidaste tu contraseña?
                         </CButton>
                       </CCol>
                     </CRow>
@@ -167,7 +148,7 @@ const Login = () => {
               <CCard className="text-white py-5 login_custom">
                 <CCardBody className="text-center">
                   <div>
-                    <h2>Sign up</h2>
+                    <h2>Regístrate</h2>
                     <p>¿Qué estás esperando para empezar a usar nuestra plataforma?</p>
                     <Link to="/register">
                       <CButton
@@ -176,7 +157,7 @@ const Login = () => {
                         tabIndex={-1}
                         shape="rounded-pill"
                       >
-                        Register Now!
+                        ¡Regístrate ahora!
                       </CButton>
                     </Link>
                   </div>
@@ -192,30 +173,26 @@ const Login = () => {
           aria-labelledby="Modal Info"
         >
           <CModalHeader>
-            <CModalTitle id="Create Users">Forgot Your Password?</CModalTitle>
+            <CModalTitle id="Create Users">¿Olvidaste tu contraseña?</CModalTitle>
           </CModalHeader>
           <CModalBody>
             <CRow className="mb-3">
               <CCol md={12} className="mb-3">
-                <label className="fw-bold mb-2">Insert your Email</label>
+                <label className="fw-bold">Ingresa tu correo electrónico</label>
                 <CFormInput
                   type="email"
-                  placeholder="Email"
+                  placeholder="Correo electrónico"
                   value={recoverEmail}
-                  onChange={(e) => setRecoverEmail(e.target.value)}
+                  onChange={(e) => setRecoverEmail(e.target.value)} // Update state on change
                 />
               </CCol>
             </CRow>
-            {recoverMessage && <CAlert color="success">{recoverMessage}</CAlert>}
-            {recoverError && <CAlert color="danger">{recoverError}</CAlert>}
           </CModalBody>
           <CModalFooter>
             <CButton color="secondary" onClick={() => setVisibleRecoverPasswordModal(false)}>
-              Close
+              Cerrar
             </CButton>
-            <CButton color="primary" onClick={handleRecoverPassword}>
-              Recover Password
-            </CButton>
+            <CButton color="primary" onClick={handleRecoverPassword}>Recuperar contraseña</CButton>
           </CModalFooter>
         </CModal>
       </CContainer>
@@ -223,4 +200,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Login; 

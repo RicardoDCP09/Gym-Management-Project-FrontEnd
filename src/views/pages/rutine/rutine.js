@@ -51,7 +51,7 @@ const Rutine = () => {
 
     useEffect(() => {
         const fetchRutines = async () => {
-            const data = await API.get('rutines')
+            const data = await API.get('routines')
             if (data) {
                 setRutines(data)
             }
@@ -61,7 +61,7 @@ const Rutine = () => {
 
     useEffect(() => {
         const fetchTraineers = async () => {
-            const data = await API.get('users')
+            const data = await API.get('staff')
             if (data) {
                 setTraineers(data)
             }
@@ -90,7 +90,7 @@ const Rutine = () => {
     }, [])
 
     const handleAddRutine = async () => {
-        const data = await API.post('rutines', newRutine)
+        const data = await API.post('routines', newRutine)
         if (data) {
             setRutines([...rutines, data])
             setNewRutine({ name: '', difficulty: '', objective: '', coach_id: '', exercise_id: '' })
@@ -99,18 +99,18 @@ const Rutine = () => {
     }
 
     const handleEditRutine = async () => {
-        if (!currentRutine || !currentRutine.id) {
+        if (!currentRutine || !currentRutine.id_routine) {
             console.error("No Rutine selected for edit");
             return;
         }
         try {
             const updateRutine = await API.put(
-                'rutines',
+                'routines',
                 currentRutine,
-                currentRutine.id);
+                currentRutine.id_routine);
             setRutines((prevRut) =>
                 prevRut.map((rutine) =>
-                    rutine.id === currentRutine.id ?
+                    rutine.id_routine === currentRutine.id_routine ?
                         { ...rutine, ...updateRutine } : rutine
                 )
             );
@@ -122,10 +122,10 @@ const Rutine = () => {
 
     const handleDeleteRutine = async () => {
         if (deleteConfirmation === 'confirm') {
-            const rutineId = currentRutine.id;
+            const rutineId = currentRutine.id_routine;
             try {
-                const deletedRutine = await API.del('rutines', rutineId);
-                setRutines(rutines.filter((rutine) => rutine.id !== rutineId));
+                const deletedRutine = await API.del('routines', rutineId);
+                setRutines(rutines.filter((rutine) => rutine.id_routine !== rutineId));
                 setVisibleDelete(false);
             } catch (error) {
                 console.error("Error deleting Rutine", error);
@@ -134,12 +134,12 @@ const Rutine = () => {
     };
 
     const getTraineer = (trainerId) => {
-        const trainer = traineers ? traineers.find((traineer) => traineer.id === trainerId) : null;
+        const trainer = traineers ? traineers.find((traineer) => traineer.id_user === Number(trainerId)) : null;
         return trainer ? trainer.name + ' ' + trainer.lastname : 'Unknown';
     }
 
     const getExercise = (exerciseId) => {
-        const exercise = exercises ? exercises.find((exercise) => exercise.id === exerciseId) : null
+        const exercise = exercises ? exercises.find((exercise) => exercise.id_exercise === exerciseId) : null
         return exercise ? exercise.name : 'Unknown';
     }
 
@@ -211,7 +211,7 @@ const Rutine = () => {
                                         >
                                             <option value="">Select a Exercise</option>
                                             {exercises.map((exercise) => (
-                                                <option key={exercise.id} value={exercise.id}>
+                                                <option key={exercise.id_exercise} value={exercise.id_exercise}>
                                                     {exercise.name}
                                                 </option>
                                             ))}
@@ -226,8 +226,8 @@ const Rutine = () => {
                                             onChange={(e) => setNewRutine({ ...newRutine, coach_id: e.target.value })}
                                         >
                                             <option value="">Select a Traineer</option>
-                                            {traineers.filter((traineer) => (traineer.role === '2')).map((traineer) => (
-                                                <option key={traineer.id} value={traineer.id}>
+                                            {traineers.filter((traineer) => (traineer.role === 2)).map((traineer) => (
+                                                <option key={traineer.id_user} value={traineer.id_user}>
                                                     {traineer.name} {traineer.lastname}
                                                 </option>
                                             ))}
@@ -269,7 +269,7 @@ const Rutine = () => {
                     </CTableHead>
                     <CTableBody>
                         {rutines.map((rutine) => (
-                            <CTableRow key={rutine?.id || ''}>
+                            <CTableRow key={rutine?.id_routine || ''}>
                                 <CTableDataCell>{rutine?.name || ''}</CTableDataCell>
                                 <CTableDataCell>{getdifficulty(rutine?.difficulty || '')}</CTableDataCell>
                                 <CTableDataCell>{rutine?.objective || ''}</CTableDataCell>
@@ -328,7 +328,7 @@ const Rutine = () => {
                                                     >
                                                         <option value="">Select a Exercise</option>
                                                         {exercises.map((exercise) => (
-                                                            <option key={exercise.id} value={exercise.id}>
+                                                            <option key={exercise.id_exercise} value={exercise.id_exercise}>
                                                                 {exercise.name}
                                                             </option>
                                                         ))}
@@ -343,8 +343,8 @@ const Rutine = () => {
                                                         onChange={(e) => setCurrentRutine({ ...currentRutine, coach_id: e.target.value })}
                                                     >
                                                         <option value="">Select a Traineer</option>
-                                                        {traineers.filter((traineer) => (traineer.role === '2')).map((traineer) => (
-                                                            <option key={traineer.id} value={traineer.id}>
+                                                        {traineers.filter((traineer) => (traineer.role === 2)).map((traineer) => (
+                                                            <option key={traineer.id_user} value={traineer.id_user}>
                                                                 {traineer.name} {traineer.lastname}
                                                             </option>
                                                         ))}
