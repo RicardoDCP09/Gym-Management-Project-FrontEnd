@@ -26,10 +26,16 @@ import avatar8 from './../../assets/images/avatars/2.jpg'
 
 const AppHeaderDropdown = () => {
   const navigate = useNavigate()
+  /*
+    const handleLogout = () => {
+      localStorage.removeItem('token');
+      navigate('/');
+    };*/
   const handleLogout = () => {
     localStorage.removeItem('user')
     navigate('/')
   };
+
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>

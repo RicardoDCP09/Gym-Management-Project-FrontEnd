@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   CButton,
   CCard,
@@ -12,17 +12,28 @@ import {
   CInputGroup,
   CInputGroupText,
   CRow,
-} from '@coreui/react'
-
-import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
-import { helpFetch } from '../../../helpers/helpFetch'
+  CModal,
+  CModalBody,
+  CModalHeader,
+  CModalFooter,
+  CModalTitle,
+  CSpinner,
+  CAlert
+} from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { cilLockLocked, cilUser } from '@coreui/icons';
+import { helpFetch } from '../../../helpers/helpFetch';
 
 const Login = () => {
-  const API = helpFetch()
+  const API = helpFetch();
+  const [visibleRecoverPasswordModal, setVisibleRecoverPasswordModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const [recoverEmail, setRecoverEmail] = useState('');
+  const [recoverMessage, setRecoverMessage] = useState('');
+  const [recoverError, setRecoverError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,6 +46,14 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setErrorMessage('');
+    setIsLoading(true);
+
+    // Validar entradas
+    if (!username || !password) {
+      setErrorMessage('Por favor, ingresa tu nombre de usuario y contraseña.');
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const usersRes = await API.get('users');
@@ -47,28 +66,57 @@ const Login = () => {
           localStorage.setItem('user', JSON.stringify(user));
           navigate('/dashboard');
         } else {
-          setErrorMessage('Invalid username or password');
+          setErrorMessage('Usuario o contraseña incorrectos.');
         }
       } else {
-        setErrorMessage('Error fetching user data');
+        setErrorMessage('Error al obtener los datos del usuario.');
       }
     } catch (error) {
-      setErrorMessage('An unexpected error occurred.');
+      setErrorMessage('Ocurrió un error inesperado. Por favor, intenta de nuevo.');
+      console.error('Error en handleLogin:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  const handleRecoverPassword = async () => {
+    setRecoverError('');
+    setRecoverMessage('');
+
+    // Validar el correo electrónico
+    if (!recoverEmail) {
+      setRecoverError('Por favor, ingresa tu correo electrónico.');
+      return;
+    }
+
+    try {
+      const response = await API.post('recover-password', { email: recoverEmail });
+
+      if (!response.err) {
+        setRecoverMessage('Se ha enviado un correo electrónico con instrucciones para recuperar tu contraseña.');
+        setRecoverEmail('');
+      } else {
+        setRecoverError(response.message || 'Error al enviar el correo de recuperación.');
+      }
+    } catch (error) {
+      setRecoverError('Ocurrió un error inesperado. Por favor, intenta de nuevo.');
+      console.error('Error en handleRecoverPassword:', error);
+    }
+  };
+
   return (
-    <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center login_background ">
+    <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center login_background">
       <CContainer>
         <CRow className="justify-content-center">
           <CCol md={8}>
-            <CCardGroup className='g-0 p-0'>
+            <CCardGroup className="g-0 p-0">
               <CCard className="p-4" style={{ backgroundColor: '#ce4242' }}>
                 <CCardBody>
                   <CForm onSubmit={handleLogin}>
                     <h1 className="text-white">Login</h1>
                     <p className="text-white">Sign In to your account</p>
                     {errorMessage && <p className="text-warning">{errorMessage}</p>}
-                    <CInputGroup className=" text-white mb-3">
+                    <CInputGroup className="text-white mb-3">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
@@ -88,22 +136,27 @@ const Login = () => {
                         placeholder="Password"
                         autoComplete="current-password"
                         value={password}
-                        onChange={e => setPassword(e.target.value)}
+                        onChange={(e) => setPassword(e.target.value)}
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
                         <CButton
-                          color='primary'
+                          color="primary"
                           className="text-white px-4"
                           shape="rounded-pill"
-                          type='submit'
+                          type="submit"
+                          disabled={isLoading}
                         >
-                          Login
+                          {isLoading ? <CSpinner size="sm" /> : 'Login'}
                         </CButton>
                       </CCol>
                       <CCol xs={6} className="text-right">
-                        <CButton color="link" className="text-white px-0">
+                        <CButton
+                          color="link"
+                          className="text-white px-0"
+                          onClick={() => setVisibleRecoverPasswordModal(!visibleRecoverPasswordModal)}
+                        >
                           Forgot password?
                         </CButton>
                       </CCol>
@@ -115,9 +168,7 @@ const Login = () => {
                 <CCardBody className="text-center">
                   <div>
                     <h2>Sign up</h2>
-                    <p>
-                      Que estas esperando para empezar a usar nuestra plataforma!?
-                    </p>
+                    <p>¿Qué estás esperando para empezar a usar nuestra plataforma?</p>
                     <Link to="/register">
                       <CButton
                         style={{ backgroundColor: '#942727' }}
@@ -134,9 +185,42 @@ const Login = () => {
             </CCardGroup>
           </CCol>
         </CRow>
+        <CModal
+          backdrop="static"
+          visible={visibleRecoverPasswordModal}
+          onClose={() => setVisibleRecoverPasswordModal(false)}
+          aria-labelledby="Modal Info"
+        >
+          <CModalHeader>
+            <CModalTitle id="Create Users">Forgot Your Password?</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CRow className="mb-3">
+              <CCol md={12} className="mb-3">
+                <label className="fw-bold mb-2">Insert your Email</label>
+                <CFormInput
+                  type="email"
+                  placeholder="Email"
+                  value={recoverEmail}
+                  onChange={(e) => setRecoverEmail(e.target.value)}
+                />
+              </CCol>
+            </CRow>
+            {recoverMessage && <CAlert color="success">{recoverMessage}</CAlert>}
+            {recoverError && <CAlert color="danger">{recoverError}</CAlert>}
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setVisibleRecoverPasswordModal(false)}>
+              Close
+            </CButton>
+            <CButton color="primary" onClick={handleRecoverPassword}>
+              Recover Password
+            </CButton>
+          </CModalFooter>
+        </CModal>
       </CContainer>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;
