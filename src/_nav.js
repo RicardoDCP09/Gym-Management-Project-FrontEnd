@@ -60,7 +60,7 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Payment',
+    name: 'Payments',
     to: '/payment',
     icon: <CIcon icon={cilCreditCard} customClassName="nav-icon" />,
   },
