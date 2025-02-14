@@ -37,6 +37,8 @@ const Login = () => {
     const token = localStorage.getItem('token');
     if (token) {
       navigate('/dashboard');
+    } else if (!token) {
+      navigate('/')
     }
   }, [navigate]);
 
