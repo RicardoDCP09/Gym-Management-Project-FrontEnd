@@ -30,7 +30,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [recoverEmail, setRecoverEmail] = useState(''); // State for recover email
+  const [recoverEmail, setRecoverEmail] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const Login = () => {
     }
 
     try {
-      const response = await API.post('login', { email: username, password });
+      const response = await API.get('login', { email: username, password });
 
       if (!response.err) {
         localStorage.setItem('token', response.token);
@@ -72,14 +72,14 @@ const Login = () => {
   };
 
   const handleRecoverPassword = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     if (!recoverEmail) {
       setErrorMessage('Por favor, ingresa tu correo electrónico.');
       return;
     }
 
     try {
-      const response = await API.post('recover', { email: recoverEmail }); // Use POST instead of GET
+      const response = await API.post('recover', { email: recoverEmail });
       setErrorMessage(response.message || 'Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña.');
     } catch (error) {
       setErrorMessage('Ocurrió un error al enviar el correo electrónico.');
@@ -185,7 +185,7 @@ const Login = () => {
                   type="email"
                   placeholder="Correo electrónico"
                   value={recoverEmail}
-                  onChange={(e) => setRecoverEmail(e.target.value)} // Update state on change
+                  onChange={(e) => setRecoverEmail(e.target.value)}
                 />
               </CCol>
             </CRow>
