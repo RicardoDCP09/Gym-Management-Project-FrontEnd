@@ -54,7 +54,7 @@ const Login = () => {
     }
 
     try {
-      const response = await API.get('login', { email: username, password });
+      const response = await API.post('login', { email: username, password });
 
       if (!response.err) {
         localStorage.setItem('token', response.token);
