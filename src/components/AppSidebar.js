@@ -13,6 +13,7 @@ import {
 import { CIcon } from '@coreui/icons-react'
 import { cilHome } from '@coreui/icons'
 import { AppSidebarNav } from './AppSidebarNav'
+import ComponentsImg from 'src/assets/images/Proofrdm.jpeg'
 
 // sidebar nav config
 import navigation from '../_nav'
@@ -36,7 +37,7 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <CImage src='src\assets\images\Proofrdm.jpeg' alt='logo' className="sidebar-brand-full sidebar-logo " height={45} width={200} />
+          <CImage src={ComponentsImg} alt='logo' className="sidebar-brand-full sidebar-logo " height={45} width={200} />
           <CIcon customClassName="sidebar-brand-narrow" icon={cilHome} height={32} />
 
         </CSidebarBrand>
