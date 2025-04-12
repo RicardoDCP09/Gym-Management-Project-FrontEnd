@@ -29,8 +29,7 @@ const routes = [
   { path: '/reports', name: 'Reports', element: Reports },
   { path: '/staff', name: 'Staff', element: Staff },
   { path: '/profile', name: 'Profile', element: Profile },
-  { path: '/resetpassword', name: 'Recover Password', element: RecoveryPassword }
-
+  { path: '/resetpassword', name: 'Recover Password', element: RecoveryPassword },
 ]
 
 export default routes

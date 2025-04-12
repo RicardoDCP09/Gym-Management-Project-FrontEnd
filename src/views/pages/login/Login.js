@@ -33,12 +33,17 @@ const Login = () => {
   const [recoverEmail, setRecoverEmail] = useState('');
   const navigate = useNavigate();
 
+  const handleTokenExpiration = () => {
+    localStorage.removeItem('token')
+    navigate('/')
+  }
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
       navigate('/dashboard');
     } else if (!token) {
-      navigate('/login')
+      handleTokenExpiration()
     }
   }, [navigate]);
 
