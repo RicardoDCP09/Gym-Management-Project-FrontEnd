@@ -18,7 +18,6 @@ import {
 } from '@coreui/icons'
 import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 
-
 const _nav = [
   {
     component: CNavItem,
@@ -87,7 +86,7 @@ const _nav = [
         to: '/exercise',
         icon: <CIcon icon={cilBurn} customClassName="nav-icon" />,
       },
-    ]
+    ],
   },
   {
     component: CNavGroup,
@@ -112,7 +111,7 @@ const _nav = [
         to: '/reports',
         icon: <CIcon icon={cilBell} customClassName="nav-icon" />,
       },
-    ]
+    ],
   },
 ]
 

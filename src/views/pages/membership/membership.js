@@ -239,7 +239,7 @@ const Membership = () => {
                     size="sm"
                   >
                     Delete
-                  </CButton>{' '}
+                  </CButton>
                   <CModal
                     backdrop="static"
                     visible={visibleDelete}

@@ -38,7 +38,7 @@ const Login = () => {
     if (token) {
       navigate('/dashboard');
     } else if (!token) {
-      navigate('/')
+      navigate('/login')
     }
   }, [navigate]);
 
