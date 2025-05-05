@@ -37,10 +37,17 @@ const UserProfile = () => {
       if (loggedInUser && loggedInUser.id) {
         try {
           const userData = await API.get(`users/${loggedInUser.id}`)
-          const userRoles = await API.get('user_roles')
-          const roleRelation = userRoles.find((role) => role.user_id === userData.id)
-          const combinedData = {
+          // Mapeo de campos para que coincidan con el frontend
+          const mappedUser = {
             ...userData,
+            fechaNac: userData.fechanac,
+            registerDate: userData.registerdate,
+            typeMembership: userData.typemembership,
+          }
+          const userRoles = await API.get('user_roles')
+          const roleRelation = userRoles.find((role) => role.user_id === mappedUser.id)
+          const combinedData = {
+            ...mappedUser,
             user_role_id: roleRelation ? roleRelation.id : null,
           }
           setUser(combinedData)
@@ -138,8 +145,9 @@ const UserProfile = () => {
   }
 
   const getRoleName = (roleId) => {
+    if (!roles.length) return 'Cargando...'
     const role = roles.find((role) => String(role.id) === String(roleId))
-    return role ? role.name : 'Unknown'
+    return role ? role.name : 'Desconocido'
   }
   if (error) {
     return <div>{error}</div>
@@ -150,9 +158,15 @@ const UserProfile = () => {
 
   const formatDate = (dateStr) => {
     if (!dateStr) return ''
+    // Si ya está en formato YYYY-MM-DD, devuélvelo tal cual
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr
+    // Si viene con T, corta antes de la T
     return dateStr.split('T')[0]
   }
-
+  console.log('roles:', roles)
+  console.log('user.role:', user.role)
+  console.log('user.fechaNac:', user.fechaNac)
+  console.log('user.registerDate:', user.registerDate)
   return (
     <CCard className="mb-4">
       <CCardHeader>
