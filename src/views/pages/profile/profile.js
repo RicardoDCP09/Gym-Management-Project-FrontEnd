@@ -34,9 +34,9 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (loggedInUser && loggedInUser.id_user) {
+      if (loggedInUser && loggedInUser.id) {
         try {
-          const userData = await API.get(`users/${loggedInUser.id_user}`)
+          const userData = await API.get(`users/${loggedInUser.id}`)
           const userRoles = await API.get('user_roles')
           const roleRelation = userRoles.find((role) => role.user_id === userData.id)
           const combinedData = {
@@ -79,7 +79,7 @@ const UserProfile = () => {
   }, [])
 
   const handleEditUser = async () => {
-    if (!currentUser || !currentUser.id_user) {
+    if (!currentUser || !currentUser.id) {
       console.error('Current user data is incomplete or does not have an ID.')
       return
     }
@@ -88,7 +88,7 @@ const UserProfile = () => {
       const updatedUser = await API.put(
         'users',
         {
-          id: currentUser.id_user,
+          id: currentUser.id,
           name: currentUser.name,
           lastname: currentUser.lastname,
           email: currentUser.email,
