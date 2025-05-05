@@ -34,9 +34,9 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      if (loggedInUser && loggedInUser.id_user) {
+      if (loggedInUser && loggedInUser.id) {
         try {
-          const userData = await API.get(`users/${loggedInUser.id_user}`)
+          const userData = await API.get(`users/${loggedInUser.id}`)
           const userRoles = await API.get('user_roles')
           const roleRelation = userRoles.find((role) => role.user_id === userData.id)
           const combinedData = {
