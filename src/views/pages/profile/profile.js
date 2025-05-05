@@ -19,7 +19,7 @@ import {
   CFormSelect,
 } from '@coreui/react'
 import { helpFetch } from '../../../helpers/helpFetch'
-
+import ComponentsImg from './src/assets/images/avatars/3.jpg'
 const UserProfile = () => {
   const API = helpFetch()
   const [visibleEdit, setVisibleEdit] = useState(false)
@@ -156,11 +156,11 @@ const UserProfile = () => {
         <CRow>
           <CCol md="3" className="border-end">
             <div className="text-center mb-4">
-              <CAvatar src={'./src/assets/images/avatars/8.jpg'} size="xl" className="mb-3" />
+              <CAvatar src={ComponentsImg} size="xl" className="mb-3" />
               <h4>
                 {user?.name || ''} {user?.lastname || ''}
               </h4>
-              <p>{'#' + user?.id || ''}</p>
+              <p>{user?.id ? `#${user.id}` : ''}</p>
             </div>
           </CCol>
           <CCol md="9">
