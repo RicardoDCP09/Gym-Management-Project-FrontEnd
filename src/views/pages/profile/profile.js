@@ -27,6 +27,7 @@ const UserProfile = () => {
   const [usersMemberRole, setUsersMemberRole] = useState([])
   const [roles, setRoles] = useState([])
   const [currentUser, setCurrentUser] = useState(null)
+  const [error, setError] = useState(null)
   const [alert, setAlert] = useState({ show: false, message: '', color: '' })
 
   const loggedInUser = JSON.parse(localStorage.getItem('user'))
@@ -34,15 +35,21 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchUser = async () => {
       if (loggedInUser && loggedInUser.id) {
-        const userData = await API.get(`users/${loggedInUser.id}`)
-        const userRoles = await API.get('user_roles')
-        const roleRelation = userRoles.find((role) => role.user_id === userData.id)
-        const combinedData = {
-          ...userData,
-          user_role_id: roleRelation ? roleRelation.id : null,
+        try {
+          const userData = await API.get(`users/${loggedInUser.id}`)
+          const userRoles = await API.get('user_roles')
+          const roleRelation = userRoles.find((role) => role.user_id === userData.id)
+          const combinedData = {
+            ...userData,
+            user_role_id: roleRelation ? roleRelation.id : null,
+          }
+          setUser(combinedData)
+          setCurrentUser(combinedData)
+        } catch (error) {
+          setError('No se pudo cargar el perfil.')
         }
-        setUser(combinedData)
-        setCurrentUser(combinedData)
+      } else {
+        setError('Usuario no autenticado.')
       }
     }
     fetchUser()
@@ -133,6 +140,9 @@ const UserProfile = () => {
   const getRoleName = (roleId) => {
     const role = roles.find((role) => role.id === roleId)
     return role ? role.name : 'Unknown'
+  }
+  if (error) {
+    return <div>{error}</div>
   }
   if (!user) {
     return <div>Loading...</div>
