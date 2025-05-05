@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
@@ -63,6 +64,7 @@ const Login = () => {
 
       if (!response.err) {
         localStorage.setItem('token', response.token)
+        localStorage.setItem('user', JSON.stringify(response.user))
         console.log('Login successful:', response.token)
         navigate('/dashboard')
       } else {
@@ -87,7 +89,7 @@ const Login = () => {
       const response = await API.post('recover', { email: recoverEmail })
       setErrorMessage(
         response.message ||
-          'Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña.',
+        'Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña.',
       )
     } catch (error) {
       setErrorMessage('Ocurrió un error al enviar el correo electrónico.')
