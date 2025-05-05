@@ -19,7 +19,7 @@ import {
   CFormSelect,
 } from '@coreui/react'
 import { helpFetch } from '../../../helpers/helpFetch'
-import ComponentsImg from './src/assets/images/avatars/3.jpg'
+import ComponentsImg from 'src/assets/images/avatars/3.jpg'
 const UserProfile = () => {
   const API = helpFetch()
   const [visibleEdit, setVisibleEdit] = useState(false)
@@ -147,6 +147,12 @@ const UserProfile = () => {
   if (!user) {
     return <div>Loading...</div>
   }
+
+  const formatDate = (dateStr) => {
+    if (!dateStr) return ''
+    return dateStr.split('T')[0]
+  }
+
   return (
     <CCard className="mb-4">
       <CCardHeader>
@@ -269,7 +275,7 @@ const UserProfile = () => {
                   <CFormInput
                     type="date"
                     label="Birth Date"
-                    value={currentUser?.fechaNac || ''}
+                    value={formatDate(currentUser?.fechaNac || '')}
                     onChange={(e) => setCurrentUser({ ...currentUser, fechaNac: e.target.value })}
                     className="mb-3"
                   />
@@ -278,7 +284,7 @@ const UserProfile = () => {
                   <CFormInput
                     type="date"
                     label="Registration Date"
-                    value={currentUser?.registerDate || ''}
+                    value={formatDate(currentUser?.registerDate || '')}
                     onChange={(e) =>
                       setCurrentUser({ ...currentUser, registerDate: e.target.value })
                     }
