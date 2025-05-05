@@ -28,9 +28,9 @@ const AppHeaderDropdown = () => {
   const navigate = useNavigate()
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/');
-  };
+    localStorage.removeItem('token')
+    navigate('/')
+  }
 
   return (
     <CDropdown variant="nav-item">

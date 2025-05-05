@@ -8,7 +8,7 @@ import {
   CSidebarFooter,
   CSidebarHeader,
   CSidebarToggler,
-  CImage
+  CImage,
 } from '@coreui/react'
 import { CIcon } from '@coreui/icons-react'
 import { cilHome } from '@coreui/icons'
@@ -37,9 +37,14 @@ const AppSidebar = () => {
     >
       <CSidebarHeader className="border-bottom">
         <CSidebarBrand to="/">
-          <CImage src={ComponentsImg} alt='logo' className="sidebar-brand-full sidebar-logo " height={45} width={200} />
+          <CImage
+            src={ComponentsImg}
+            alt="logo"
+            className="sidebar-brand-full sidebar-logo "
+            height={45}
+            width={200}
+          />
           <CIcon customClassName="sidebar-brand-narrow" icon={cilHome} height={32} />
-
         </CSidebarBrand>
         <CCloseButton
           className="d-lg-none"

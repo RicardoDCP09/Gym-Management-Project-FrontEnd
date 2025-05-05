@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   CButton,
   CCard,
@@ -17,21 +17,21 @@ import {
   CModalHeader,
   CModalFooter,
   CModalTitle,
-  CSpinner
-} from '@coreui/react';
-import CIcon from '@coreui/icons-react';
-import { cilLockLocked, cilUser } from '@coreui/icons';
-import { helpFetch } from '../../../helpers/helpFetch';
+  CSpinner,
+} from '@coreui/react'
+import CIcon from '@coreui/icons-react'
+import { cilLockLocked, cilUser } from '@coreui/icons'
+import { helpFetch } from '../../../helpers/helpFetch'
 
 const Login = () => {
-  const API = helpFetch();
-  const [visibleRecoverPasswordModal, setVisibleRecoverPasswordModal] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [recoverEmail, setRecoverEmail] = useState('');
-  const navigate = useNavigate();
+  const API = helpFetch()
+  const [visibleRecoverPasswordModal, setVisibleRecoverPasswordModal] = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [recoverEmail, setRecoverEmail] = useState('')
+  const navigate = useNavigate()
 
   const handleTokenExpiration = () => {
     localStorage.removeItem('token')
@@ -39,58 +39,61 @@ const Login = () => {
   }
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token')
     if (token) {
-      navigate('/dashboard');
+      navigate('/dashboard')
     } else if (!token) {
       handleTokenExpiration()
     }
-  }, [navigate]);
+  }, [navigate])
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setErrorMessage('');
-    setIsLoading(true);
+    e.preventDefault()
+    setErrorMessage('')
+    setIsLoading(true)
 
     if (!username || !password) {
-      setErrorMessage('Por favor, ingresa tu nombre de usuario y contraseña.');
-      setIsLoading(false);
-      return;
+      setErrorMessage('Por favor, ingresa tu nombre de usuario y contraseña.')
+      setIsLoading(false)
+      return
     }
 
     try {
-      const response = await API.post('login', { email: username, password });
+      const response = await API.post('login', { email: username, password })
 
       if (!response.err) {
-        localStorage.setItem('token', response.token);
-        console.log('Login successful:', response.token);
-        navigate('/dashboard');
+        localStorage.setItem('token', response.token)
+        console.log('Login successful:', response.token)
+        navigate('/dashboard')
       } else {
-        setErrorMessage(response.message || 'Error en el inicio de sesión');
+        setErrorMessage(response.message || 'Error en el inicio de sesión')
       }
     } catch (error) {
-      setErrorMessage('Ocurrió un error inesperado. Por favor, intenta de nuevo.');
-      console.error('Error en handleLogin:', error);
+      setErrorMessage('Ocurrió un error inesperado. Por favor, intenta de nuevo.')
+      console.error('Error en handleLogin:', error)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleRecoverPassword = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     if (!recoverEmail) {
-      setErrorMessage('Por favor, ingresa tu correo electrónico.');
-      return;
+      setErrorMessage('Por favor, ingresa tu correo electrónico.')
+      return
     }
 
     try {
-      const response = await API.post('recover', { email: recoverEmail });
-      setErrorMessage(response.message || 'Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña.');
+      const response = await API.post('recover', { email: recoverEmail })
+      setErrorMessage(
+        response.message ||
+          'Se ha enviado un correo electrónico con instrucciones para restablecer tu contraseña.',
+      )
     } catch (error) {
-      setErrorMessage('Ocurrió un error al enviar el correo electrónico.');
-      console.error('Error en handleRecoverPassword:', error);
+      setErrorMessage('Ocurrió un error al enviar el correo electrónico.')
+      console.error('Error en handleRecoverPassword:', error)
     }
-  };
+  }
 
   return (
     <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center login_background">
@@ -143,7 +146,9 @@ const Login = () => {
                         <CButton
                           color="link"
                           className="text-white px-0"
-                          onClick={() => setVisibleRecoverPasswordModal(!visibleRecoverPasswordModal)}
+                          onClick={() =>
+                            setVisibleRecoverPasswordModal(!visibleRecoverPasswordModal)
+                          }
                         >
                           ¿Olvidaste tu contraseña?
                         </CButton>
@@ -199,12 +204,14 @@ const Login = () => {
             <CButton color="secondary" onClick={() => setVisibleRecoverPasswordModal(false)}>
               Cerrar
             </CButton>
-            <CButton color="primary" onClick={handleRecoverPassword}>Recuperar contraseña</CButton>
+            <CButton color="primary" onClick={handleRecoverPassword}>
+              Recuperar contraseña
+            </CButton>
           </CModalFooter>
         </CModal>
       </CContainer>
     </div>
-  );
-};
+  )
+}
 
-export default Login; 
+export default Login

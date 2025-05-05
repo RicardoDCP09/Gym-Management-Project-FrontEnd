@@ -14,7 +14,9 @@ const Reports = React.lazy(() => import('./views/pages/reportss/report.js'))
 const Staff = React.lazy(() => import('./views/pages/staff/staff.js'))
 const Login = React.lazy(() => import('./views/pages/login/Login.js'))
 const Profile = React.lazy(() => import('./views/pages/profile/profile.js'))
-const RecoveryPassword = React.lazy(() => import('./views/pages/recoveryPassword/recoveryPassword.js'))
+const RecoveryPassword = React.lazy(
+  () => import('./views/pages/recoveryPassword/recoveryPassword.js'),
+)
 const routes = [
   { path: '/', exact: true, name: 'Login', element: Login },
   { path: '/dashboard', name: 'Dashboard', element: Dashboard },

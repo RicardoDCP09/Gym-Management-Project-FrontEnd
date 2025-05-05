@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useRef } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useState, useRef } from 'react'
+import PropTypes from 'prop-types'
 import {
   CRow,
   CCol,
@@ -8,51 +8,54 @@ import {
   CDropdownItem,
   CDropdownToggle,
   CWidgetStatsA,
-} from '@coreui/react';
-import { getStyle } from '@coreui/utils';
-import { CChartLine } from '@coreui/react-chartjs';
-import CIcon from '@coreui/icons-react';
-import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons';
-import { helpFetch } from '../../helpers/helpFetch';
+} from '@coreui/react'
+import { getStyle } from '@coreui/utils'
+import { CChartLine } from '@coreui/react-chartjs'
+import CIcon from '@coreui/icons-react'
+import { cilArrowBottom, cilArrowTop, cilOptions } from '@coreui/icons'
+import { helpFetch } from '../../helpers/helpFetch'
 
 const WidgetsDropdown = (props) => {
-  const API = helpFetch();
-  const [users, setUsers] = useState([]);
-  const [payments, setPayments] = useState([]);
-  const [classes, setClasses] = useState([]);
-  const [staff, setStaff] = useState([]); // Nuevo estado para el staff
-  const widgetChartRef1 = useRef(null);
-  const widgetChartRef2 = useRef(null);
-  const widgetChartRef3 = useRef(null);
-  const widgetChartRef4 = useRef(null); // Referencia para el gráfico de staff
+  const API = helpFetch()
+  const [users, setUsers] = useState([])
+  const [payments, setPayments] = useState([])
+  const [classes, setClasses] = useState([])
+  const [staff, setStaff] = useState([]) // Nuevo estado para el staff
+  const widgetChartRef1 = useRef(null)
+  const widgetChartRef2 = useRef(null)
+  const widgetChartRef3 = useRef(null)
+  const widgetChartRef4 = useRef(null) // Referencia para el gráfico de staff
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersData = await API.get('users');
-        setUsers(usersData);
+        const usersData = await API.get('users')
+        setUsers(usersData)
 
-        const paymentsData = await API.get('payments');
-        setPayments(paymentsData);
+        const paymentsData = await API.get('payments')
+        setPayments(paymentsData)
 
-        const classesData = await API.get('classes');
-        setClasses(classesData);
+        const classesData = await API.get('classes')
+        setClasses(classesData)
 
-        const staffData = await API.get('staff'); // Llamada al endpoint de staff
-        setStaff(staffData); // Guardar los datos de staff
+        const staffData = await API.get('staff') // Llamada al endpoint de staff
+        setStaff(staffData) // Guardar los datos de staff
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error)
       }
-    };
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
-  const totalUsers = users.length;
-  const totalStaff = staff.length; // Calcular el total de staff
-  const totalPayments = payments.reduce((acc, payment) => acc + (parseFloat(payment.amount) || 0), 0);
-  const totalClasses = classes.length; // Calculamos el total de clases
-  const totalPeople = totalUsers + totalStaff; // Total combinado de usuarios y staff
+  const totalUsers = users.length
+  const totalStaff = staff.length // Calcular el total de staff
+  const totalPayments = payments.reduce(
+    (acc, payment) => acc + (parseFloat(payment.amount) || 0),
+    0,
+  )
+  const totalClasses = classes.length // Calculamos el total de clases
+  const totalPeople = totalUsers + totalStaff // Total combinado de usuarios y staff
 
   return (
     <CRow className={props.className} xs={{ gutter: 4 }}>
@@ -61,7 +64,7 @@ const WidgetsDropdown = (props) => {
           color="primary"
           value={
             <>
-              {totalPeople}{' '} {/* Mostrar total combinado */}
+              {totalPeople} {/* Mostrar total combinado */}
               <span className="fs-6 fw-normal">
                 (-12.4% <CIcon icon={cilArrowBottom} />)
               </span>
@@ -292,11 +295,11 @@ const WidgetsDropdown = (props) => {
         />
       </CCol>
     </CRow>
-  );
-};
+  )
+}
 
 WidgetsDropdown.propTypes = {
   className: PropTypes.string,
-};
+}
 
-export default WidgetsDropdown; 
+export default WidgetsDropdown
