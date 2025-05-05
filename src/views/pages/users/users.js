@@ -31,7 +31,7 @@ import {
   CFormSelect,
   CFormTextarea,
 } from '@coreui/react'
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { helpFetch } from '../../../helpers/helpFetch'
 
 const Users = () => {
@@ -531,7 +531,7 @@ const Users = () => {
                     <CModalBody>
                       <CRow className="mb-3">
                         <label className="fw-bold mb-2">
-                          Please write "confirm" if you want to delete this membership
+                          Please write &quot;confirm&quot; if you want to delete this membership
                         </label>
                         <CCol className="mb-3" md={12}>
                           <CForm>

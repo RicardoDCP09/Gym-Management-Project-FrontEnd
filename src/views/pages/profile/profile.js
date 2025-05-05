@@ -62,7 +62,7 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchStateMemberRole = async () => {
       try {
-        const data = await API.get('type_memberships')
+        const data = await API.get('typememberships')
         setUsersMemberRole(Array.isArray(data) ? data : [])
       } catch (error) {
         setUsersMemberRole([]) // Si hay error, deja el array vacío
