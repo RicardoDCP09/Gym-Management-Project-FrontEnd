@@ -65,8 +65,12 @@ const UserProfile = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       const data = await API.get('roles')
-      const filteredUserRole = data.filter(
-        (role) => role.id === '1' || role.id === '2' || role.id === '3',
+      const mappedRoles = data.map((role) => ({
+        id: role.id_role,
+        name: role.name_role,
+      }))
+      const filteredUserRole = mappedRoles.filter(
+        (role) => role.id === 1 || role.id === 2 || role.id === 3,
       )
       setRoles(filteredUserRole)
     }
@@ -145,9 +149,8 @@ const UserProfile = () => {
   }
 
   const getRoleName = (roleId) => {
-    if (!roles.length) return 'Cargando...'
-    const role = roles.find((role) => String(role.id) === String(roleId))
-    return role ? role.name : 'Desconocido'
+    const role = roles.find((role) => Number(role.id) === Number(roleId))
+    return role ? role.name : 'Cargando...'
   }
   if (error) {
     return <div>{error}</div>
