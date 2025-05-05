@@ -138,7 +138,7 @@ const UserProfile = () => {
   }
 
   const getRoleName = (roleId) => {
-    const role = roles.find((role) => role.id === roleId)
+    const role = roles.find((role) => String(role.id) === String(roleId))
     return role ? role.name : 'Unknown'
   }
   if (error) {
@@ -166,7 +166,7 @@ const UserProfile = () => {
               <h4>
                 {user?.name || ''} {user?.lastname || ''}
               </h4>
-              <p>{user?.id ? `#${user.id}` : ''}</p>
+              <p>{user?.id ? `#${user.id}` : user?.id_user ? `#${user.id_user}` : ''}</p>
             </div>
           </CCol>
           <CCol md="9">
@@ -205,11 +205,11 @@ const UserProfile = () => {
             <CRow>
               <CCol xs="6">
                 <strong>Registration Date:</strong>
-                <p>{user?.registerDate || ''}</p>
+                <p>{formatDate(user?.registerDate || '')}</p>
               </CCol>
               <CCol xs="6">
                 <strong>Birth Date:</strong>
-                <p>{user?.fechaNac || ''}</p>
+                <p>{formatDate(user?.fechaNac || '')}</p>
               </CCol>
             </CRow>
           </CCol>
